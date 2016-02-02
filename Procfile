@@ -1,1 +1,1 @@
-web: gunicorn greenjacket.wsgi --log-file -
+web: gunicorn GJ_Web.wsgi --log-file -
