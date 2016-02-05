@@ -1,11 +1,15 @@
 # Compiled source #
 *.pyc
-
+venv
+staticfiles
+.env
 
 # OS generated files #
-######################
+#export P#####################
+taticfiles
+.envi
+DS_Store
 .DS_Store
-.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
