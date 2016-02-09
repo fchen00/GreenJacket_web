@@ -94,20 +94,28 @@ Website for Green Jacket
 ### Customer app
 * this is not for website users, but it sends data to mobile app
 * **possible urls:** 
-  * /data/menu/ {unique restaurant name/id} / {optional section name/id} / {optional food name/id} / {optional keyword}
-    * keyword can be "sides", "price", "drinks", "variations"
+  * /data/customer/menu/ {unique restaurant name/id} / {optional section name/id} / {optional food name/id} / {optional keyword}
+    * keywords: 
+     * "sides"
+     * "price"
+     * "drinks"
+     * "variations"
     * if optional info is not provided, send all available data
       * for example, if food not provided, send all available foods
-  * /data/menu/ {address}
+  * /data/customer/find/ {address}
     * return restauraunts near that address
 
 ### Employee app
 * not for website users, but sends data to employee mobile app
 * authentication is required in POST data
 * **posible urls:**
-  * /data/orders
+  * /data/employee/login
+    * employee login
+  * /data/employee/logout
+    * employee logout
+  * /data/employee/orders
     * send all orders that have not been dismissed
-  * /dismiss_order/{unique order id}
+  * /data/employee/dismiss_order/{unique order id}
     * dismiss order with order id 
 
 
