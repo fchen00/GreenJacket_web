@@ -14,8 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
     Testing
 """
+
 from django.conf.urls import include, url
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
+from django.views.generic import RedirectView
+from GJ_app import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
