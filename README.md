@@ -45,7 +45,7 @@ Website for Green Jacket
 *  **url:** /logout
 
 ## Menus
-### Create:
+### Update:
 * user can edit their menu
 * **url:** /edit_menu
 * create new / edit existing section
