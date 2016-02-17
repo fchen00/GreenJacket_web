@@ -11,20 +11,12 @@
                     <a href="/GJ_app/" class="navbar-brand">GreenJacket</a>
                 </div>
                 <div class ="collapse navbar-collapse" id="navbar-collapse">
-
-                    <!--  Here is where we should put our user's username-->
-                    {% if user and not user.is_anonymous %}
-                        <a > Logged in </a>
-                    {% else %}
-                        <a  >Login</a>
-                    {% endif %}
-                    <!--   <a href="" class="btn btn-info navbar-btn navbar-right">Log in</a> -->
                     <ul class="nav navbar-nav">
                         <li><a href="/GJ_app/">Home</a>
-                        <li><a href="/sideapp/player_rank">About Us</a>
-                        <li><a href="/sideapp/contact">Contact Us</a>
-                        <li><a href="/#">Sign-up</a>
-                        <li><a href="/#">Login</a>
+                        <li><a href="#">About Us</a>
+                        <li><a href="#">Contact Us</a>
+                        <li><a href="/GJ_app/signup">Sign-up</a>
+                        <li><a href="#">Login</a>
                     </ul>
                 </div>
             </div>

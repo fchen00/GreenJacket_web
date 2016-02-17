@@ -32,3 +32,6 @@ def vote(request, question_id):
 		selected_choice.votes +=1
 		selected_choice.save()
     	return HttpResponseRedirect(reverse('GJ_app:results', args=(question.id,)))
+
+def signup(request):
+	return render(request, 'GJ_app/signup.html')

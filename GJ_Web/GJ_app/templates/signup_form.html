@@ -1,0 +1,38 @@
+<h1> Registration </h1>
+<form action="{% url 'GJ_app:signup' %}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="Username1">User Name</label>
+    <input type="text" class="form-control" id="Username1" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <label for="Password1">Password</label>
+    <input type="password" class="form-control" id="Password1" placeholder="Password">
+  </div>
+  <div class="form-group">
+    <label for="Email1">Email address</label>
+    <input type="email" class="form-control" id="Email1" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <label for="SecureQ1">Security Question</label>
+    <input type="text" class="form-control" id="SecureQ1" placeholder="Security Question">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputCompName1">Company Name</label>
+    <input type="text" class="form-control" id="CompName1" placeholder="Company Name">
+  </div>
+  <div class="form-group">
+    <label for="Numstore1">Number of Stores</label>
+    <input type="integer" class="form-control" id="Numstore1" placeholder="Number of Stores">
+  </div>
+  <div class="form-group">
+    <label for="Compaddr1">Company Adress</label>
+    <input type="text" class="form-control" id="Compaddr1" placeholder="Company Adress">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputFile">Upload Comapny Logo</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block">Example block-level help text here.</p>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
