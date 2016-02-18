@@ -3,6 +3,7 @@ from . import views
 
 app_name = 'GJ_app'
 urlpatterns = [ 
+	# Users
 	# ex: /GJ_app/
     url(r'^$', views.index, name='index'),
     # ex: /GJ_app/5/
@@ -12,6 +13,10 @@ urlpatterns = [
     # ex: /GJ_app/5/vote/
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     # ex: /GJ_app/signup/
-    url(r'^signup/', views.signup, name='signup')
+    url(r'^signup/', views.signup, name='signup'),
+    # ex: /GJ_app/login/
+    url(r'^login/', views.login, name='login'),
+    # ex: /GJ_app/logout/
+    url(r'^logout/', views.logout, name='logout')
 ]
 

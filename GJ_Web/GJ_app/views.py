@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 
 from .models import Question
 
-
 def index(request):
 	latest_question_list = Question.objects.order_by('-pub_date')[:5]
 	context = {
@@ -35,3 +34,13 @@ def vote(request, question_id):
 
 def signup(request):
 	return render(request, 'GJ_app/signup.html')
+	
+def login(request):
+	if request.method == 'POST':
+		print "username = " + request.POST['username'] + "\npassword = " + request.POST['password']
+		return HttpResponseRedirect(reverse('GJ_app:index'))
+	else:
+		return render(request, 'GJ_app/login.html')
+	
+def logout(request):
+	return render(request, 'GJ_app/logout.html')
