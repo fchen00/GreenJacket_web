@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
+from django.http import JsonResponse
 
 from .models import Question
 
+# Users
 def index(request):
 	latest_question_list = Question.objects.order_by('-pub_date')[:5]
 	context = {
@@ -44,3 +46,14 @@ def login(request):
 	
 def logout(request):
 	return render(request, 'GJ_app/logout.html')
+
+# Menu Data to App
+def menu_json(request):
+	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 
+							'menu':{'foods':[{'burger':{'options':['cheese', 'pickels']}}, 
+												{'sandwich':{'options':['chicken', 'bacon', 'blt']}}]},
+							'last update':'today', 'food count':36})
+
+def data(request): 
+	return HttpResponseRedirect(reverse('GJ_app:menu_json'))
+	

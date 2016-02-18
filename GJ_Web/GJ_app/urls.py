@@ -17,6 +17,12 @@ urlpatterns = [
     # ex: /GJ_app/login/
     url(r'^login/', views.login, name='login'),
     # ex: /GJ_app/logout/
-    url(r'^logout/', views.logout, name='logout')
+    url(r'^logout/', views.logout, name='logout'),
+	
+	# App Data
+	# /GJ_app/data/customer/menu/ 
+    url(r'^data/customer/menu/', views.menu_json, name='menu_json'),
+    url(r'^data/', views.data)
+	
 ]
 
