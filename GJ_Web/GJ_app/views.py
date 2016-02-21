@@ -39,7 +39,7 @@ def signup(request):
 	
 def login(request):
 	if request.method == 'POST':
-		print "username = " + request.POST['username'] + "\npassword = " + request.POST['password']
+		print "email = " + request.POST['email'] + "\npassword = " + request.POST['password']
 		return HttpResponseRedirect(reverse('GJ_app:index'))
 	else:
 		return render(request, 'GJ_app/login.html')
