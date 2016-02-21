@@ -38,13 +38,27 @@ def signup(request):
 	return render(request, 'GJ_app/signup.html')
 	
 def login(request):
+	logged_in = request.session.get('logged_in', False)
+	if logged_in:
+		return HttpResponseRedirect(reverse('GJ_app:index'))
+		
 	if request.method == 'POST':
-		print "email = " + request.POST['email'] + "\npassword = " + request.POST['password']
+		email = request.POST['email']
+		password = request.POST['password']
+		print "email = " + email + "\npassword = " + password
+		request.session['logged_in'] = True
+		request.session['email'] = email
+		
 		return HttpResponseRedirect(reverse('GJ_app:index'))
 	else:
 		return render(request, 'GJ_app/login.html')
 	
 def logout(request):
+	logged_in = request.session.get('logged_in', False)
+	if not logged_in:
+		return HttpResponseRedirect(reverse('GJ_app:login'))
+	
+	request.session['logged_in'] = False
 	return render(request, 'GJ_app/logout.html')
 
 # Menu Data to App
