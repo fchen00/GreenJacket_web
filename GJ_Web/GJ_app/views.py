@@ -5,14 +5,16 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 
 from .models import *
+from .menu_controller import *
+from .helpers_controller import *
 
 # Users
 
 def index(request):
-	menus = Menu.objects.all()
-	for i in menus:
-		print i.item_nickname
-	return render(request, 'GJ_app/index.html', {'menus': menus})
+	# menus = Menu.objects.all()
+	# for i in menus:
+		# print i.menu_id.user_id
+	return render(request, 'GJ_app/index.html')
 
 # def detail(request, question_id):
     # question = get_object_or_404(Question, pk=question_id)
@@ -34,6 +36,7 @@ def index(request):
 		# selected_choice.save()
     	# return HttpResponseRedirect(reverse('GJ_app:results', args=(question.id,)))
 
+		
 def signup(request):
 	return render(request, 'GJ_app/signup.html')
 	
@@ -48,6 +51,7 @@ def login(request):
 		print "email = " + email + "\npassword = " + password
 		request.session['logged_in'] = True
 		request.session['email'] = email
+		request.session['user_id'] = user_id
 		
 		return HttpResponseRedirect(reverse('GJ_app:index'))
 	else:

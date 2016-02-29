@@ -10,10 +10,32 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    company_name = models.CharField(max_length=200)
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=1000)
+    QR_code = models.BinaryField(db_column='QR_code', blank=True, null=True)  # Field name made lowercase.
+    is_admin = models.NullBooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'User'
+		
+	def __init__(self, user_id, company_name, email, password, qr_code, is_admin):
+		self.user_id = user_id
+		self.company_name = company_name
+		self.email = email
+		self.password = password
+		self.QR_code = QR_code_code
+		self.is_admin = is_admin
+	
+	def __repr__(self):
+		return '<User %r, %r, %r>' % self.name, self.company_name, self.is_admin
+
 class Branch(models.Model):
     branch_id = models.AutoField(primary_key=True)
-    #  company_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    company_id = models.IntegerField()
+    company_id = models.ForeignKey(User, db_column='company_id', on_delete=models.CASCADE)
     branch_phone = models.CharField(max_length=12, blank=True, null=True)
     branch_address = models.CharField(max_length=200, blank=True, null=True)
     branch_city = models.CharField(max_length=200, blank=True, null=True)
@@ -27,18 +49,25 @@ class Branch(models.Model):
 
 
 class Category(models.Model):
-    category_id = models.IntegerField(primary_key=True)
+    category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'Category'
 
+class Option(models.Model):
+    option_id = models.AutoField(primary_key=True)
+    option_name = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Option'
 
 class CategoryOption(models.Model):
-    id = models.IntegerField(primary_key=True)  # AutoField?
-    category_id = models.IntegerField()
-    option_id = models.IntegerField()
+    id = models.AutoField(primary_key=True)  
+    category_id = models.ForeignKey(Category, db_column='category_id', on_delete=models.CASCADE)
+    option_id = models.ForeignKey(Option, db_column='option_id', on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -46,8 +75,8 @@ class CategoryOption(models.Model):
 
 
 class Company(models.Model):
-    id = models.IntegerField(primary_key=True)  # AutoField?
-    company_id = models.IntegerField()
+    id = models.AutoField(primary_key=True)  # AutoField?
+    company_id = models.ForeignKey(User, db_column='company_id', on_delete=models.CASCADE)
     company_name = models.CharField(max_length=200)
     main_phone = models.TextField(blank=True, null=True)  # This field type is a guess.
     main_address = models.CharField(max_length=200, blank=True, null=True)
@@ -68,76 +97,67 @@ class Company(models.Model):
 
 
 class Container(models.Model):
-    container_id = models.IntegerField(primary_key=True)
+    container_id = models.AutoField(primary_key=True)
     container_name = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'Container'
 
-
-class Item(models.Model):
-    id = models.IntegerField(primary_key=True)  # AutoField?
-    item_id = models.IntegerField()
-    category_id = models.IntegerField()
-    container_id = models.IntegerField()
-    size_id = models.IntegerField()
-    options = models.CharField(max_length=1000, blank=True, null=True)
-    options_isfixed = models.CharField(db_column='options_isFixed', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    options_price = models.CharField(max_length=1000, blank=True, null=True)
-    item_mealoptions = models.CharField(db_column='item_mealOptions', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    item_mealprice = models.CharField(db_column='item_mealPrice', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Item'
-
-
 class Menu(models.Model):
-    item_id = models.IntegerField(primary_key=True)
-    menu_id = models.IntegerField()
+    item_id = models.AutoField(primary_key=True)
+    menu_id = models.ForeignKey(User, db_column='menu_id', on_delete=models.CASCADE)
     item_nickname = models.CharField(max_length=200)
-    item_baseprice = models.IntegerField(db_column='item_basePrice')  # Field name made lowercase.
-    item_isactive = models.NullBooleanField(db_column='item_isActive')  # Field name made lowercase.
-    item_startdate = models.DateField(db_column='item_startDate', blank=True, null=True)  # Field name made lowercase.
-    item_enddate = models.DateField(db_column='item_endDate', blank=True, null=True)  # Field name made lowercase.
-    item_starttime = models.TimeField(db_column='item_startTime', blank=True, null=True)  # Field name made lowercase.
-    item_endtime = models.TimeField(db_column='item_endTime', blank=True, null=True)  # Field name made lowercase.
+    item_basePrice = models.IntegerField(db_column='item_basePrice')  # Field name made lowercase.
+    item_isActive = models.NullBooleanField(db_column='item_isActive')  # Field name made lowercase.
+    item_startDate = models.DateField(db_column='item_startDate', blank=True, null=True)  # Field name made lowercase.
+    item_endDate = models.DateField(db_column='item_endDate', blank=True, null=True)  # Field name made lowercase.
+    item_startTime = models.TimeField(db_column='item_startTime', blank=True, null=True)  # Field name made lowercase.
+    item_endTime = models.TimeField(db_column='item_endTime', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Menu'
-
-
-class Option(models.Model):
-    option_id = models.IntegerField(primary_key=True)
-    option_name = models.CharField(max_length=200, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'Option'
+		
+	def __init__(self, user_id, company_name, email, password, qr_code, is_admin):
+		self.item_id = item_id
+		self.menu_id = menu_id
+		self.item_nickname = item_nickname
+		self.item_basePrice = item_basePrice
+		self.item_isActive = item_isActive
+		self.item_startDate = item_startDate
+		self.item_endTime = item_endDate
+		self.item_startTime = item_startTime
+		self.item_endTime = item_endTime
+	
+	def __repr__(self):
+		return '<Menu %r, %r, %r>' % self.item_id, self.item_nickname, self.item_basePrice
 
 
 class Size(models.Model):
-    size_id = models.IntegerField(primary_key=True)
+    size_id = models.AutoField(primary_key=True)
     size_name = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'Size'
-
-
-class User(models.Model):
-    user_id = models.IntegerField(primary_key=True)
-    company_name = models.CharField(max_length=200)
-    email = models.CharField(max_length=50)
-    password = models.CharField(max_length=1000)
-    qr_code = models.BinaryField(db_column='QR_code', blank=True, null=True)  # Field name made lowercase.
-    is_admin = models.NullBooleanField()
+		
+		
+class Item(models.Model):
+    id = models.AutoField(primary_key=True)  # AutoField?
+    item_id =  models.ForeignKey(Menu, db_column='item_id', on_delete=models.CASCADE)
+    category_id = models.ForeignKey(Category, db_column='category_id', on_delete=models.CASCADE)
+    container_id = models.ForeignKey(Container, db_column='container_id', on_delete=models.CASCADE)
+    size_id = models.ForeignKey(Size, db_column='size_id', on_delete=models.CASCADE)
+    options = models.CharField(max_length=1000, blank=True, null=True)
+    options_isFixed = models.CharField(db_column='options_isFixed', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+    options_price = models.CharField(max_length=1000, blank=True, null=True)
+    item_mealOptions = models.CharField(db_column='item_mealOptions', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+    item_mealPrice = models.CharField(db_column='item_mealPrice', max_length=1000, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'User'
+        db_table = 'Item'
 
 
 class AuthGroup(models.Model):

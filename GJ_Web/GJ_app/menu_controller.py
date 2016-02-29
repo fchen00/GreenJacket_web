@@ -3,15 +3,19 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
 
-from .models import Question
+from .models import *
 
 # we have to define 
-def index(request):
-	latest_question_list = Question.objects.order_by('-pub_date')[:5]
-	context = {
-		'latest_question_list': latest_question_list,
-		}
-	return render(request, 'GJ_app/index.html',context)
+
+def index(request, comp_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	user = User.objects.get(user_id = comp_id)
+	thisUser = user.user_id
+	company_name = user.company_name
+	menus = Menu.objects.filter(menu_id = thisUser)
+	print menus
+	return render(request, 'GJ_app/menus/index.html', {'menus': menus, 'companyName' : company_name})
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+	{% block content %}
+		<section>
+			<legend style="font-size:65px"> Menu Page </legend>
+			<div class="row">
+				<div class="col-xs-12 col-md-2">
+					<ul class="menuitems nav nav-pills nav-stacked">
+						{% for item in menus %}
+							<li id="nav-{{item.item_id}}" role="navigation"><a href="#">{{item.item_nickname}}</a></li>
+						{% endfor %}.
+					</ul>
+				</div>
+				<div class="col-xs-12 col-md-10">
+					{% for item in menus %}
+						<div id ="content-{{item.item_id}}" class="dynamic">
+							{{item.item_basePrice}}
+						</div>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+
+		
+		
+
+		</section>
+		
+		
+		
+		<script>
+				$(".nav menuitems li").on("click", function() {
+					$(".nav menuitems li").removeClass("active");
+					$(this).addClass("active");
+					document.getElementById(this).className = 'visible';
+				})
+			
+			
+		</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	{% endblock %}

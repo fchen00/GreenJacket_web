@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-<h2> hello </h2>	
-{% block test %}
- 
-
-asdfhklj
-
-{% endblock %}
+{% block title %}My amazing blog{% endblock %}
+	{% block content %}
+		<section> {% include "Jumbotron.html" %} </section>
+	{% endblock %}

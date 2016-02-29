@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from . import views
+from . import menu_controller
+
 
 app_name = 'GJ_app'
 urlpatterns = [ 
@@ -22,7 +24,15 @@ urlpatterns = [
 	# App Data
 	# /GJ_app/data/customer/menu/ 
     url(r'^data/customer/menu/', views.menu_json, name='menu_json'),
-    url(r'^data/', views.data)
+    url(r'^data/', views.data),
 	
+	# Menus page
+	# /GJ_app/menu/mcdonalds
+	# url(r'^menu/(?P<comp_name>\w+)/$', menu_controller.index, name='index')
+	
+	# for testing purposes , we are going to do it with company_id
+	url(r'^menu/(?P<comp_id>[0-9]+)/$', menu_controller.index, name='index')
+	
+
 ]
 
