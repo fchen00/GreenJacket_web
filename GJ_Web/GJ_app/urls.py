@@ -15,6 +15,7 @@ urlpatterns = [
     # ex: /GJ_app/5/vote/
   #  url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     # ex: /GJ_app/signup/
+    url(r'^profile/',views.profile, name='profile'),
     url(r'^signup/', views.signup, name='signup'),
     # ex: /GJ_app/login/
     url(r'^login/', views.login, name='login'),

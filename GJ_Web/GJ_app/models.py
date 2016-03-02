@@ -18,6 +18,9 @@ class User(models.Model):
     QR_code = models.BinaryField(db_column='QR_code', blank=True, null=True)  # Field name made lowercase.
     is_admin = models.NullBooleanField()
 
+    def __str__(self):        
+        return self.company_name + " " + self.email + " " + str(self.user_id) + " " + self.password
+
     class Meta:
         managed = False
         db_table = 'User'
@@ -41,7 +44,10 @@ class Branch(models.Model):
     branch_city = models.CharField(max_length=200, blank=True, null=True)
     branch_state = models.TextField(blank=True, null=True)  # This field type is a guess.
     branch_zipcode = models.TextField(blank=True, null=True)  # This field type is a guess.
-    date_added = models.DateField(blank=True, null=True)
+    date_added = models.DateField(auto_now_add=True, blank=True)
+
+    def __str__(self):        
+        return self.company_id.company_name + " " + self.branch_phone + " " + self.branch_address + "," + self.branch_city + "," + self.branch_state + "," + self.branch_zipcode + " " + str(self.date_added)
 
     class Meta:
         managed = False
@@ -87,9 +93,12 @@ class Company(models.Model):
     credit_expiration = models.TextField(blank=True, null=True)  # This field type is a guess.
     credit_cvv = models.CharField(max_length=4, blank=True, null=True)
     credit_zipcode = models.TextField(blank=True, null=True)  # This field type is a guess.
-    date_created = models.DateField(blank=True, null=True)
+    date_created = models.DateField(auto_now_add=True, blank=True)
     last_updated = models.DateField(blank=True, null=True)
     is_active = models.NullBooleanField()
+
+    def __str__(self):        
+        return self.company_id.company_name + " " + self.main_phone + " " + self.main_address + "," + self.main_city + "," + self.main_state + "," + self.main_zipcode + " " + str(self.date_created) + " " + self.credit_number + " " + self.credit_expiration + " " + self.credit_cvv + " " + self.credit_zipcode
 
     class Meta:
         managed = False
