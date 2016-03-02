@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
+from datetime import date
 
 from .models import *
 
@@ -14,9 +15,19 @@ def index(request, comp_id):
 	thisUser = user.user_id
 	company_name = user.company_name
 	menus = Menu.objects.filter(menu_id = thisUser)
-	print menus
-	return render(request, 'GJ_app/menus/index.html', {'menus': menus, 'companyName' : company_name})
+	currentDate = date.today();
+	continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
+	return render(request, 'GJ_app/menus/index.html', {'menus': menus, 'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate})
 
+	
+
+	
+# def editInfo(request):
+		# if(request.GET.get('mybtn')):
+		# .mypythonfunction( int(request.GET.get('mytextbox')) )
+	# return render_to_response('myApp/templateHTML.html')
+
+	
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'GJ_app/detail.html', {'question': question})

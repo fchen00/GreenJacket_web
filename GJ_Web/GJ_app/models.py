@@ -114,35 +114,38 @@ class Container(models.Model):
         db_table = 'Container'
 
 class Menu(models.Model):
-    item_id = models.AutoField(primary_key=True)
-    menu_id = models.ForeignKey(User, db_column='menu_id', on_delete=models.CASCADE)
-    item_nickname = models.CharField(max_length=200)
-    item_basePrice = models.IntegerField(db_column='item_basePrice')  # Field name made lowercase.
-    item_isActive = models.NullBooleanField(db_column='item_isActive')  # Field name made lowercase.
-    item_startDate = models.DateField(db_column='item_startDate', blank=True, null=True)  # Field name made lowercase.
-    item_endDate = models.DateField(db_column='item_endDate', blank=True, null=True)  # Field name made lowercase.
-    item_startTime = models.TimeField(db_column='item_startTime', blank=True, null=True)  # Field name made lowercase.
-    item_endTime = models.TimeField(db_column='item_endTime', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Menu'
-		
-	def __init__(self, user_id, company_name, email, password, qr_code, is_admin):
-		self.item_id = item_id
-		self.menu_id = menu_id
-		self.item_nickname = item_nickname
-		self.item_basePrice = item_basePrice
-		self.item_isActive = item_isActive
-		self.item_startDate = item_startDate
-		self.item_endTime = item_endDate
-		self.item_startTime = item_startTime
-		self.item_endTime = item_endTime
+	item_id = models.AutoField(primary_key=True)
+	menu_id = models.ForeignKey(User, db_column='menu_id', on_delete=models.CASCADE)
+	item_nickname = models.CharField(max_length=200)
+	item_basePrice = models.IntegerField(db_column='item_basePrice')  # Field name made lowercase.
+	item_isActive = models.NullBooleanField(db_column='item_isActive')  # Field name made lowercase.
+	item_startDate = models.DateField(db_column='item_startDate', blank=True, null=True)  # Field name made lowercase.
+	item_endDate = models.DateField(db_column='item_endDate', blank=True, null=True)  # Field name made lowercase.
+	item_startTime = models.TimeField(db_column='item_startTime', blank=True, null=True)
+	item_endTime = models.TimeField(db_column='item_endTime', blank=True, null=True) 
+	
+	# def __init__(self, item_id, item_nickname, item_basePrice, item_isActive, item_startDate, item_endDate, item_startTime, item_endTime):
+		# self.item_id = item_id
+		# self.item_nickname = item_nickname
+		# self.item_basePrice = item_basePrice
+		# self.item_isActive = item_isActive
+		# self.item_startDate = item_startDate
+		# self.item_endTime = item_endDate
+		# self.item_startTime = item_startTime
+		# self.item_endTime = item_endTime
 	
 	def __repr__(self):
 		return '<Menu %r, %r, %r>' % self.item_id, self.item_nickname, self.item_basePrice
-
-
+	
+	def realPrice(self):
+	# make sure it returns a real number
+		return self.item_basePrice/ 100.0
+	
+	class Meta:
+		managed = False
+		db_table = 'Menu'
+		
+		
 class Size(models.Model):
     size_id = models.AutoField(primary_key=True)
     size_name = models.CharField(max_length=200, blank=True, null=True)
