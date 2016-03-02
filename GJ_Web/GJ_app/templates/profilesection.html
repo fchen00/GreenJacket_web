@@ -1,56 +1,65 @@
 <div class="container" style="padding-top: 60px;">
-  <h1 class="page-header">Profile</h1>
+  <h1 class="page-header">{{ usr.company_name }}</h1>
   <div class="row">
     <!-- left column -->
     <div class="col-md-4 col-sm-6 col-xs-12">
       <div class="text-center">
-        <img src="http://www.mstoic.com/wp-content/uploads/2012/08/Facebook-Profile-Pictures-Michael_Jackson_thumb.jpg" class="avatar img-circle img-thumbnail" alt="avatar">
+        <img src="https://s.yimg.com/fz/api/res/1.2/q6knydGw9HaoPg.Tb7jT4Q--/YXBwaWQ9c3JjaGRkO2g9ODcyO3E9OTU7dz0xMDI0/http://www.sparfreunde.com/sites/default/files/dealpics/mcdonalds_0.jpg" class="avatar img-circle img-thumbnail" alt="avatar">
         <h6>Upload a different photo...</h6>
         <input type="file" class="text-center center-block well well-sm">
       </div>
     </div>
     <!-- edit form column -->
     <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+
+
+
       <div class="alert alert-info alert-dismissable">
         <a class="panel-close close" data-dismiss="alert">×</a> 
         <i class="fa fa-coffee"></i>
         This is an <strong>.alert</strong>. Use this to show important messages to the user.
       </div>
+
+
+
+
+
       <h3>Company info</h3>
-      <form class="form-horizontal" role="form">
+      <form action="profile.html" method="post" class="form-horizontal" role="form" >
+      {% csrf_token %}
         <div class="form-group">
           <label class="col-lg-3 control-label">Company:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="Jane" type="text">
+            <input class="form-control" value={{usr.company_name}} name="comp_name" type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Email:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="Bishop" type="text">
+            <input class="form-control" value={{usr.email}} name="comp_email" readonly type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Phone Number:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="Bishop" type="text">
+            <input class="form-control" value={{company.main_phone}} name="comp_phone" type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Address:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="janesemail@gmail.com" type="text">
+            <input class="form-control" value={{company.main_address}} name="comp_address" type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">City:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="janesemail@gmail.com" type="text">
+            <input class="form-control" value={{company.main_city}} name="comp_city" type="text">
           </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">State:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="janesemail@gmail.com" type="text">
+            <input class="form-control" value={{company.main_state}} name="comp_state" type="text">
           </div>
 
         </div>
@@ -59,27 +68,29 @@
         <div class="form-group">
           <label class="col-md-3 control-label">Credit Number:</label>
           <div class="col-md-8">
-            <input class="form-control" value="janeuser" type="text">
+            <input class="form-control" value={{company.credit_number}} name="credit_num" type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-3 control-label">Credit Expeiration Date:</label>
           <div class="col-md-8">
-            <input class="form-control" value="janeuser" type="text">
+            <input class="form-control" value={{company.credit_expiration}} name="credit_expdate" type="text">
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-3 control-label">Credit Zipcode:</label>
           <div class="col-md-8">
-            <input class="form-control" value="janeuser" type="text">
+            <input class="form-control" value={{company.credit_zipcode}} name="credit_zipcode" type="text">
           </div>
 
         <div class="form-group">
           <label class="col-md-3 control-label"></label>
           <div class="col-md-8">
-            <input class="btn btn-primary" value="Save Changes" type="button">
+            <button type="submit">Update</button>
+            <!--
             <span></span>
             <input class="btn btn-default" value="Cancel" type="reset">
+            -->
           </div>
         </div>
       </form>

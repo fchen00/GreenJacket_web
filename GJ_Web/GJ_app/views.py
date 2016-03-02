@@ -37,7 +37,35 @@ def index(request):
     	# return HttpResponseRedirect(reverse('GJ_app:results', args=(question.id,)))
 
 def profile(request):
-	return render(request, 'GJ_app/profile.html')
+	logged_in = request.session.get('logged_in', False)
+	if not logged_in:
+		return HttpResponseRedirect(reverse('GJ_app:login'))
+	print "Logging in " + str(logged_in)
+	print request.session.get('email')
+	usr = get_object_or_404(User, email=request.session.get('email'))
+	print usr
+	company = get_object_or_404(Company,company_id = usr)
+	print company
+
+	if request.method == 'POST':
+		Company.objects.filter(company_id=usr).update(company_name=request.POST['comp_name'])
+		User.objects.filter(email=request.session.get('email')).update(email=request.POST['comp_email'])
+		Company.objects.filter(company_id=usr).update(main_phone=request.POST['comp_phone'])
+		Company.objects.filter(company_id=usr).update(main_address=request.POST['comp_address'])
+		Company.objects.filter(company_id=usr).update(main_city=request.POST['comp_city'])
+		Company.objects.filter(company_id=usr).update(main_state=request.POST['comp_state'])
+		Company.objects.filter(company_id=usr).update(credit_number=request.POST['credit_num'])
+		Company.objects.filter(company_id=usr).update(credit_expiration=request.POST['credit_expdate'])
+		Company.objects.filter(company_id=usr).update(credit_zipcode=request.POST['credit_zipcode'])
+		Branch.objects.filter(company_id=usr).update(branch_phone=request.POST['comp_phone'])
+		Branch.objects.filter(company_id=usr).update(branch_address=request.POST['comp_address'])
+		Branch.objects.filter(company_id=usr).update(branch_city=request.POST['comp_city'])
+		Branch.objects.filter(company_id=usr).update(branch_state=request.POST['comp_state'])
+
+
+	#usr = get_object_or_404(User.objects.all())
+	#print usr
+	return render(request, 'GJ_app/profile.html', {'usr' : usr, 'company':company})
 		
 def signup(request):
 	#user = get_object_or_404(User)
@@ -82,7 +110,7 @@ def signup(request):
 def login(request):
 	logged_in = request.session.get('logged_in', False)
 	if logged_in:
-		return HttpResponseRedirect(reverse('GJ_app:index'))
+		return HttpResponseRedirect(reverse('GJ_app:profile'))
 		
 	if request.method == 'POST':
 		email = request.POST['email']
