@@ -138,8 +138,12 @@ def logout(request):
 # Menu Data to App
 def menu_json(request):
 	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 
-							'menu':{'foods':[{'burger':{'options':['cheese', 'pickels']}}, 
-												{'sandwich':{'options':['chicken', 'bacon', 'blt']}}]},
+							'categories':{'Meat':{'containers':{'Burger':
+								{'options':{'Cheese':{'locked':True},
+									'Bacon':{'locked':False, 'extra_price':0.20},
+									'Pickles':{'locked':False, 'extra_price':0.05}}}, 'Wrap':{}}},
+							'Sides':{'containers':{'Fries':{}}},
+							'Drinks':{'containers':{'small':{}, 'medium':{}, 'large':{}}}},
 							'last update':'today', 'food count':36})
 
 def data(request): 
