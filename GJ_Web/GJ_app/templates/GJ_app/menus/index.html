@@ -5,12 +5,23 @@
 			dd {
 				text-align:right;
 			}
+			
+			.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+				text-shadow:grey;
+				background-image: linear-gradient(to bottom,grey 0,#5E5E5E 100%);
+				border-color:grey;
+			}
+		
+			.editForm, .noEditForm, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+			.editForm:hover, .noEditForm:hover, .editForm:focus, .noEditForm:focus .editForm:active, .noEditForm:active, 
+			.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
+			
 		</style>
 		<section>
 			<legend style="font-size:50px; text-align:center" > Menu Page </legend>
 			<div class="row">
 				<div class="col-xs-12 col-md-2">
-					<h5 style="text-align:center; color:#7F7F7F"> Menu items </h5>
+					<h5 style="text-align:center; color:#2C8A64"> Menu items </h5>
 					<div class="menuitems list-group">
 						{% for item in menus %}
 							<a href="#/" style="outline:none" class="list-group-item" id="nav-{{item.item_id}}" >{{item.item_nickname}}</a>
@@ -73,7 +84,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td> End Date (Default is "Continuous Item") </td>
+												<td> End Date </td>
 												<td>{% if item.item_endDate < currentDate %}
 															Item Ended
  														{% elif  item.item_endDate == currentDate %}
@@ -86,7 +97,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td style="width:unset"> End Time (Default is "All Day")</td>
+												<td style="width:unset"> End Time</td>
 												<td>{% if item.item_endTime|stringformat:"s" == "02:00:00" %}
 															All-day Item
 														{% else %}
@@ -200,7 +211,11 @@
 					$('#content-'+id).show();
 				});
 				
-				$(".noeditForm").on("click", function() {
+				$(".editForm").on("click", function() {
+					$("#basePriceEdit").prop("disabled", false) ;
+				});
+				
+				$(".noEditForm").on("click", function() {
 					$("#basePriceEdit").prop("disabled", true) ;
 				});
 				

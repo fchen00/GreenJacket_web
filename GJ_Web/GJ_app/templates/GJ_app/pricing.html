@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+	<style>
+		text{
+			font-size:28px;
+			
+		}
+		.jumbotron{
+			text-align:center;
+		}
+		
+		.branches {
+			font-size:11px;
+			color:#2C8A64;
+		}
+		.jumbotron p {
+			text-align:justify;
+			font-size:16px;
+			padding-top:20px;
+			
+		}
+		
+		.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
+	</style>
+	<section>
+		<div class="container">
+			<div class="row">
+				<h1 style="text-align:left; color:#2C8A64	"><i>
+					Here is our Green Jacket pricing list </i></h1>
+			<div class="row" style="padding-top:35px">
+			
+				<div class="col-xs-12 col-md-4">
+					<div class="jumbotron">
+						<text> Small enterprises</text>
+						<i class="branches"> (Companies with 1 or 2 branches)</i>	
+						<p>
+							Our offer is limited to all small restaurants. With our bundle (web application + mobile application for customers), you will need to start finding a bigger place to expand your business for a bigger crowd.
+						</p>
+						<p style="text-align:center"><a class="btn btn-success btn-lg " href="#" role="button">Sign Up</a></p>
+
+					</div>
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<div class="jumbotron">
+						<text> Medium enterprises </text>
+						<i class="branches">     (Companies with 3 or up to 10 branches)</i>	
+						<p>
+							Our offer is limited to all small restaurants. Through our bundle (web application + mobile application for customers), you will need to start finding a bigger place to expand your business for a bigger crowd.
+						</p>
+						<p style="text-align:center"><a class="btn btn-success btn-lg " href="#" role="button">Sign Up</a></p>
+					</div>
+				</div>
+				<div class="col-xs-12 col-md-4">
+					<div class="jumbotron">
+						<text>Large enterprises</text>
+						<i class="branches"> (Companies with more than 10 branches)</i>	
+						<p>
+							Our offer is limited to all small restaurants. Through our bundle (web application + mobile application for customers), you will need to start finding a bigger place to expand your business for a bigger crowd.
+						</p>
+						<p style="text-align:center"><a class="btn btn-success btn-lg " href="#" role="button">Sign Up</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	
+	
+	</section>
+{% endblock %}

@@ -15,6 +15,9 @@ def index(request):
 	# for i in menus:
 		# print i.menu_id.user_id
 	return render(request, 'GJ_app/index.html')
+	
+def pricing(request):
+	return render(request, "GJ_app/pricing.html")
 
 # def detail(request, question_id):
     # question = get_object_or_404(Question, pk=question_id)
