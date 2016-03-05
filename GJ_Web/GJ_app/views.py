@@ -138,6 +138,33 @@ def logout(request):
 	request.session['logged_in'] = False
 	return render(request, 'GJ_app/logout.html')
 
+# Testing Braintree
+import braintree
+from braintree.test.nonces import Nonces
+
+
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id="r9kd7wjtk8cngfpq",
+                                  public_key="3k4tcgjpwp6pxtmb",
+                                  private_key="a1f5495a400cb65e2d4b46d0846fa218")
+                                  
+def pay (request):
+    if request.method == "GET":
+        braintree_token = braintree.ClientToken.generate()
+        print braintree_token
+        return render (request, 'GJ_app/pay.html', {'braintree_token': braintree_token})
+    elif request.method == "POST":
+        nonce = request.POST['payment_method_nonce']
+        result = braintree.Transaction.sale({
+            "amount": "1.00",
+            "payment_method_nonce": nonce,
+            "options": {
+              "submit_for_settlement": True
+            }
+        })
+        print "\n\nresult is", result, "\n\n"
+        return render (request, 'GJ_app/message.html', {'message':"Payment Received"})
+
 # Menu Data to App
 def menu_json(request):
 	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 

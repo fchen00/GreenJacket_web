@@ -21,7 +21,11 @@ urlpatterns = [
     url(r'^login/', views.login, name='login'),
     # ex: /GJ_app/logout/
     url(r'^logout/', views.logout, name='logout'),
-	
+    
+    # Testing Braintree
+    # ex: /GJ_app/pay/
+    url(r'^pay/', views.pay, name='pay'),
+    
 	# App Data
 	# /GJ_app/data/customer/menu/ 
     url(r'^data/customer/menu/', views.menu_json, name='menu_json'),
