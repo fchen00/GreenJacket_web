@@ -135,7 +135,7 @@ class Menu(models.Model):
 		# self.item_endTime = item_endTime
 	
 	def __repr__(self):
-		return '<Menu %r, %r, %r>' % self.item_id, self.item_nickname, self.item_basePrice
+		return '<Menu %r, %r, %r>' %(self.item_id, self.item_nickname, self.item_basePrice)
 	
 	def realPrice(self):
 	# make sure it returns a real number
@@ -167,6 +167,100 @@ class Item(models.Model):
     item_mealOptions = models.CharField(db_column='item_mealOptions', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     item_mealPrice = models.CharField(db_column='item_mealPrice', max_length=1000, blank=True, null=True)  # Field name made lowercase.
 
+    def __repr__(self):
+		return '<Item %r, %r, %r>' %(self.item_id, self.category_id, self.container_id)
+
+    def fixedItems(self):
+
+		fixedOptionsindexes= []
+		fixedOptions = []
+		fixedString = ""
+
+		fixedList = self.options_isFixed.split(',')
+		optionsList = self.options.split(',')
+		
+		for index, value in enumerate(fixedList):
+			if value == "true" or  value == "True" or value == 1:
+				fixedOptionsindexes.append(optionsList[index])
+		
+		for i in fixedOptionsindexes:
+			fixedOptions.append(str((Option.objects.get(option_id = i)).option_name))
+		
+		if fixedOptions:
+			for i, val in enumerate(fixedOptions):
+				if i+1 == len(fixedOptions):
+					fixedString += val
+				else:
+					fixedString += val
+					fixedString += ", "			
+			return fixedString
+		
+		return "No Main Ingredients"
+		
+    def optionalItems(self):
+		
+		fixedOptionsindexes= []
+		optionsPriceindexes = []
+		fixedOptions = []
+		fixedString = ""
+		
+		fixedList = self.options_isFixed.split(',')
+		optionsList = self.options.split(',')
+		optionsPriceList = self.options_price.split(',')
+
+		for index, value in enumerate(fixedList):
+			if value == "false" or  value == "False" or value == 0:
+				fixedOptionsindexes.append(optionsList[index])
+				optionsPriceindexes.append(optionsPriceList[index])
+
+		for i, value in enumerate(fixedOptionsindexes):
+			fixedOptions.append(str((Option.objects.get(option_id = value)).option_name))
+			fixedOptions.append(str(optionsPriceindexes[i]))
+			
+		if fixedOptions:
+			for i, val in enumerate(fixedOptions):
+				if i+1 == len(fixedOptions):
+					fixedString += " (+ $" + str(int(val)/100.00) + ")"
+
+				else:
+					if i%2 == 1:
+						fixedString += "(+ $" + str(int(val)/100.00) + "), "
+					else:
+						fixedString += val
+			return fixedString
+		
+		return "No Optional Ingredients"
+
+		
+    def mealOptions(self):	
+		mealOption = []
+		finalmealList = []
+		mealString = ""
+		
+		mealList = self.item_mealOptions.split(',')
+		mealPriceList = self.item_mealPrice.split(',')
+
+		for index, value in enumerate(mealList):
+			
+			mealOption = value.split('-')
+			
+			finalmealList.append(str((Size.objects.get(size_id = mealOption[1])).size_name))
+			finalmealList.append(str((Option.objects.get(option_id = mealOption[0])).option_name))
+			finalmealList.append(str(mealPriceList[index]))
+
+		if finalmealList:
+			for i, value in enumerate(finalmealList):
+				if i%3 == 2:
+					if i+1 == len(finalmealList):
+						mealString += " (+ $" + str(int(value)/100.00) + ")"
+					else:
+						mealString += "(+ $" + str(int(value)/100.00) + "), "
+				else:
+					mealString += value + " "
+			return mealString
+		
+		return "No Meal Options"
+	
     class Meta:
         managed = False
         db_table = 'Item'

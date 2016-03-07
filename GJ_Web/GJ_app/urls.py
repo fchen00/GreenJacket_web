@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 from . import menu_controller
+from django.core.urlresolvers import reverse
+
 
 
 app_name = 'GJ_app'
@@ -32,8 +34,12 @@ urlpatterns = [
 	# url(r'^menu/(?P<comp_name>\w+)/$', menu_controller.index, name='index')
 	
 	# for testing purposes , we are going to do it with company_id
-	url(r'^menu/(?P<comp_id>[0-9]+)/$', menu_controller.index, name='index'),
-	    url(r'^pricing/', views.pricing, name='pricing'),
+	url(r'^menu/(?P<comp_id>[0-9]+)/', views.menuHome, name='menuHome'),
+	url(r'^activateItem/(?P<itemID>[0-9]+)/', views.activateItem, name='activateItem'),
+	url(r'^deactivateItem/(?P<itemID>[0-9]+)/', views.deactivateItem, name='deactivateItem'),
+	url(r'^itemMainInfo/(?P<itemID>[0-9]+)/$', views.itemMainInfo, name='itemMainInfo'),
+
+	url(r'^pricing/', views.pricing, name='pricing'),
 
 	
 

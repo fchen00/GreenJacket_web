@@ -1,239 +1,346 @@
 {% extends "base.html" %}
-	{% block content %}
+{% block content %}
+	<style>
+		dd {
+			text-align:right;
+		}
 		
-		<style>
-			dd {
-				text-align:right;
-			}
-			
-			.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-				text-shadow:grey;
-				background-image: linear-gradient(to bottom,grey 0,#5E5E5E 100%);
-				border-color:grey;
-			}
+		.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+			text-shadow:grey;
+			background-image: linear-gradient(to bottom,grey 0,#5E5E5E 100%);
+			border-color:grey;
+		}
+	
+		.editForm, .activate, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+		.editForm:hover, .activate:hover, .editForm:focus, .activate:focus .editForm:active, .activate:active, 
+		.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
 		
-			.editForm, .noEditForm, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
-			.editForm:hover, .noEditForm:hover, .editForm:focus, .noEditForm:focus .editForm:active, .noEditForm:active, 
-			.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
-			
-		</style>
-		<section>
-			<legend style="font-size:50px; text-align:center" > Menu Page </legend>
-			<div class="row">
-				<div class="col-xs-12 col-md-2">
-					<h5 style="text-align:center; color:#2C8A64"> Menu items </h5>
-					<div class="menuitems list-group">
-						{% for item in menus %}
-							<a href="#/" style="outline:none" class="list-group-item" id="nav-{{item.item_id}}" >{{item.item_nickname}}</a>
-						{% endfor %}.
-					</div>
-				</div>
-				<div class="col-xs-12 col-md-10">
-					{% for item in menus %}
-					<div class="row-xs-12 row-md-4">				
-						<div id ="content-{{item.item_id}}" class="dynamic_link"  style="display:none">
-							<h2>{{item.item_nickname}}</h2>
-							<p>
-								<div class="dl-horizontal col-xs-12 col-md-6">
-										<table class="table table-hover col-xs-12 col-md-6">
-										<thead>
-											<th> </th>
-											<th> </th>
-										</thead>
-										<tbody>
-											<tr>
-												<td style="width:unset" >Base price (Subtotal Price before Sales tax)  </td>
-												<td>${{item.realPrice}} </td>
-											</tr>
-											<tr>
-												<td style="width:unset"> Start Date </td>
-												<td>{% if item.item_startDate < currentDate %}
-															Current Item
-														{% elif  item.item_startDate == currentDate %}
-															Starts Today!
-														{% else %}
-															{{item.item_startDate}}
-														{% endif %}   
-												</td>
-											</tr>
-											<tr>
-												<td style="width:unset"> Start Time </td>
-												<td>{% if item.item_startTime|stringformat:"s" == "02:00:00" %}
-															All-day Item
-														{% else %}
-															{{item.item_startTime}}
-														{% endif %}  </td>
-											</tr>								
-										</tbody>
-									</table>
-								</div>
-								<div class="dl-horizontal col-xs-12 col-md-6">
-									<table class="table table-hover col-xs-12 col-md-6">
-										<thead>
-											<th> </th>
-											<th> </th>
-										</thead>
-										<tbody>
-											<tr>
-												<td style="width:unset"> Item Status </td>
-												<td>{% if item.item_isActive == "true" %}
-															Active
-														{% else %}
-															Inactive
-														{% endif %}  
-												</td>
-											</tr>
-											<tr>
-												<td> End Date </td>
-												<td>{% if item.item_endDate < currentDate %}
-															Item Ended
- 														{% elif  item.item_endDate == currentDate %}
-															Ends Today!
-														{% elif  item.item_endDate == continDate %}
-															Continuous Item
-														{% else %}
-															{{item.item_endDate}}
-														{% endif %} 
-												</td>
-											</tr>
-											<tr>
-												<td style="width:unset"> End Time</td>
-												<td>{% if item.item_endTime|stringformat:"s" == "02:00:00" %}
-															All-day Item
-														{% else %}
-															{{item.item_endTime}}
-														{% endif %} </td>
-											</tr>								
-										</tbody>
-									</table>
-								</div>
-							</p>
-							<p>
-								<div style="padding-top:7%">
-									{% if item.item_isActive == "true" %}
-										<button class="editForm btn btn-success" style="outline:none" href="#/" role="button" data-toggle="modal" data-target="#editInfoModal"> Edit item info</button>
-									{% else %}
-										<button class="noEditForm btn btn-success"  style="outline:none"  href="#/" role="button" data-toggle="modal" data-target="#editInfoModal"> Edit item info</button>
-									{% endif %} 
-									<a class="editIngredients btn btn-success" style="outline:none"  href="#/" role="button" onclick="itemIngredients()">Edit item ingredients</a>
-								</div>
-							</p>
-						</div>
-					</div>
-					<div class="row-xs-12 row-md-8">
-						<div class="modal fade" id="editInfoModal" tabindex="-1" role="dialog" aria-labelledby="editItemInfo">
-							<div class="modal-dialog" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										{% if item.item_isActive == "true" %}
-											<h4 class="modal-title" id="editItemInfo">Item Info Form </h4>
-										{% else %}
-											<h4 class="modal-title" id="editItemInfo">Item Info Form (Inactive) </h4>
-										{% endif %} 
-										
-									</div>
-									<div class="modal-body">
-										<form>
-											{% if item.item_isActive == "false" %}
-												<div class="checkbox">
-													<label>
-														<input type="checkbox"> Activate Item
-													</label>
-												</div>
-											{% endif %}
-											<div class="form-group">
-												<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)"</label>
-												<div class="input-group">
-													<div class="input-group-addon">$</div>
-													<input class="form-control" id="basePriceEdit" value="{{item.realPrice}}" placeholder="{{item.realPrice}}">
-												</div>
-											</div>
-											<div class="form-group">
-												<label for="startDateEdit">Item Start Date</label>
-												<div class='input-group date' id='datetimepicker1'>
-													<input type='text' class="form-control" value= "{{item.item_startDate}}" placeholder="{{item.item_startDate}}"   id="startDateEdit" />
-													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
-													</span>
-												</div>
-											</div>
-											<div class="form-group">
-												<label for="endDateEdit">Item End Date</label>
-												<div class='input-group date' id='datetimepicker2'>
-													<input type='text' class="form-control" value= "{{item.item_endDate}}" placeholder="{{item.item_endDate}}"   id="endDateEdit" />
-													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
-													</span>
-												</div>
-											</div><div class="form-group">
-												<label for="startTimeEdit">Item Start Time</label>
-												<div class='input-group date' id='datetimepicker3'>
-													<input type='text' class="form-control" value= "{{item.item_startTime}}" placeholder="{{item.item_endDate}}"   id="startTimeEdit" />
-													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
-													</span>
-												</div>
-											</div><div class="form-group">
-												<label for="endTimeEdit">Item End Time</label>
-												<div class='input-group date' id='datetimepicker4'>
-													<input type='text' class="form-control" value= "{{item.item_endTime}}" placeholder="{{item.item_endTime}}"   id="endTimeEdit" />
-													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
-													</span>
-												</div>
-											</div>
-											
-											<div class="modal-footer">
-												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-												<button type="button" class="btn btn-primary" name="changeItemInfo">Save changes</button>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>				
-						</div>
-					</div>
-					{% endfor %}
+	</style>
+	<section>
+		<legend style="font-size:50px; text-align:center" > Menu Page </legend>
+		<div class="row">
+			<div class="col-xs-12 col-md-2">
+				<h5 style="text-align:center; color:#2C8A64"> Menu items </h5>
+				<div class="menuitems list-group">
+					{% for item in items %}
+						<a href="#/" style="outline:none" class="list-group-item" id="nav-{{item.item_id.item_id}}" >{{item.item_id.item_nickname}}</a>
+					{% endfor %}.
 				</div>
 			</div>
-		</section>
-		
-		
-		
-		<script>
-			$(document).ready(function () {
-				$(".menuitems a").on("click", function() {
-					$(".menuitems a").removeClass("active");
-					$(this).addClass("active");
-					id = this.id.substring(4, this.id.length)
-					$('.dynamic_link').hide();
-					$('#content-'+id).show();
-				});
+			<div class="col-xs-12 col-md-10">
+				{% for item in items %}
+				<div class="row-xs-12 row-md-4">				
+					<div id ="content-{{item.item_id.item_id}}" class="dynamic_link"  style="display:none">
+						<h2>{{item.item_id.item_nickname}}</h2>
+						<p>
+							<div class="dl-horizontal col-xs-12 col-md-6">
+									<table class="table table-hover col-xs-12 col-md-6">
+									<thead>
+										<th> </th>
+										<th> </th>
+									</thead>
+									<tbody>
+										<tr>
+											<td style="width:unset" >Base price (Subtotal Price before Sales tax)  </td>
+											<td>${{item.item_id.realPrice}} </td>
+										</tr>
+										<tr>
+											<td s	> Start Date </td>
+											<td>{% if item.item_id.item_startDate < currentDate %}
+														Current Item
+													{% elif  item.item_id.item_startDate == currentDate %}
+														Starts Today!
+													{% else %}
+														{{item.item_id.item_startDate}}
+													{% endif %}   
+											</td>
+										</tr>
+										<tr>
+											<td style="width:unset"> Start Time </td>
+											<td>{% if item.item_id.item_startTime|stringformat:"s" == "02:00:00" %}
+														All-day Item
+													{% else %}
+														{{item.item_id.item_startTime}}
+													{% endif %}  </td>
+										</tr>								
+									</tbody>
+								</table>
+							</div>
+							<div class="dl-horizontal col-xs-12 col-md-6">
+								<table class="table table-hover col-xs-12 col-md-6">
+									<thead>
+										<th> </th>
+										<th> </th>
+									</thead>
+									<tbody>
+										<tr>
+											<td style="width:unset"> Item Status </td>
+											<td>{% if item.item_id.item_isActive == 1 %}
+														Active &nbsp;
+														<a class="btn-sm btn-danger" style="outline:none" href="/GJ_app/deactivateItem/{{item.item_id.item_id}}"> Deactivate</a>
+													{% else %}
+														Inactive
+													{% endif %}  
+											</td>
+										</tr>
+										<tr>
+											<td> End Date </td>
+											<td>{% if item.item_id.item_endDate < currentDate %}
+														Item Ended
+													{% elif  item.item_id.item_endDate == currentDate %}
+														Ends Today!
+													{% elif  item.item_id.item_endDate == continDate %}
+														Continuous Item
+													{% else %}
+														{{item.item_id.item_endDate}}
+													{% endif %} 
+											</td>
+										</tr>
+										<tr>
+											<td style="width:unset"> End Time</td>
+											<td>{% if item.item_id.item_endTime|stringformat:"s" == "02:00:00" %}
+														All-day Item
+													{% else %}
+														{{item.item_id.item_endTime}}
+													{% endif %} </td>
+										</tr>								
+									</tbody>
+								</table>
+							</div>
+						</p>
+						<p>
+							<div style="padding-top:7%">
+								{% if item.item_id.item_isActive == 1 %}
+									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit item info</button>
+								{% else %}
+									<a class="activate btn btn-success" style="outline:none" href="/GJ_app/activateItem/{{item.item_id.item_id}}" role="button"> Activate Item</a>
+								{% endif %} 
+								<a class="editIngredients btn btn-success hvr-bubble-float-bottom " id="ingredients-{{item.item_id.item_id}}" style="outline:none"  href="#/ role="button">More detailed info</a>
+							</div>
+						</p>
+					</div>
+				</div>
+				<div class="row-xs-12 row-md-8">
+					<div class="modal fade" id="editInfoModal-{{item.item_id.item_id}}" tabindex="-1" role="dialog" aria-labelledby="editItemInfo">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="editItemInfo">Item Info Form </h4>					
+								</div>
+								<div class="modal-body">
+									<form action="/GJ_app/itemMainInfo/{{item.item_id.item_id}}/" method="POST"> {% csrf_token %}
+										<div class="form-group">
+											<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)"</label>
+											<div class="input-group">
+												<div class="input-group-addon">$</div>
+												<input class="form-control" name="basePriceEdit" value="{{item.item_id.realPrice}}" placeholder="{{item.item_id.realPrice}}">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="startDateEdit">Item Start Date</label>
+											<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
+												<input type='text' class="form-control" name="startDateEdit"  value="{{item.item_id.item_startDate}}" id="startDateEdit" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="endDateEdit">Item End Date</label>
+											<div class='input-group date' id='datetimepicker2'>
+												<input type='text' class="form-control" name="endDateEdit" value= "{{item.item_id.item_endDate}}" placeholder="{{item.item_id.item_endDate}}"   id="endDateEdit" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div><div class="form-group">
+											<label for="startTimeEdit">Item Start Time</label>
+											<div class='input-group date' id='datetimepicker3'>
+												<input type='text' class="form-control" name="startTimeEdit" value= "{{item.item_id.item_startTime}}" placeholder="{{item.item_id.item_endDate}}"   id="startTimeEdit" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div><div class="form-group">
+											<label for="endTimeEdit">Item End Time</label>
+											<div class='input-group date' id='datetimepicker4'>
+												<input type='text' class="form-control" name="endTimeEdit" value= "{{item.item_id.item_endTime}}" placeholder="{{item.item_id.item_endTime}}"   id="endTimeEdit" />
+												<span class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+										
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											<button type="submit" class="btn btn-primary" name="changeItemInfo">Save changes</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>				
+					</div>
+				</div>
 				
-				$(".editForm").on("click", function() {
-					$("#basePriceEdit").prop("disabled", false) ;
-				});
 				
-				$(".noEditForm").on("click", function() {
-					$("#basePriceEdit").prop("disabled", true) ;
-				});
+				<div class="row-xs-12 row-md-4">				
+					<div id ="moreDetails-{{item.item_id.item_id}}" class="dynamic_link"  style="display:none">
+						<p>
+							<div class="dl-horizontal col-xs-12 col-md-8">
+									<table class="table table-hover col-xs-12 col-md-6">
+									<thead>
+										<th> </th>
+										<th> </th>
+									</thead>
+									<tbody>
+										<tr>
+											<td style="width:unset" > Item Category </td>
+											<td>{{item.category_id.category_name}} </td>
+										</tr>
+										<tr>
+											<td style="width:unset"> Item Container </td>
+											<td> {{item.container_id.container_name}}</td>
+										</tr>
+										<tr>
+											<td> Item Size </td>
+											<td>{{item.size_id.size_name}}</td>
+										</tr>
+										<tr>
+											<td style="width:unset"> Fixed ingredients </td>
+											<td>{{item.fixedItems}} </td>
+										</tr>
+										<tr>
+											<td style="width:unset"> Optional Ingredients </td>
+											<td>{{item.optionalItems}} </td>
+										</tr>
+										<tr>
+											<td style="width:unset"> Meal Options</td>
+											<td>{{item.mealOptions}}</td>
+										</tr>												
+									</tbody>
+								</table>
+							</div>
+						</p>
+						<p>
+							<div style="padding-top:7%">
+								{% if item.item_id.item_isActive == 1 %}
+									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit Menu Details</button>
+								{% endif %}
+							</div>
+						</p>
+					</div>
+				</div>
 				
-				$(function(){
-					$('#datetimepicker1').datetimepicker();
-				});
 				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+	
+	
+	
+	<script>
+		$(document).ready(function () {
+			$(".menuitems a").on("click", function() {
+				$(".menuitems a").removeClass("active");
+				$(this).addClass("active");
+				id = this.id.substring(4, this.id.length)
+				$('.dynamic_link').hide();
+				$('#content-'+id).show();
 			});
 			
-           
-   		</script>
+
+			$(function(){
+				$('#datetimepicker1').datepicker();
+			});
+			
+			$(".editIngredients").on("click", function() {
+				id = this.id.substring("ingredients-".length, this.id.length)
+				<!-- $('#moreDetails-'+id).animate({ -->
+					<!-- 'top': '340px' -->
+					<!-- }, 1000);         -->
+				$('#moreDetails-'+id).show();
+			});
+			
+		});
 		
-		
-		
-		
-		
-		
-		
-		
-		
-	{% endblock %}
+	   
+	</script>
+	
+	
+<!-- 				$(".editForm").on("click", function() {
+				$("#basePriceEdit").prop("disabled", false) ;
+				$("#startDateEdit").prop("disabled", false) ;
+				$("#endDateEdit").prop("disabled", false) ;
+				$("#startTimeEdit").prop("disabled", false) ;
+				$("#endTimeEdit").prop("disabled", false) ;
+			});
+			
+			$(".false").on("click", function() {
+				$("#basePriceEdit").prop("disabled", true) ;
+				$("#startDateEdit").prop("disabled", true) ;
+				$("#endDateEdit").prop("disabled", true) ;
+				$("#startTimeEdit").prop("disabled", true) ;
+				$("#endTimeEdit").prop("disabled", true) ;
+			});
+			
+						$('#activateItem').on('click' , function(e){
+				e.preventDefault();
+				console.log($(this).attr("value"));  // sanity check
+				$.ajax({
+					url : "activateItem", // the endpoint
+					type : "POST", // http method
+					data : { the_post : $('#post-text').val() }, // data sent with the post request
+
+					// handle a successful response
+					success : function(json) {
+						$('#post-text').val(''); // remove the value from the input
+						console.log(json); // log the returned json to the console
+						console.log("success"); // another sanity check
+					},
+
+					// handle a non-successful response
+					error : function(xhr,errmsg,err) {
+						$('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+							" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+					}
+				});
+			 -->
+	
+	
+	
+	
+	
+	
+{% endblock %}

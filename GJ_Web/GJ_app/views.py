@@ -3,6 +3,8 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
+from django.contrib import messages
+from datetime import *
 
 from .models import *
 from .menu_controller import *
@@ -11,10 +13,67 @@ from .helpers_controller import *
 # Users
 
 def index(request):
-	# menus = Menu.objects.all()
-	# for i in menus:
-		# print i.menu_id.user_id
+	logged_in = request.session.get('logged_in', False)
+	if logged_in:
+		comp_id = request.session.get("user_id")
+		print comp_id
+		return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
+		
 	return render(request, 'GJ_app/index.html')
+	
+	
+
+def menuHome(request, comp_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	user = User.objects.get(user_id = comp_id)
+	thisUser = user.user_id
+	company_name = user.company_name
+	menu = Menu.objects.filter(menu_id = thisUser)
+	items = []
+	for item in menu:
+		items.extend(Item.objects.filter(item_id = item.item_id))
+
+	options = Option.objects.all()
+	currentDate = date.today();
+	continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
+	return render(request, 'GJ_app/menus/index.html', {'items': items, 'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
+
+def activateItem(request, itemID):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	item = Menu.objects.get(item_id = itemID)
+	item.item_isActive = True
+	item.save()
+	return HttpResponseRedirect(reverse('GJ_app:index'))
+	
+def deactivateItem(request, itemID):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	item = Menu.objects.get(item_id = itemID)
+	item.item_isActive = False
+	item.save()
+	return HttpResponseRedirect(reverse('GJ_app:index'))
+
+	
+def itemMainInfo(request, itemID):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	if request.method == 'POST':
+		basePrice = request.POST['basePriceEdit']
+		startDate = request.POST['startDateEdit']
+		endDate = request.POST['endDateEdit']
+		startTime = request.POST['startTimeEdit']
+		endTime = request.POST['endTimeEdit']
+		
+	item = Menu.objects.get(item_id = itemID)
+	item.item_basePrice = int(float(basePrice)*100)
+	item.item_startDate = datetime.strptime(startDate,  "%B %d, %Y")
+	item.item_endDate = datetime.strptime(endDate, "%B %d, %Y")
+	item.item_startTime = datetime.strptime(startTime, "%I:%M %p")
+	item.item_endTime = datetime.strptime(endTime, "%I:%M %p")
+	item.save()
+	return HttpResponseRedirect(reverse('GJ_app:index'))
 	
 def pricing(request):
 	return render(request, "GJ_app/pricing.html")
@@ -72,8 +131,8 @@ def profile(request):
 		
 def signup(request):
 	#user = get_object_or_404(User)
-	print User.objects.all()
-	print Branch.objects.all()
+	#print User.objects.all()
+	#print Branch.objects.all()
 	if request.method == 'POST':
 		compname = request.POST['comp_name']
 		compemail = request.POST['comp_email']

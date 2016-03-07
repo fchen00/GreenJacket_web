@@ -1,4 +1,15 @@
 {% extends "base.html" %}
 	{% block content %}
-		<section> {% include "Jumbotron.html" %} </section>
+		<style>
+			.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+			.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
+		</style>
+		<section>
+			<div class="container" style="height:450px">
+			  <h1>Welcome to Green Jacket</h1>
+			  <p style="color:grey; padding-left:25px"> You ultimate <u><b>menu</b></u> solution to reach more customers</p>
+			  <p style="text-align:center"><a class="btn btn-success btn-lg " href="/GJ_app/signup" role="button">Sign Up</a></p>
+
+			</div>
+		</section>
 	{% endblock %}
