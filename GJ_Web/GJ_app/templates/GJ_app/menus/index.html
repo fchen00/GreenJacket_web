@@ -11,6 +11,7 @@
 			border-color:grey;
 		}
 		
+
 		h2 {font-family: 'Poiret One', cursive;}
 		h5 { font-family: 'Poiret One', cursive;}
 		legend { font-family: 'Poiret One', cursive}
@@ -18,14 +19,13 @@
 		
 		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
-		.editForm, .activate, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
-		.editForm:hover, .activate:hover, .editForm:focus, .activate:focus .editForm:active, .activate:active, 
-		.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
+		.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none; font-family: 'Poiret One', cursive;}
+		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none; font-family: 'Poiret One', cursive;}
 		
 	</style>
 	<section>
-		<a class="btn btn-success GJButton" style="outline:none; float:right" id="addPop"
-				data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Add Item" href="/GJ_app/addItem/{{item.item_id.menu_id}}"> +</a>
+		<a class="btn btn-success GJButton" style="outline:none; float:left; overflow:hidden;" id="addPop"
+				data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Add New Item" href="/GJ_app/addItem/{{item.item_id.menu_id}}"> +</a>
 		<legend style="font-size:50px; text-align:center" > Menu Page  </legend>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
@@ -86,7 +86,7 @@
 											<td style="width:unset"> Item Status </td>
 											<td>{% if item.item_id.item_isActive == 1 %}
 														Active &nbsp;
-														<a class="btn-sm btn-danger" style="outline:none" href="/GJ_app/deactivateItem/{{item.item_id.item_id}}"> Deactivate</a>
+														<a class="btn-sm btn-danger" style="outline:none text-decoration:none;" href="/GJ_app/deactivateItem/{{item.item_id.item_id}}"> Deactivate</a>
 													{% else %}
 														Inactive
 													{% endif %}  
@@ -235,7 +235,7 @@
 						<p>
 							<div style="padding-top:7%">
 								{% if item.item_id.item_isActive == 1 %}
-									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit Menu Details</button>
+									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit Item Details</button>
 								{% endif %}
 							</div>
 						</p>

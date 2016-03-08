@@ -89,6 +89,7 @@ class Company(models.Model):
     main_city = models.CharField(max_length=200, blank=True, null=True)
     main_state = models.TextField(blank=True, null=True)  # This field type is a guess.
     main_zipcode = models.TextField(blank=True, null=True)  # This field type is a guess.
+    credit_holder = models.TextField(blank=True, null=True)
     credit_number = models.TextField(blank=True, null=True)  # This field type is a guess.
     credit_expiration = models.TextField(blank=True, null=True)  # This field type is a guess.
     credit_cvv = models.CharField(max_length=4, blank=True, null=True)
@@ -160,7 +161,6 @@ class Item(models.Model):
     item_id =  models.ForeignKey(Menu, db_column='item_id', on_delete=models.CASCADE)
     category_id = models.ForeignKey(Category, db_column='category_id', on_delete=models.CASCADE)
     container_id = models.ForeignKey(Container, db_column='container_id', on_delete=models.CASCADE)
-    size_id = models.ForeignKey(Size, db_column='size_id', on_delete=models.CASCADE)
     options = models.CharField(max_length=1000, blank=True, null=True)
     options_isFixed = models.CharField(db_column='options_isFixed', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     options_price = models.CharField(max_length=1000, blank=True, null=True)
@@ -265,6 +265,15 @@ class Item(models.Model):
         managed = False
         db_table = 'Item'
 
+class ItemSize(models.Model):
+	id = models.AutoField(primary_key=True)  
+	item_id =  models.ForeignKey(Menu, db_column='item_id', on_delete=models.CASCADE)
+	size_id = models.ForeignKey(Size, db_column='size_id', on_delete=models.CASCADE)
+	itemSizePrice = models.IntegerField(db_column='itemSizePrice')
+
+	class Meta:
+		managed = False
+		db_table = 'Item-Size'
 
 class AuthGroup(models.Model):
     id = models.IntegerField(primary_key=True)  # AutoField?
