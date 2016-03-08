@@ -10,14 +10,23 @@
 			background-image: linear-gradient(to bottom,grey 0,#5E5E5E 100%);
 			border-color:grey;
 		}
-	
-		.editForm, .activate, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+		
+		h2 {font-family: 'Poiret One', cursive;}
+		h5 { font-family: 'Poiret One', cursive;}
+		legend { font-family: 'Poiret One', cursive}
+
+		
+		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
+		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
+		.editForm, .activate, .editIngredients { border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.editForm:hover, .activate:hover, .editForm:focus, .activate:focus .editForm:active, .activate:active, 
-		.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;}
+		.editIngredients:hover, .editIngredients:focus, .editIngredients:active { border-color: #FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
 		
 	</style>
 	<section>
-		<legend style="font-size:50px; text-align:center" > Menu Page </legend>
+		<a class="btn btn-success GJButton" style="outline:none; float:right" id="addPop"
+				data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Add Item" href="/GJ_app/addItem/{{item.item_id.menu_id}}"> +</a>
+		<legend style="font-size:50px; text-align:center" > Menu Page  </legend>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
 				<h5 style="text-align:center; color:#2C8A64"> Menu items </h5>
@@ -111,11 +120,12 @@
 						<p>
 							<div style="padding-top:7%">
 								{% if item.item_id.item_isActive == 1 %}
-									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit item info</button>
+									<button class="editForm btn btn-success" style="outline:none" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit item info</button>
 								{% else %}
 									<a class="activate btn btn-success" style="outline:none" href="/GJ_app/activateItem/{{item.item_id.item_id}}" role="button"> Activate Item</a>
 								{% endif %} 
-								<a class="editIngredients btn btn-success hvr-bubble-float-bottom " id="ingredients-{{item.item_id.item_id}}" style="outline:none"  href="#/ role="button">More detailed info</a>
+									<button class="editIngredients btn btn-success" type="button" data-toggle="collapse" data-target="#moreDetails-{{item.item_id.item_id}}" aria-expanded="false" aria-controls="moreDetails-{{item.item_id.item_id}}"> More detailed info
+									</button>
 							</div>
 						</p>
 					</div>
@@ -139,7 +149,7 @@
 										</div>
 										<div class="form-group">
 											<label for="startDateEdit">Item Start Date</label>
-											<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
+											<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy" style="z-index:1050;">
 												<input type='text' class="form-control" name="startDateEdit"  value="{{item.item_id.item_startDate}}" id="startDateEdit" />
 												<span class="input-group-addon">
 													<span class="glyphicon glyphicon-calendar"></span>
@@ -185,7 +195,7 @@
 				
 				
 				<div class="row-xs-12 row-md-4">				
-					<div id ="moreDetails-{{item.item_id.item_id}}" class="dynamic_link"  style="display:none">
+					<div class="collapse" id ="moreDetails-{{item.item_id.item_id}}">
 						<p>
 							<div class="dl-horizontal col-xs-12 col-md-8">
 									<table class="table table-hover col-xs-12 col-md-6">
@@ -279,18 +289,12 @@
 				$('#content-'+id).show();
 			});
 			
-
-			$(function(){
-				$('#datetimepicker1').datepicker();
-			});
+			 $('#datetimepicker1').datepicker()
+				.on('changeDate', function(ev){
+					$('#datetimepicker1').datepicker('hide');
+			 });	
 			
-			$(".editIngredients").on("click", function() {
-				id = this.id.substring("ingredients-".length, this.id.length)
-				<!-- $('#moreDetails-'+id).animate({ -->
-					<!-- 'top': '340px' -->
-					<!-- }, 1000);         -->
-				$('#moreDetails-'+id).show();
-			});
+			$("#addPop").popover({ trigger: "hover" });
 			
 		});
 		

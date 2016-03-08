@@ -11,10 +11,13 @@
                 <div class ="collapse navbar-collapse" id="navbar-collapse" style="padding-top:5px">
                     <ul class="nav navbar-nav" >
                         <li><a href="/GJ_app/">Home</a>
-                        <li><a href="/GJ_app/signup">Sign-up</a>
+                        <!-- <li><a href="/GJ_app/signup">Sign-up</a> -->
 						 <li><a href="/GJ_app/pricing">Pricing</a>
-                        <li><a href="/GJ_app/login/">Login</a>
-                        <li><a href="/GJ_app/logout/">Logout</a>
+                        <!-- <li><a href="/GJ_app/login/">Login</a> -->
+                        {% if request.session.logged_in %}
+							<li><a href="/GJ_app/profile/">Profile</a>
+							<li><a href="/GJ_app/logout/">Logout</a>
+						{% endif %}
                     </ul>
                 </div>
             </div>

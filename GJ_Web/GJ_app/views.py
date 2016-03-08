@@ -24,21 +24,26 @@ def index(request):
 	
 
 def menuHome(request, comp_id):
+	logged_in = request.session.get('logged_in', False)
+	if logged_in:
 	# if is_logged:'
 	# im going to be using the user_id until we set uo the session
-	user = User.objects.get(user_id = comp_id)
-	thisUser = user.user_id
-	company_name = user.company_name
-	menu = Menu.objects.filter(menu_id = thisUser)
-	items = []
-	for item in menu:
-		items.extend(Item.objects.filter(item_id = item.item_id))
+		user = User.objects.get(user_id = comp_id)
+		thisUser = user.user_id
+		company_name = user.company_name
+		menu = Menu.objects.filter(menu_id = thisUser)
+		items = []
+		for item in menu:
+			items.extend(Item.objects.filter(item_id = item.item_id))
 
-	options = Option.objects.all()
-	currentDate = date.today();
-	continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
-	return render(request, 'GJ_app/menus/index.html', {'items': items, 'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
+		options = Option.objects.all()
+		currentDate = date.today();
+		continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
+		return render(request, 'GJ_app/menus/index.html', {'items': items, 'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
+	
+	return render(request, 'GJ_app/index.html')
 
+	
 def activateItem(request, itemID):
 	# if is_logged:'
 	# im going to be using the user_id until we set uo the session
@@ -68,7 +73,7 @@ def itemMainInfo(request, itemID):
 		
 	item = Menu.objects.get(item_id = itemID)
 	item.item_basePrice = int(float(basePrice)*100)
-	item.item_startDate = datetime.strptime(startDate,  "%B %d, %Y")
+	item.item_startDate = datetime.strptime(startDate,  "%m-%d-%Y")
 	item.item_endDate = datetime.strptime(endDate, "%B %d, %Y")
 	item.item_startTime = datetime.strptime(startTime, "%I:%M %p")
 	item.item_endTime = datetime.strptime(endTime, "%I:%M %p")
@@ -178,16 +183,17 @@ def login(request):
 		email = request.POST['email']
 		password = request.POST['password']
 		print "email = " + email + "\npassword = " + password
-		request.session['logged_in'] = True
-		request.session['email'] = email
 		k = User.objects.get(email=email)
-		print k
-		user_id = k.user_id
-		request.session['user_id'] = user_id
+		
+		if k:
+			request.session['logged_in'] = True
+			request.session['email'] = email
+			user_id = k.user_id
+			request.session['user_id'] = user_id
 		
 		return HttpResponseRedirect(reverse('GJ_app:index'))
 	else:
-		return render(request, 'GJ_app/login.html')
+		return render(request, 'GJ_app/index.html')
 	
 def logout(request):
 	logged_in = request.session.get('logged_in', False)
@@ -195,7 +201,7 @@ def logout(request):
 		return HttpResponseRedirect(reverse('GJ_app:login'))
 	
 	request.session['logged_in'] = False
-	return render(request, 'GJ_app/logout.html')
+	return render(request, 'GJ_app/index.html')
 
 # Testing Braintree
 import braintree
@@ -224,7 +230,7 @@ def pay (request):
         print "\n\nresult is", result, "\n\n"
         return render (request, 'GJ_app/message.html', {'message':"Payment Received"})
 
-# Menu Data to App
+# # Menu Data to App
 def menu_json(request):
 	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 
 							'categories':{'Meat':{'containers':{'Burger':

@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Testing Braintree
     # ex: /GJ_app/pay/
-    url(r'^pay/', views.pay, name='pay'),
+    # url(r'^pay/', views.pay, name='pay'),
     
 	# App Data
 	# /GJ_app/data/customer/menu/ 
