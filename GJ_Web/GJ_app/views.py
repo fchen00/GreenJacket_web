@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
@@ -227,6 +227,41 @@ def pay (request):
 
 # # Menu Data to App
 def menu_json(request):
+	branch_id = request.GET.get('branch', -1)
+	print branch_id
+	branch = get_object_or_404(Branch, branch_id = branch_id)
+	company = get_object_or_404(Company, id = branch.company_id.user_id)
+	menu_table = get_list_or_404(Menu, menu_id = company.company_id)
+	
+	item_table = []
+	menu_dict = {'company_id': company.company_id.user_id, 'company_name': company.company_name}
+	menu_dict['categories'] = {}
+		
+	for menu_entry in menu_table:
+		# going by category id and container id
+		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		item_table.append(new_item)
+		category = new_item.category_id
+		container = new_item.container_id
+		
+		if not category.category_id in menu_dict['categories']:
+			menu_dict['categories'][category.category_id] = {'id': category.category_id,
+									'name': category.category_name,
+									'containers': {}}
+		
+		container_dict = menu_dict['categories'][category.category_id]['containers']
+		if not container.container_id in container_dict:
+			container_dict[container.container_id] = {'id': container.container_id,
+									'name': container.container_name,
+									'sizes':{}, 'items':{}}
+		
+		container_dict[container.container_id]['items'][new_item.id] = menu_entry.item_nickname
+			
+		
+	
+	
+	return JsonResponse(menu_dict)
+	
 	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 
 							'categories':{'Meat':{'containers':{'Burger':
 								{'options':{'Cheese':{'locked':True},

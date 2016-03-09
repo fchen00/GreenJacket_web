@@ -29,7 +29,7 @@ urlpatterns = [
     # url(r'^pay/', views.pay, name='pay'),
     
 	# App Data
-	# /GJ_app/data/customer/menu/ 
+	# /GJ_app/data/customer/menu/?branch={branch id} 
     url(r'^data/customer/menu/', views.menu_json, name='menu_json'),
     url(r'^data/', views.data),
 	
