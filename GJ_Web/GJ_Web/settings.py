@@ -109,7 +109,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 TIME_FORMAT = "h:i A"
-DATE_FORMAT = "F d, Y"
+DATE_FORMAT = "m-d-Y"
 
 USE_I18N = True
 

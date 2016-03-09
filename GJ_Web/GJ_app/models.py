@@ -170,6 +170,48 @@ class Item(models.Model):
     def __repr__(self):
 		return '<Item %r, %r, %r>' %(self.item_id, self.category_id, self.container_id)
 
+    def itemSizes(self):
+
+		itemSizesList = []
+		actualSizesList = []
+		sizesString = ""
+		
+		itemSizesList = ItemSize.objects.filter(item_id = self.item_id)
+		
+		for value in itemSizesList:
+			actualSizesList.append(value.size_id.size_name)
+			actualSizesList.append(value.itemSizePrice)
+			
+			if value.size_id.size_id == 6:
+				actualSizesList.append(value.item_count)
+
+		if actualSizesList:
+			i = 0
+			while i < len(actualSizesList):
+				if actualSizesList[i] == 'Count':
+					sizesString += "$" + str(int(actualSizesList[i+1])/100.00) 
+					if i+3 == len(actualSizesList):
+						if actualSizesList[i+2] == 1:
+							sizesString += " per piece"
+						else: 
+							sizesString += " for " + str(actualSizesList[i+2]) + " pieces"
+					else:
+						if actualSizesList[i+2] == 1:
+							sizesString += " per piece, "
+						else: 
+							sizesString += " for " + str(actualSizesList[i+2]) + " pieces, "
+					i += 3
+				else:
+					sizesString += str(actualSizesList[i]) + " "
+					
+					if i+2 == len(actualSizesList):
+						sizesString += " (+ $" + str(int(actualSizesList[i+1])/100.00) + ")"
+					else:
+						sizesString += " (+ $" + str(int(actualSizesList[i+1])/100.00) + "), "
+					i += 2
+			return sizesString
+		return "No Specified Size"
+
     def fixedItems(self):
 
 		fixedOptionsindexes= []
@@ -270,6 +312,7 @@ class ItemSize(models.Model):
 	item_id =  models.ForeignKey(Menu, db_column='item_id', on_delete=models.CASCADE)
 	size_id = models.ForeignKey(Size, db_column='size_id', on_delete=models.CASCADE)
 	itemSizePrice = models.IntegerField(db_column='itemSizePrice')
+	item_count = models.IntegerField(db_column='item_count')
 
 	class Meta:
 		managed = False

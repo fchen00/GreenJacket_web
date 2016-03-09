@@ -25,7 +25,7 @@
 	</style>
 	<section>
 		<a class="btn btn-success GJButton" style="outline:none; float:left; overflow:hidden;" id="addPop"
-				data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Add New Item" href="/GJ_app/addItem/{{item.item_id.menu_id}}"> +</a>
+				data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Add New Item" href="/GJ_app/addItem/{{comp_id}}/"> +</a>
 		<legend style="font-size:50px; text-align:center" > Menu Page  </legend>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
@@ -141,6 +141,12 @@
 								<div class="modal-body">
 									<form action="/GJ_app/itemMainInfo/{{item.item_id.item_id}}/" method="POST"> {% csrf_token %}
 										<div class="form-group">
+											<label for="nickNameEdit">Item Nickname</label>
+											<div class="input-group">
+												<input class="form-control" name="nickNameEdit" value="{{item.item_id.item_nickname}}" placeholder="{{item.item_id.item_nickname}}">
+											</div>
+										</div>
+										<div class="form-group">
 											<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)"</label>
 											<div class="input-group">
 												<div class="input-group-addon">$</div>
@@ -214,7 +220,7 @@
 										</tr>
 										<tr>
 											<td> Item Size </td>
-											<td>{{item.size_id.size_name}}</td>
+											<td>{{item.itemSizes}}</td>
 										</tr>
 										<tr>
 											<td style="width:unset"> Fixed ingredients </td>
@@ -235,7 +241,7 @@
 						<p>
 							<div style="padding-top:7%">
 								{% if item.item_id.item_isActive == 1 %}
-									<button class="editForm btn btn-success" style="outline:none" href="" role="button" data-toggle="modal" data-target="#editInfoModal-{{item.item_id.item_id}}"> Edit Item Details</button>
+									<a class="editForm btn btn-success" style="outline:none" href="" role="button"> Edit Item Details</a>
 								{% endif %}
 							</div>
 						</p>
@@ -287,6 +293,7 @@
 				id = this.id.substring(4, this.id.length)
 				$('.dynamic_link').hide();
 				$('#content-'+id).show();
+				
 			});
 			
 			 $('#datetimepicker1').datepicker()
