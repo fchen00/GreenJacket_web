@@ -7,15 +7,22 @@
 			.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none;}
 		</style>
 		<section>
+
 			<div class="container" style="height:450px; font-family: 'Poiret One', cursive; background-image:url('/static/pictures/food.JPG'); background-size:100%" >
+
+
 				<div class="col-xs-12 col-md-5">
 				  <h1 style="color:white; text-weight: bold;">Welcome to Green Jacket</h1>
 				  <p style="color:white; text-weight:bold; padding-left:25px"> You ultimate <u><b>menu</b></u> solution to reach more customers</p>
-				  <p style="text-align:center"><a class="btn btn-success btn-lg " href="/GJ_app/signup" role="button">Sign Up</a></p>
+				  <p style="text-align:center"><a class="btn btn-success btn-lg " href="/GJ_app/pricing" role="button">Sign Up</a></p>
 				</div>
+
+
 				<div class="col-xs-12 col-md-3">
 					<h1 style="font-family: 'Poiret One', cursive; text-weight:bold; padding-left:60px">  OR </h1>
 				</div>
+
+
 				<div class="col-xs-12 col-md-4">
 					<h2 style="font-family: 'Poiret One', cursive;">Enter Login Info:</h2>
 					<form action="/GJ_app/login/" method="POST" style="text-align:center"> {% csrf_token %}
@@ -30,6 +37,8 @@
 						<button type="submit" class="btn btn-success GJButton">Sign in</button>
 					</form>
 				</div>
+
+
 			</div>
 		</section>
 	{% endblock %}
