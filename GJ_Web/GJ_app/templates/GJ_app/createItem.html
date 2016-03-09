@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+	{% block content %}
+		<style>
+			div {font-family: 'Poiret One', cursive}
+			
+			.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
+			.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none;}
+		</style>
+		<section>
+			<div class="container">
+				<legend style="font-size:50px; text-align:center" > Create an item  </legend>
+				<div class="row">
+					<div class="col-xs-12 col-md-6">
+						<div class="container">
+							<h5> Choose a category </h5>
+							<div class="dropdown">
+								<button id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Category
+								<span class="caret"></span>
+								</button>
+								<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
+									{% for element in categories %}
+										<li role="presentaton" class="group" id="{{element.category_id}}"><a href="">  {{element.category_name}} </a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="container">
+							<h5> Choose a size </h5>
+							<div class="dropdown">
+								<button id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Size
+								<span class="caret"></span>
+								</button>
+								<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
+									{% for element in sizes %}
+										<li role="presentaton" class="group" id="{{element.size_id}}"><a href="">  {{element.size_name}} </a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6">
+						<div class="container">
+							<h5> Choose a container </h5>
+							<div class="dropdown">
+								<button id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Container
+								<span class="caret"></span>
+								</button>
+								<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
+									{% for element in categoryOptions %}
+										<li role="presentaton" class="group" id="{{element.option_id.option_id}}"><a href="">  {{element.option_id.option_name}} </a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	{% endblock %}
+	
+	
+	<script>
+		$(document).ready(function () {
+			$(".dynamic_link li").on("click", function() {
+				$(".dynamic_link li").removeClass("active");
+				$(this).addClass("active");
+				
+			});
+			
+			
+		});
+		
+	   
+	</script>
+	

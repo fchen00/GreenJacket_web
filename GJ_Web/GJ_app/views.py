@@ -39,7 +39,7 @@ def menuHome(request, comp_id):
 		options = Option.objects.all()
 		currentDate = date.today();
 		continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
-		return render(request, 'GJ_app/menus/index.html', {'items': items, 'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
+		return render(request, 'GJ_app/menus/index.html', {'items': items, 'comp_id':comp_id,  'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
 	
 	return render(request, 'GJ_app/index.html')
 
@@ -65,6 +65,7 @@ def itemMainInfo(request, itemID):
 	# if is_logged:'
 	# im going to be using the user_id until we set uo the session
 	if request.method == 'POST':
+		nickName = request.POST['nickNameEdit']
 		basePrice = request.POST['basePriceEdit']
 		startDate = request.POST['startDateEdit']
 		endDate = request.POST['endDateEdit']
@@ -72,36 +73,30 @@ def itemMainInfo(request, itemID):
 		endTime = request.POST['endTimeEdit']
 		
 	item = Menu.objects.get(item_id = itemID)
+	item.item_nickname = nickName
 	item.item_basePrice = int(float(basePrice)*100)
 	item.item_startDate = datetime.strptime(startDate,  "%m-%d-%Y")
-	item.item_endDate = datetime.strptime(endDate, "%B %d, %Y")
+	item.item_endDate = datetime.strptime(endDate,  "%m-%d-%Y")
 	item.item_startTime = datetime.strptime(startTime, "%I:%M %p")
 	item.item_endTime = datetime.strptime(endTime, "%I:%M %p")
 	item.save()
 	return HttpResponseRedirect(reverse('GJ_app:index'))
 	
+
+def addItem(request, menu_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	categories = Category.objects.all()
+	categoryOptions= CategoryOption.objects.all()
+	sizes = Size.objects.all()
+	containers = Container.objects.all()
+	
+	return render(request, 'GJ_app/createItem.html', {'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+		
 def pricing(request):
 	return render(request, "GJ_app/pricing.html")
 
-# def detail(request, question_id):
-    # question = get_object_or_404(Question, pk=question_id)
-    # return render(request, 'GJ_app/detail.html', {'question': question})
 
-
-# def results(request, question_id):
-    # question = get_object_or_404(Question, pk=question_id)
-    # return render(request, 'GJ_app/results.html', {'question':question})
-
-# def vote(request, question_id):
-	# question = get_object_or_404(Question, pk=question_id)
-	# try:
-		# selected_choice = question.choice_set.get(pk=request.POST['choice'])
-	# except (keyError, Choice.DoesNotExists):
-		# return render(request,'GJ_app/details.html', {'question':question, 'error_message':"You didn't select a choice.",})
-	# else:
-		# selected_choice.votes +=1
-		# selected_choice.save()
-    	# return HttpResponseRedirect(reverse('GJ_app:results', args=(question.id,)))
 
 def profile(request):
 	logged_in = request.session.get('logged_in', False)

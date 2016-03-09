@@ -42,6 +42,7 @@ urlpatterns = [
 	url(r'^activateItem/(?P<itemID>[0-9]+)/', views.activateItem, name='activateItem'),
 	url(r'^deactivateItem/(?P<itemID>[0-9]+)/', views.deactivateItem, name='deactivateItem'),
 	url(r'^itemMainInfo/(?P<itemID>[0-9]+)/$', views.itemMainInfo, name='itemMainInfo'),
+	url(r'^addItem/(?P<menu_id>[0-9]+)/$', views.addItem, name='addItem'),
 
 	url(r'^pricing/', views.pricing, name='pricing'),
 
