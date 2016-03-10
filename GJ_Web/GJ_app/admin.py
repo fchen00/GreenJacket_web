@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 
 class Userdisplay(admin.ModelAdmin):
-    list_display = ('user_id', 'company_name', 'email') #, 'is_admin')
+    list_display = ('user_id', 'company_name', 'email', 'is_admin')
 
 class Branchdisplay(admin.ModelAdmin):
     list_display = ('branch_id', 'company_id', 'branch_phone', 'branch_address', 'branch_city', 'branch_state', 'branch_zipcode', 'date_added')
@@ -18,7 +18,7 @@ class CategoryOptiondisplay(admin.ModelAdmin):
     list_display = ('id', 'category_id', 'option_id')
 
 class Companydisplay(admin.ModelAdmin):
-    list_display = ('id', 'company_id', 'company_name', 'main_phone', 'main_address', 'main_city', 'main_state', 'main_zipcode', 'date_created', 'last_updated')
+    list_display = ('id', 'company_id', 'company_name', 'main_phone', 'main_address', 'main_city', 'main_state', 'main_zipcode', 'date_created', 'last_updated', 'is_active')
 
 class Containerdisplay(admin.ModelAdmin):
     list_display = ('container_id', 'container_name')
