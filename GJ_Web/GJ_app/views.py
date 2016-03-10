@@ -227,6 +227,98 @@ def pay (request):
 
 # # Menu Data to App
 def menu_json(request):
+	# dictionary to return
+	"""
+	'categories': 
+	{
+		1423:
+		{
+			'id': 1423,
+			'name': 'Meat',
+			'mains':
+			{
+				25:
+				{
+					'id': 25,
+					'name': 'Chicken',
+					'containers':
+					{
+						48:
+						{
+							'id': 48,
+							'name': 'Bread',
+							'item': {'id': 47, 'name': 'Chicken Sandwich',
+										'mains': {25: {'id': 25, 'name': 'Chicken'}}},
+							'sizes':
+							{
+								72:
+								{
+									'id': 72,
+									'name': 'regular',
+									'price': 6.12,
+									'options':
+									{
+										41:
+										{
+											'id': 41,
+											'name': 'Cheese',
+											'fixed': False,
+											'extra_price': .05
+										}
+									}
+								}
+								
+							}
+						}
+						65:
+						{
+							'id': 65,
+							'name': 'Salad Bowl',
+							'item': {'id': 67, 'name': 'Chicken Salad',
+										'mains': {25: {'id': 25, 'name': 'Chicken'}, 27: {'id': 27, 'name': 'Lettuce'}}},
+							'sizes':
+							{
+								13:
+								{
+									'id': 13,
+									'name': 'regular',
+									'price': 5.40,
+									'options':
+									{
+										42:
+										{
+											'id': 42,
+											'name': 'Shredded Cheese',
+											'fixed': False,
+											'extra_price': .05
+										}	
+									}
+								},
+								34:
+								{
+									'id': 34,
+									'name': 'large',
+									'price': 6.40,
+									options:
+									{
+										42:
+										{
+											'id': 42,
+											'name': 'Shredded Cheese',
+											'fixed': False,
+											'extra_price': .05
+										}	
+									}									
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}
+	}	
+	"""
 	branch_id = request.GET.get('branch', -1)
 	print branch_id
 	branch = get_object_or_404(Branch, branch_id = branch_id)
@@ -238,7 +330,7 @@ def menu_json(request):
 	menu_dict['categories'] = {}
 		
 	for menu_entry in menu_table:
-		# going by category id and container id
+		# going by category id and main option id
 		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
 		item_table.append(new_item)
 		category = new_item.category_id
@@ -247,7 +339,7 @@ def menu_json(request):
 		if not category.category_id in menu_dict['categories']:
 			menu_dict['categories'][category.category_id] = {'id': category.category_id,
 									'name': category.category_name,
-									'containers': {}}
+									'mains': {}}
 		
 		container_dict = menu_dict['categories'][category.category_id]['containers']
 		if not container.container_id in container_dict:
