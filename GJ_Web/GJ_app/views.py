@@ -341,14 +341,16 @@ def menu_json(request):
 									'name': category.category_name,
 									'mains': {}}
 		
-		container_dict = menu_dict['categories'][category.category_id]['containers']
+		mains_dict = menu_dict['categories'][category.category_id]['mains']
+		mains_dict[new_item.id] = menu_entry.item_nickname
+		"""
 		if not container.container_id in container_dict:
 			container_dict[container.container_id] = {'id': container.container_id,
 									'name': container.container_name,
 									'sizes':{}, 'items':{}}
 		
-		container_dict[container.container_id]['items'][new_item.id] = menu_entry.item_nickname
-			
+		mains_dict[container.container_id]['mains'][new_item.id] = menu_entry.item_nickname
+		"""	
 		
 	
 	
