@@ -19,7 +19,7 @@ class User(models.Model):
     is_admin = models.NullBooleanField()
 
     def __str__(self):        
-        return self.company_name + " " + self.email + " " + str(self.user_id) + " " + self.password
+        return self.company_name + " " + self.email + " " + str(self.user_id) + " " + self.password + " " + str(self.is_admin)
 
     class Meta:
         managed = False
@@ -33,8 +33,8 @@ class User(models.Model):
 		self.QR_code = QR_code_code
 		self.is_admin = is_admin
 	
-	def __repr__(self):
-		return '<User %r, %r, %r>' % self.name, self.company_name, self.is_admin
+	# def __repr__(self):
+	# 	return '<User %r, %r, %r>' % self.name, self.company_name, self.is_admin
 
 class Branch(models.Model):
     branch_id = models.AutoField(primary_key=True)
@@ -46,8 +46,8 @@ class Branch(models.Model):
     branch_zipcode = models.TextField(blank=True, null=True)  # This field type is a guess.
     date_added = models.DateField(auto_now_add=True, blank=True)
 
-    def __str__(self):        
-        return self.company_id.company_name + " " + self.branch_phone + " " + self.branch_address + "," + self.branch_city + "," + self.branch_state + "," + self.branch_zipcode + " " + str(self.date_added)
+    def __str__(self):
+    	return self.company_id.company_name + " " + self.branch_phone + " " + self.branch_address + "," + self.branch_city + "," + self.branch_state + "," + self.branch_zipcode + " " + str(self.date_added)
 
     class Meta:
         managed = False
@@ -58,6 +58,9 @@ class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=200, blank=True, null=True)
 
+    def __str__(self):        
+        return str(self.category_id) + " 	" + self.category_name
+
     class Meta:
         managed = False
         db_table = 'Category'
@@ -66,6 +69,8 @@ class Option(models.Model):
     option_id = models.AutoField(primary_key=True)
     option_name = models.CharField(max_length=200, blank=True, null=True)
 
+    def __str__(self):
+        return str(self.option_id) + " " + self.option_name
     class Meta:
         managed = False
         db_table = 'Option'
@@ -74,6 +79,9 @@ class CategoryOption(models.Model):
     id = models.AutoField(primary_key=True)  
     category_id = models.ForeignKey(Category, db_column='category_id', on_delete=models.CASCADE)
     option_id = models.ForeignKey(Option, db_column='option_id', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id) + " " + str(self.category_id.category_id) + " " + str(self.option_id.option_id)
 
     class Meta:
         managed = False
@@ -99,7 +107,7 @@ class Company(models.Model):
     is_active = models.NullBooleanField()
 
     def __str__(self):        
-        return self.company_id.company_name + " " + self.main_phone + " " + self.main_address + "," + self.main_city + "," + self.main_state + "," + self.main_zipcode + " " + str(self.date_created) + " " + self.credit_number + " " + self.credit_expiration + " " + self.credit_cvv + " " + self.credit_zipcode
+        return self.company_id.company_name + " " + self.main_phone + " " + self.main_address + "," + self.main_city + "," + self.main_state + "," + self.main_zipcode + " " + self.credit_number + " " + self.credit_expiration + " " + self.credit_cvv + " " + self.credit_zipcode + " " #+ str(self.is_active)
 
     class Meta:
         managed = False
@@ -109,6 +117,9 @@ class Company(models.Model):
 class Container(models.Model):
     container_id = models.AutoField(primary_key=True)
     container_name = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.container_id) + " " + self.container_name
 
     class Meta:
         managed = False
@@ -134,9 +145,12 @@ class Menu(models.Model):
 		# self.item_endTime = item_endDate
 		# self.item_startTime = item_startTime
 		# self.item_endTime = item_endTime
-	
-	def __repr__(self):
-		return '<Menu %r, %r, %r>' %(self.item_id, self.item_nickname, self.item_basePrice)
+
+	def __str__(self):
+		return str(self.item_id) + " " + self.menu_id.company_name + " " + self.item_nickname + " " + str(self.item_basePrice) + " " + str(self.item_startDate) + " " + str(self.item_endDate) + " " + str(self.item_startTime) + " " + str(self.item_endTime)
+
+	#def __repr__(self):
+	#	return '<Menu %r, %r, %r>' %(self.item_id, self.item_nickname, self.item_basePrice)
 	
 	def realPrice(self):
 	# make sure it returns a real number
@@ -150,6 +164,9 @@ class Menu(models.Model):
 class Size(models.Model):
     size_id = models.AutoField(primary_key=True)
     size_name = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+    	return str(self.size_id) + " " + self.size_name
 
     class Meta:
         managed = False
@@ -167,9 +184,11 @@ class Item(models.Model):
     item_mealOptions = models.CharField(db_column='item_mealOptions', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     item_mealPrice = models.CharField(db_column='item_mealPrice', max_length=1000, blank=True, null=True)  # Field name made lowercase.
 
-    def __repr__(self):
-		return '<Item %r, %r, %r>' %(self.item_id, self.category_id, self.container_id)
+    def __str__(self):
+		return str(self.id) + " " + str(self.item_id.menu_id) + " " + str(self.container_id.container_id) + "," + self.options + "," + self.options_isFixed + "," + self.options_price + " " + self.item_mealOptions + " " + self.item_mealPrice
 
+#   def __repr__(self):
+		# return '<Item %r, %r, %r>' %(self.item_id, self.category_id, self.container_id)
     def itemSizes(self):
 
 		itemSizesList = []
@@ -340,6 +359,9 @@ class ItemSize(models.Model):
 	size_id = models.ForeignKey(Size, db_column='size_id', on_delete=models.CASCADE)
 	itemSizePrice = models.IntegerField(db_column='itemSizePrice')
 	item_count = models.IntegerField(db_column='item_count')
+
+	def __str__(self):
+		return str(self.id) + " " + str(self.item_id.item_id) + " " + str(self.size_id.size_id) + " " + str(self.itemSizePrice) + " " + str(self.item_count)
 
 	class Meta:
 		managed = False
