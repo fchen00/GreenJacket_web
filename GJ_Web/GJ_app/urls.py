@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Testing Braintree
     # ex: /GJ_app/pay/
-    # url(r'^pay/', views.pay, name='pay'),
+    url(r'^pay/', views.pay, name='pay'),
     
 	# App Data
 	# /GJ_app/data/customer/menu/?branch={branch id} 
@@ -34,8 +34,7 @@ urlpatterns = [
     url(r'^data/', views.data),
 	
 	# Menus page
-	# /GJ_app/menu/mcdonalds
-	# url(r'^menu/(?P<comp_name>\w+)/$', menu_controller.index, name='index')
+
 	
 	# for testing purposes , we are going to do it with company_id
 	url(r'^menu/(?P<comp_id>[0-9]+)/', views.menuHome, name='menuHome'),

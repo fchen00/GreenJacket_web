@@ -212,7 +212,7 @@ class Item(models.Model):
 			return sizesString
 		return "No Specified Size"
 
-    def fixedItems(self):
+    def mainItems(self):
 
 		fixedOptionsindexes= []
 		fixedOptions = []
@@ -222,7 +222,7 @@ class Item(models.Model):
 		optionsList = self.options.split(',')
 		
 		for index, value in enumerate(fixedList):
-			if value == "true" or  value == "True" or value == 1:
+			if value == "main":
 				fixedOptionsindexes.append(optionsList[index])
 		
 		for i in fixedOptionsindexes:
@@ -239,6 +239,33 @@ class Item(models.Model):
 		
 		return "No Main Ingredients"
 		
+    def fixedItems(self):
+
+		fixedOptionsindexes= []
+		fixedOptions = []
+		fixedString = ""
+
+		fixedList = self.options_isFixed.split(',')
+		optionsList = self.options.split(',')
+		
+		for index, value in enumerate(fixedList):
+			if value == "fixed":
+				fixedOptionsindexes.append(optionsList[index])
+		
+		for i in fixedOptionsindexes:
+			fixedOptions.append(str((Option.objects.get(option_id = i)).option_name))
+		
+		if fixedOptions:
+			for i, val in enumerate(fixedOptions):
+				if i+1 == len(fixedOptions):
+					fixedString += val
+				else:
+					fixedString += val
+					fixedString += ", "			
+			return fixedString
+		
+		return "No Fixed Ingredients"
+		
     def optionalItems(self):
 		
 		fixedOptionsindexes= []
@@ -251,7 +278,7 @@ class Item(models.Model):
 		optionsPriceList = self.options_price.split(',')
 
 		for index, value in enumerate(fixedList):
-			if value == "false" or  value == "False" or value == 0:
+			if value == "optional":
 				fixedOptionsindexes.append(optionsList[index])
 				optionsPriceindexes.append(optionsPriceList[index])
 
