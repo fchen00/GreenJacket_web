@@ -315,11 +315,16 @@ def menu_json(request):
 					}
 				}
 			}
-			
 		}
 	}	
 	"""
 	branch_id = request.GET.get('branch', -1)
+	
+	if branch_id == -1:
+		return render (request, 'GJ_app/message.html', {'message':
+			"Please send the branch id with the following syntax:\n"
+			+ "/data/?branch={branch id}"})
+	
 	print branch_id
 	branch = get_object_or_404(Branch, branch_id = branch_id)
 	company = get_object_or_404(Company, id = branch.company_id.user_id)
@@ -366,7 +371,8 @@ def menu_json(request):
 							'last update':'today', 'food count':36})
 
 def data(request): 
-	return HttpResponseRedirect(reverse('GJ_app:menu_json'))
+	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?branch=' 
+											+ request.GET.get('branch', -1))
 
 
 	
