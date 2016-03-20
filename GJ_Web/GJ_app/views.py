@@ -339,7 +339,7 @@ def menu_json(request):
 		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
 		item_table.append(new_item)
 		
-		print "for",menu_entry.item_nickname,":"
+		print "for", menu_entry.item_nickname, "in first half:"
 		
 		# Set categories in return JSON
 		category = new_item.category_id
@@ -350,29 +350,64 @@ def menu_json(request):
 		
 		mains_dict = menu_dict['categories'][category.category_id]['mains']
 		
+		# Get Options
 		options_list = new_item.options.split(',')
 		options_type = new_item.options_isFixed.split(',')
 		options_price = new_item.options_price.split(',')
 		options_data = []
 		
-		
+		# Fix price
 		for i, price_str in enumerate(options_price):
 			temp_float = float(price_str)
 			temp_out = "{:.2f}".format(temp_float/100)
 			options_price[i] = temp_out
 			
 			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
-			
-		
-		print options_list, options_type, options_price, options_data
-		print
-		
-		#mains_dict[new_item.id] = menu_entry.item_nickname
 		
 		# populate Main Options in return json
 		for i, opt_id in enumerate(options_list):
-			if not opt_id in mains_dict and options_type[i] == "main":
-				mains_dict[opt_id] = {'id': opt_id, 'name': options_data[i].option_name, 'containers': {}}
+			if options_type[i] == "main":
+				if not opt_id in mains_dict:
+					mains_dict[opt_id] = {'id': opt_id, 
+											'name': options_data[i].option_name,
+											'containers': []}
+				
+				
+				
+	# I need to do this after all Main Options and empty Containers are created
+	for menu_entry in menu_table:
+		# going by category id and main option id
+		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		
+		print "for", menu_entry.item_nickname, "in second half:"
+		
+		category = new_item.category_id
+		mains_dict = menu_dict['categories'][category.category_id]['mains']
+		
+		options_list = new_item.options.split(',')
+		options_type = new_item.options_isFixed.split(',')
+		
+		container_dicts = []
+		# populate Main Options in return json
+		for i, opt_id in enumerate(options_list):
+			if options_type[i] == "main":
+				# look through entire Menu for all Main Options that match
+				# the current Main Option so we can add the current container
+				# to those main options
+				
+				for temp_cat_id, temp_cat in menu_dict['categories'].iteritems():
+					for temp_main_id, temp_main in temp_cat['mains'].iteritems():
+						if temp_main_id == opt_id:
+							container_dicts.append(temp_main['containers'])
+		
+		print new_item.container_id
+		print
+		
+		new_container = new_item.container_id
+		
+		for i, in_containers in enumerate(container_dicts):
+			if not new_container.container_name in in_containers:
+				in_containers.append(new_container.container_name)
 		
 		"""
 		if not container.container_id in container_dict:
