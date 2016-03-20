@@ -325,7 +325,7 @@ def menu_json(request):
 			"Please send the branch id with the following syntax:\n"
 			+ "/data/?branch={branch id}"})
 	
-	print branch_id
+	print "data for branch", branch_id
 	branch = get_object_or_404(Branch, branch_id = branch_id)
 	company = get_object_or_404(Company, id = branch.company_id.user_id)
 	menu_table = get_list_or_404(Menu, menu_id = company.company_id)
@@ -338,16 +338,42 @@ def menu_json(request):
 		# going by category id and main option id
 		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
 		item_table.append(new_item)
-		category = new_item.category_id
-		container = new_item.container_id
 		
+		print "for",menu_entry.item_nickname,":"
+		
+		# Set categories in return JSON
+		category = new_item.category_id
 		if not category.category_id in menu_dict['categories']:
 			menu_dict['categories'][category.category_id] = {'id': category.category_id,
 									'name': category.category_name,
 									'mains': {}}
 		
 		mains_dict = menu_dict['categories'][category.category_id]['mains']
-		mains_dict[new_item.id] = menu_entry.item_nickname
+		
+		options_list = new_item.options.split(',')
+		options_type = new_item.options_isFixed.split(',')
+		options_price = new_item.options_price.split(',')
+		options_data = []
+		
+		
+		for i, price_str in enumerate(options_price):
+			temp_float = float(price_str)
+			temp_out = "{:.2f}".format(temp_float/100)
+			options_price[i] = temp_out
+			
+			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+			
+		
+		print options_list, options_type, options_price, options_data
+		print
+		
+		#mains_dict[new_item.id] = menu_entry.item_nickname
+		
+		# populate Main Options in return json
+		for i, opt_id in enumerate(options_list):
+			if not opt_id in mains_dict and options_type[i] == "main":
+				mains_dict[opt_id] = {'id': opt_id, 'name': options_data[i].option_name, 'containers': {}}
+		
 		"""
 		if not container.container_id in container_dict:
 			container_dict[container.container_id] = {'id': container.container_id,
