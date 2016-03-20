@@ -16,7 +16,8 @@
 		h5 { font-family: 'Poiret One', cursive;}
 		legend { font-family: 'Poiret One', cursive}
 
-		
+		.dropdown-menu {z-index:1050;}
+
 		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
 		.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none; font-family: 'Poiret One', cursive;}
@@ -38,10 +39,10 @@
 						<div class="panel panel-default">
 							<div class="panel-heading" role="tab" id="heading-{{item.item_id.item_id}}">
 								<h4 class="panel-title">
-										<a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{item.item_id.item_id}}" aria-expanded="true" aria-controls="nav-{{item.item_id.item_id}}">
-											{{item.item_id.item_nickname}}
+										<a role="button" style="width:100%; display:block" data-toggle="collapse" data-parent="#accordion" href="#{{item.item_id.item_id}}" aria-expanded="true" aria-controls="nav-{{item.item_id.item_id}}">
+											<text style="text-align:left">{{item.item_id.item_nickname}}</text><text style="float:right">${{item.item_id.realPrice}}</text>
 										</a>
-									</h4>
+								</h4>
 							</div>
 							<div id="{{item.item_id.item_id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{item.item_id.item_id}}">
 								<div class="panel-body">
@@ -147,7 +148,7 @@
 										<form action="/GJ_app/itemMainInfo/{{item.item_id.item_id}}/" method="POST"> {% csrf_token %}
 											<div class="form-group">
 												<label for="nickNameEdit">Item Nickname</label>
-												<div class="input-group">
+												<div class="input-group" style="display:inline">
 													<input class="form-control" name="nickNameEdit" value="{{item.item_id.item_nickname}}" placeholder="{{item.item_id.item_nickname}}">
 												</div>
 											</div>
@@ -160,7 +161,7 @@
 											</div>
 											<div class="form-group">
 												<label for="startDateEdit">Item Start Date</label>
-												<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy" style="z-index:1050;">
+												<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
 													<input type='text' class="form-control" name="startDateEdit"  value="{{item.item_id.item_startDate}}" id="startDateEdit" />
 													<span class="input-group-addon">
 														<span class="glyphicon glyphicon-calendar"></span>
@@ -169,26 +170,27 @@
 											</div>
 											<div class="form-group">
 												<label for="endDateEdit">Item End Date</label>
-												<div class='input-group date' id='datetimepicker2'>
-													<input type='text' class="form-control" name="endDateEdit" value= "{{item.item_id.item_endDate}}" placeholder="{{item.item_id.item_endDate}}"   id="endDateEdit" />
+												<div class='input-group date' id='datetimepicker2' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
+													<input type='text' class="form-control" name="endDateEdit" value= "{{item.item_id.item_endDate}}" id="endDateEdit" />
 													<span class="input-group-addon">
 														<span class="glyphicon glyphicon-calendar"></span>
 													</span>
 												</div>
-											</div><div class="form-group">
+											</div>
+											<div class="form-group">
 												<label for="startTimeEdit">Item Start Time</label>
-												<div class='input-group date' id='datetimepicker3'>
-													<input type='text' class="form-control" name="startTimeEdit" value= "{{item.item_id.item_startTime}}" placeholder="{{item.item_id.item_endDate}}"   id="startTimeEdit" />
+												<div class='input-group bootstrap-timepicker timepicker'>
+													<input type='text' class="form-control" name="startTimeEdit" value= "{{item.item_id.item_startTime}}" id='datetimepicker3' data-provide="timepicker" data-minute-step="15" />
 													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
+														<span class="glyphicon glyphicon-time"></span>
 													</span>
 												</div>
 											</div><div class="form-group">
 												<label for="endTimeEdit">Item End Time</label>
-												<div class='input-group date' id='datetimepicker4'>
-													<input type='text' class="form-control" name="endTimeEdit" value= "{{item.item_id.item_endTime}}" placeholder="{{item.item_id.item_endTime}}"   id="endTimeEdit" />
+												<div class='input-group bootstrap-timepicker timepicker'>
+													<input type='text' class="form-control" name="endTimeEdit" value= "{{item.item_id.item_endTime}}" id='datetimepicker4' data-provide="timepicker" data-minute-step="15" />
 													<span class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
+														<span class="glyphicon glyphicon-time"></span>
 													</span>
 												</div>
 											</div>
@@ -260,21 +262,26 @@
 	
 	
 	<script>
+	
+	
+	
 		$(document).ready(function () {
-			$(".menuitems a").on("click", function() {
-				$(".menuitems a").removeClass("active");
-				$(this).addClass("active");
-				id = this.id.substring(4, this.id.length)
-				$('.dynamic_link').hide();
-				$('#content-'+id).show();
-				
-			});
 			
 			 $('#datetimepicker1').datepicker()
 				.on('changeDate', function(ev){
 					$('#datetimepicker1').datepicker('hide');
 			 });	
 			
+			$('#datetimepicker2').datepicker()
+				.on('changeDate', function(ev){
+					$('#datetimepicker2').datepicker('hide');
+			 });	
+
+			 $('#datetimepicker4').timepicker();
+			 $('#datetimepicker3').timepicker();
+
+
+		 
 			$("#addPop").popover({ trigger: "hover" });
 			
 		});

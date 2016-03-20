@@ -1,176 +1,189 @@
 {% extends "base.html" %}
-	{% block content %}
-		<style>
-			.container_details {text-align: center}
-			.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
+{% block content %}
+	<style>
+	
+		.dropdown-menu {z-index:1050;}
+
+		.container_details {text-align: center}
+		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
 		.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none; font-family: 'Poiret One', cursive;}
 		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none; font-family: 'Poiret One', cursive;}
-		</style>
-		<section>
-			<div class="container">
-				<legend style="font-size:50px; text-align:center" > Create an item  </legend>
-				<form action="/GJ_app/processNewItem" method="POST"> {% csrf_token %}
-					<div class="row">
-						<div class="col-xs-12 col-md-4">
-							<legend style="text-align:center" > (1) Basic Info  </legend>
-							<div class="form-group">
-								<label for="nickNameEdit">Item Nickname</label>
-								<div class="input-group" style="width:100%">
-									<input class="form-control" name="nickNameEdit" placeholder="Ex: Big Mac, Egg Muffin, Ultimate Supreme Pizza, ..">
-								</div>
+	</style>
+	<section>
+		<div class="container">
+			<legend style="font-size:50px; text-align:center" > Create an item  </legend>
+			<form action="/GJ_app/processNewItem" method="POST"> {% csrf_token %}
+				<div class="row">
+					<div class="col-xs-12 col-md-4">
+						<legend style="text-align:center" > (1) Basic Info  </legend>
+						<div class="form-group">
+							<label for="nickNameEdit">Item Nickname</label>
+							<div class="input-group" style="width:100%">
+								<input class="form-control" name="nickNameEdit" placeholder="Ex: Big Mac, Egg Muffin, Ultimate Supreme Pizza, ..">
 							</div>
-							<div class="form-group">
-								<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)</label>
-								<div class="input-group">
-									<div class="input-group-addon">$</div>
-									<input class="form-control" name="basePriceNatural" placeholder="Ex: 2 dollars">
-									<div class="input-group-addon">.</div>
-									<input class="form-control" name="basePriceFloat" placeholder="Ex: 90 cents">
+						</div>
+						<div class="form-group">
+							<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)</label>
+							<div class="input-group">
+								<div class="input-group-addon">$</div>
+								<input class="form-control" name="basePriceNatural" placeholder="Ex: 2 dollars">
+								<div class="input-group-addon">.</div>
+								<input class="form-control" name="basePriceFloat" placeholder="Ex: 90 cents">
 
-								</div>
 							</div>
-							<div class="form-group">
-								<label for="startDateEdit">Item Start Date</label>
-								<div class='input-group date' id='datetimepicker1' data-date-format="dd-mm-yyyy">
-									<input type='text' class="form-control" name="startDateEdit"  id="startDateEdit" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-								</div>
+						</div>
+						<div class="form-group">
+							<label for="startDateEdit">Item Start Date</label>
+							<div class='input-group date' id='datetimepicker1' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
+								<input type='text' class="form-control" name="startDateEdit"  id="startDateEdit" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
 							</div>
-							<div class="form-group">
-								<label for="endDateEdit">Item End Date</label>
-								<div class='input-group date' id='datetimepicker2'>
-									<input type='text' class="form-control" name="endDateEdit" id="endDateEdit" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
+						</div>
+						<div class="form-group">
+							<label for="endDateEdit">Item End Date</label>
+							<div class='input-group date' id='datetimepicker2' data-date="{{item.item_id.item_startDate}}" data-date-format="dd-mm-yyyy">
+								<input type='text' class="form-control" name="endDateEdit" id="endDateEdit" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div><div class="form-group">
+							<label for="startTimeEdit">Item Start Time</label>
+							<div class='input-group bootstrap-timepicker timepicker'>
+								<input type='text' class="form-control" name="startTimeEdit" id='datetimepicker3' data-provide="timepicker" data-minute-step="15" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-time"></span>
+								</span>
+							</div>
+						</div><div class="form-group">
+							<label for="endTimeEdit">Item End Time</label>
+							<div class='input-group bootstrap-timepicker timepicker'>
+								<input type='text' class="form-control" name="endTimeEdit" id='datetimepicker4' data-provide="timepicker" data-minute-step="15" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-time"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-8">
+						<legend style="text-align:center" > (2) Item Details  </legend>
+						<div class="row">
+							<div class="col-xs-12 col-md-6">
+								<div class="container_details">
+									<h5> Item Category</h5>
+									<div class="dropdown">
+										<button class="btn btn-default dropdown-toggle" id="category" type="button" data-toggle="dropdown" aria-expanded="false">
+											Category
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" id="mainCategory" role="menu" aria-labelledby="category">
+											{% for element in categories %}
+												<li role="presentaton" id="cat-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>
+											{% endfor %}
+										</ul>
+									</div>
 								</div>
-							</div><div class="form-group">
-								<label for="startTimeEdit">Item Start Time</label>
-								<div class='input-group date' id='datetimepicker3'>
-									<input type='text' class="form-control" name="startTimeEdit" id="startTimeEdit" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
+								<div class="container_details containerDiv">
+									<h5> Item Container</h5>
+									<div class="dropdown">
+										<button class="btn btn-default dropdown-toggle" id="container" type="button" data-toggle="dropdown" aria-expanded="false">
+											Container
+										<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" id="mainContainer" role="menu" aria-labelledby="container">
+											{% for element in containers %}
+												<li role="presentaton" id="cont-{{element.container_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.container_name}} </a></li>
+											{% endfor %}
+										</ul>
+									</div>
 								</div>
-							</div><div class="form-group">
-								<label for="endTimeEdit">Item End Time</label>
-								<div class='input-group date' id='datetimepicker4'>
-									<input type='text' class="form-control" name="endTimeEdit" id="endTimeEdit" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
+		
+
+							</div>
+							<div class="col-xs-12 col-md-6">
+								<div class="container_details" id="dynamic_ingredient"></div>	
+								<div class="container_details sizeDiv">
+									<h5> Choose a size </h5>
+									<div class="dropdown">
+										<button class="btn btn-default dropdown-toggle" id="size" type="button" data-toggle="dropdown" aria-expanded="false">
+											Size
+										<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" id="mainSize" role="menu" aria-labelledby="size">
+											{% for element in sizes %}
+												<li role="presentaton" id="size-{{element.size_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.size_name}} </a></li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+								<div class="container_details countDiv">
+									<div class="col-xs-12 col-md-6">
+										<h5> How Many Pieces? </h5>
+										<div class="input-group">
+											<input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. ">
+										</div>
+									</div>
+									<div class="col-xs-12 col-md-6">
+										<h5> Discount Price </h5>
+										<div class="input-group">
+											<div class="input-group-addon">$</div>
+											<input class="form-control" name="discountNatural" placeholder="2">
+											<div class="input-group-addon">.</div>
+											<input class="form-control" name="discountFloat" placeholder="90">
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-12 col-md-8">
-							<legend style="text-align:center" > (2) Item Details  </legend>
-							<div class="row">
-								<div class="col-xs-12 col-md-6">
-									<div class="container_details">
-										<h5> Item Category</h5>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle" id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Category
-											<span class="caret"></span>
-											</button>
-											<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
-												{% for element in categories %}
-													<li role="presentaton" class="group" id="{{element.category_id}}"><a href="">{{element.category_name}} </a></li>
-												{% endfor %}
-											</ul>
-										</div>
-									</div>
-									<div class="container_details">
-										<h5> Item Container</h5>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle" id="container" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Container
-											<span class="caret"></span>
-											</button>
-											<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
-												{% for element in containers %}
-													<li role="presentaton" class="group" id="{{element.container_id}}"><a href="">  {{element.container_name}} </a></li>
-												{% endfor %}
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-12 col-md-6">
-									<div class="container_details">
-										<h5> Item Main Ingredient </h5>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle" id="mainIngredient" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Main Ingredient
-											<span class="caret"></span>
-											</button>
-											<ul class="dynamic_link dropdown-menu" aria-labelledby="mainIngredient">
-												{% for element in categoryOptions %}
-													<li role="presentaton" class="group" id="{{element.option_id.option_id}}"><a href="">  {{element.option_id.option_name}} </a></li>
-												{% endfor %}
-											</ul>
-										</div>
-									</div>
-									<div class="container_details">
-										<h5> Choose a size </h5>
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle" id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Size
-											<span class="caret"></span>
-											</button>
-											<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
-												{% for element in sizes %}
-													<li role="presentaton" class="group" id="{{element.size_id}}"><a href="">  {{element.size_name}} </a></li>
-												{% endfor %}
-											</ul>
-										</div>
-										<div class="col-xs-12 col-md-6">
-											<h5> How Many Pieces? </h5>
-											<div class="input-group">
-												<input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. ">
+						<div class="row optionalDiv" style="padding-top:50px; padding-left:20%">
+							<h5> Optional Ingredients </h5>
+							<table class="table table-hover col-xs-12 col-md-6" id="optionalIngredientsTable">
+								<thead>
+									<th> </th>
+									<th> </th>
+									<th> </th>
+									<th> </th>
+									<th> </th>
+								</thead>
+								<tbody>
+									<tr id="row-1">
+										<td> 1 </td>
+										<td>
+											<div class="container_details">
+												<div class="dropdown">
+													<button class="btn btn-default dropdown-toggle" id="optionalCategory-1" type="button" data-toggle="dropdown" aria-expanded="false">
+														Category
+														<span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu" id="optionalCatMenu-1" role="menu" aria-labelledby="optionalCategory-1">
+														{% for element in categories %}
+															<li role="presentaton" id="optional-cat-1-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>
+														{% endfor %}
+													</ul>
+												</div>
 											</div>
-										</div>
-										<div class="col-xs-12 col-md-6">
-											<h5> Discount Price </h5>
-											<div class="input-group">
-												<div class="input-group-addon">$</div>
+										</td>
+										<td id="optionalIngTd-1"> </td>
+										<td><label class="radio-inline"><input id="selectFixed-1" type="radio" name="itemIsFixed-1">Fixed</label></td>
+										<td>
+											<label class="radio-inline"><input id="selectOptional-1" type="radio" name="itemIsFixed-1">Optional</label>
+											<div class="input-group" id="additionalPrice-1">
+												<div class="input-group-addon">Additional Price $</div>
 												<input class="form-control" name="discountNatural" placeholder="2">
 												<div class="input-group-addon">.</div>
 												<input class="form-control" name="discountFloat" placeholder="90">
 											</div>
-										</div>
-									</div>
-
-								</div>
+										</td>
+									</tr>	
+								</tbody>
+							</table>
+							<div class="col'">
+								<a id="add_row" class="btn btn-default pull-left">Add Row</a>
+								<a id='delete_row' class="pull-right btn btn-default">Delete Row</a>			
 							</div>
-							<div class="row container" style="padding-top:50px; padding-left:20%">
-								<h5> Optional Ingredients </h5>
-								<table class="table table-hover col-xs-12 col-md-6" style="width:50%">
-									<thead>
-										<th> </th>
-										<th> </th>
-										<th> </th>
-									</thead>
-									<tbody>
-										<tr>
-											<td style="width:unset" >Cheese </td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Fixed</label></td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Optional</label></td>
-										</tr>	
-										<tr>
-											<td style="width:unset" >Bacon </td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Fixed</label></td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Optional</label></td>
-										</tr>	
-																				<tr>
-											<td style="width:unset" >Pickles </td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Fixed</label></td>
-											<td><label class="checkbox-inline"><input type="checkbox" value="">Optional</label></td>
-										</tr>	
-									</tbody>
-							</table>	
 						</div>
 					</div>
 				</div>
@@ -237,18 +250,25 @@
 						</div>	
 					</div>
 				</div>
-			</div>
-		</section>
-	{% endblock %}
-	
-	
+			</form>
+		</div>
+	</section>
+
+
+
 	<script>
 		$(document).ready(function () {
-			$(".dynamic_link li").on("click", function() {
-				$(".dynamic_link li").removeClass("active");
-				$(this).addClass("active");
-				
-			});
+		
+			var i = 1;
+			
+			$(".containerDiv").hide();
+			$(".sizeDiv").hide();
+			$(".countDiv").hide();
+			$(".optionalDiv").hide();
+			$(".optionalIngTd").hide();
+			$("#additionalPrice-1").hide();
+
+		// Date Time Picker configurations	
 			
 			 $('#datetimepicker1').datepicker()
 				.on('changeDate', function(ev){
@@ -257,22 +277,172 @@
 			 
 			  $('#datetimepicker2').datepicker()
 				.on('changeDate', function(ev){
-					$('#datetimepicker1').datepicker('hide');
+					$('#datetimepicker2').datepicker('hide');
 			 });
 			 
-			  $('#datetimepicker3').datepicker()
-				.on('changeDate', function(ev){
-					$('#datetimepicker1').datepicker('hide');
-			 });
-			 
-			  $('#datetimepicker4').datepicker()
-				.on('changeDate', function(ev){
-					$('#datetimepicker1').datepicker('hide');
-			 });
-	
-			 
+			 $('#datetimepicker4').timepicker();
+			 $('#datetimepicker3').timepicker();
+
+
+		// popover message boxes on buttons
+				 
+			$("#addPop").popover({ trigger: "hover" });
+
+			$("#mainCategory li").on("click", function() {
+				//sets button text
+				$("#category").text($($(this).find("a")).text())
+				var categoryId = $(this).prop('id');
+				//removes isSelected class
+				$("#mainCategory li a").removeClass("isSelected");
+
+				//add isSlected Class to clicked element
+				$($(this).find('a')).addClass("isSelected")
+				
+				return changeMainIngredient(categoryId.slice(4, categoryId.length));
+			});
+			
+		
+			
+			function changeMainIngredient(id){
+
+				var divPartI = "<h5> Item Main Ingredient</h5><div class='dropdown'> <button class='btn btn-default dropdown-toggle' id='ingredient' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='mainIngredient' role='menu' aria-labelledby='ingredient'>";
+				{% for element in categoryOptions %}
+					
+					if (id == {{element.category_id.category_id}})
+						divPartI = divPartI +  "<li role='presentaton' id='{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-1' href='#/'>{{element.option_id.option_name}} </a></li>";
+				{% endfor %}
+				var res = divPartI + "</ul></div>";
+				document.getElementById("dynamic_ingredient").innerHTML =  res;
+
+				$("#mainIngredient li").on("click", function() {
+				//sets button text
+				$("#ingredient").text($($(this).find("a")).text())
+				//removes isSelected class
+				$("#mainIngredient li a").removeClass("isSelected");
+
+				//add isSlected Class to clicked element
+				$($(this).find('a')).addClass("isSelected")
+				
+				
+				return changeContainer();
+				});
+			};
+			
+			function changeContainer(){
+
+				$(".containerDiv").show();
+
+				$("#mainContainer li").on("click", function() {
+					//sets button text
+					$("#container").text($($(this).find("a")).text())
+					//removes isSelected class
+					$("#mainContainer li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")	
+				
+					return changeSize();
+				});
+			};
+			
+			function changeSize(){
+
+				$(".sizeDiv").show();
+
+				$("#mainSize li").on("click", function() {
+					//sets button text
+					$("#size").text($($(this).find("a")).text())
+					var sizeText= $(this).text();
+					//removes isSelected class
+					$("#mainSize li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")	
+					return checkCount(sizeText);
+				});
+			};
+			
+			function checkCount(text){
+				if (text.trim() == "Count") {
+					$(".countDiv").show();
+					$(".optionalDiv").show();
+				} else {
+					$(".countDiv").hide();
+					$(".optionalDiv").show();
+				}
+		
+			};
+
+
+			$("#optionalCatMenu-1 li").on("click", function() {
+				//sets button text
+				$("#optionalCategory-1").text($($(this).find("a")).text())
+				var categoryId = $(this).prop('id');
+				//removes isSelected class
+				$("#optionalCatMenu-1 li a").removeClass("isSelected");
+
+				//add isSlected Class to clicked element
+				$($(this).find('a')).addClass("isSelected")
+				
+				return changeOptionalIngredient(categoryId.slice(15, categoryId.length));
+			});
+			
+			
+			function changeOptionalIngredient(id){
+				var divPartI = "<div class='dropdown'><button class='btn btn-default dropdown-toggle' id='optionalIngredient-1' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='optionalIngMenu-1' role='menu' aria-labelledby='optionalIngredient-1'>";
+				{% for element in categoryOptions %}
+					
+					if (id == {{element.category_id.category_id}})
+						divPartI = divPartI +  "<li role='presentaton' id='optional-1-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-1' href='#/'>{{element.option_id.option_name}} </a></li>";
+				{% endfor %}
+				var res = divPartI + "</ul></div>";
+				
+				document.getElementById("optionalIngTd-1").innerHTML =  res;
+
+				$("#optionalIngMenu-1 li").on("click", function() {
+				//sets button text
+				$("#optionalIngredient-1").text($($(this).find("a")).text())
+				//removes isSelected class
+				$("#optionalIngMenu-1 li a").removeClass("isSelected");
+
+				//add isSlected Class to clicked element
+				$($(this).find('a')).addClass("isSelected")
+				
+				});
+			};
+			
+			$("#selectOptional-1").on("click", function() {
+				//sets button text
+				$("#additionalPrice-1").show();
+			});
+			
+			$("#selectFixed-1").on("click", function() {
+				//sets button text
+				$("#additionalPrice-1").hide();
+			});
+			
+			$("#add_row").click(function(){
+				
+				 i++;
+				$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
+
+				$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">Category	<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}	</ul></div></div></td><td id="optionalIngTd-' + i + '"> </td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '">Fixed</label></td><td><label class="radio-inline"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '">Optional</label><div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="discountNatural" placeholder="2"><div class="input-group-addon">.</div><input class="form-control" name="discountFloat" placeholder="90"></div></td></tr>');
+
+				  
+			});
+			
+			 $("#delete_row").click(function(){
+				if (i>1) {
+					$("#row-"+ i).html('');
+					i--;
+
+				 }
+			});
+			
+			
 		});
 		
 	   
 	</script>
 	
+{% endblock %}	
