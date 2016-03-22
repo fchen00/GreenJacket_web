@@ -14,14 +14,27 @@ from .helpers_controller import *
 
 def index(request):
 	logged_in = request.session.get('logged_in', False)
+	print "Login? " + str(logged_in)
 	if logged_in:
-		comp_id = request.session.get("user_id")
-		print comp_id
-		return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
+ 		return HttpResponseRedirect(reverse('GJ_app:profile'))
+ 	elif request.method == 'POST':
+ 		email = request.POST['email']
+ 		password = request.POST['password']
+ 		print "GOt the method Post " + email + " " + password
+ 		print "email = " + email + "\npassword = " + password
+ 		k = User.objects.get(email=email)
 		
-	return render(request, 'GJ_app/index.html')
+ 		if k:
+ 			request.session['logged_in'] = True
+ 			request.session['email'] = email
+ 			user_id = k.user_id
+ 			request.session['user_id'] = user_id
+		
+ 		return HttpResponseRedirect(reverse('GJ_app:index'))
+	else:	
+		return render(request, 'GJ_app/index.html')
 	
-	
+
 
 def menuHome(request, comp_id):
 	logged_in = request.session.get('logged_in', False)
@@ -41,6 +54,8 @@ def menuHome(request, comp_id):
 		continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
 		return render(request, 'GJ_app/menus/index.html', {'items': items, 'comp_id':comp_id,  'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
 	
+
+
 	return render(request, 'GJ_app/index.html')
 
 	
@@ -116,14 +131,7 @@ def profile(request):
 		Company.objects.filter(company_id=usr).update(main_address=request.POST['comp_address'])
 		Company.objects.filter(company_id=usr).update(main_city=request.POST['comp_city'])
 		Company.objects.filter(company_id=usr).update(main_state=request.POST['comp_state'])
-		Company.objects.filter(company_id=usr).update(credit_number=request.POST['credit_num'])
-		Company.objects.filter(company_id=usr).update(credit_expiration=request.POST['credit_expdate'])
-		Company.objects.filter(company_id=usr).update(credit_zipcode=request.POST['credit_zipcode'])
-		Branch.objects.filter(company_id=usr).update(branch_phone=request.POST['comp_phone'])
-		Branch.objects.filter(company_id=usr).update(branch_address=request.POST['comp_address'])
-		Branch.objects.filter(company_id=usr).update(branch_city=request.POST['comp_city'])
-		Branch.objects.filter(company_id=usr).update(branch_state=request.POST['comp_state'])
-
+		
 
 	#usr = get_object_or_404(User.objects.all())
 	#print usr
@@ -142,33 +150,25 @@ def signup(request):
 		compcity = request.POST['comp_city']
 		compstate = request.POST['comp_state']
 		compzip = request.POST['comp_zip']
-		numbranch = request.POST['comp_branch_num']
-		credname = request.POST['credit_holder']
-		crednum = request.POST['credit_number']
-		credexpdate = request.POST['credit_exp_date']
-		credcvv = request.POST['credit_cvv']
-		credzipcode = request.POST['credit_zip']
 		print "password is " + comppassword
-		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip + " " + numbranch
-		u = User(company_name=compname, email=compemail, password=comppassword)
+		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip
+		u = User(company_name=compname, email=compemail, password=comppassword, is_admin=False)
 		u.save()
-		b = Branch(company_id=u, branch_phone=compphone, branch_address=compaddress, branch_city=compcity, branch_state=compstate, branch_zipcode=compzip)
-		print "This branch"
-		print  b
-		b.save()
 		c = Company(company_id=u, company_name=compname, main_phone=compphone, 
 			main_address=compaddress, main_city=compcity, main_state=compstate, 
-			main_zipcode=compzip, credit_number=crednum, credit_expiration=credexpdate,
-			credit_cvv=credcvv, credit_zipcode=credzipcode, )
+			main_zipcode=compzip, is_active=False)
 		print "This Company"
 		print c
 		c.save()
 		return render(request, 'GJ_app/signupsuccess.html')
-
-
 	#print companyname
 	return render(request, 'GJ_app/signup.html')
-	
+
+
+
+'''
+I think we can remove this since we can login through the index page
+'''	
 def login(request):
 	logged_in = request.session.get('logged_in', False)
 	if logged_in:
@@ -177,6 +177,7 @@ def login(request):
 	if request.method == 'POST':
 		email = request.POST['email']
 		password = request.POST['password']
+		print "GOt the method Post " + email + " " + password
 		print "email = " + email + "\npassword = " + password
 		k = User.objects.get(email=email)
 		
@@ -190,6 +191,8 @@ def login(request):
 	else:
 		return render(request, 'GJ_app/index.html')
 	
+
+
 def logout(request):
 	logged_in = request.session.get('logged_in', False)
 	if not logged_in:

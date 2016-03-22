@@ -1,99 +1,135 @@
 <div class="container" style="padding-top: 60px;">
-  <h1 class="page-header">{{ usr.company_name }}</h1>
-  <div class="row">
-    <!-- left column -->
+    <h1 class="page-header">{{ usr.company_name }}</h1>
+
     <div class="col-md-4 col-sm-6 col-xs-12">
-      <div class="text-center">
-        <img src="https://s.yimg.com/fz/api/res/1.2/q6knydGw9HaoPg.Tb7jT4Q--/YXBwaWQ9c3JjaGRkO2g9ODcyO3E9OTU7dz0xMDI0/http://www.sparfreunde.com/sites/default/files/dealpics/mcdonalds_0.jpg" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h6>Upload a different photo...</h6>
-        <input type="file" class="text-center center-block well well-sm">
-      </div>
+    <h3>Add a Branch</h3>
+      <form action=# name="branchform" method="post">
+            {% csrf_token %} 
+                <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+                        <label for="phone">Phone Number:
+                        <input type="text" id="phone" name="branch_phone"></label>
+                        
+                        <label for="address">Address:
+                        <input type="email" id="address" name="branch_address"></label>
+                        
+                        <label for="city">City:
+                        <input type="password" id="city" name="branch_city"></label>
+
+                        <label for="state">State:
+                        <input type="text" id="state" name="branch_state"></label>
+
+                        <label for="zipcode">Zipcode:
+                        <input type="text" id="zipcode" name="branch_zip"></label>
+                
+                <div style="text-align:center; font-family: 'Poiret One', cursive;">
+                    <button class="btn btn-success btn-lg" type="submit">Add</button> 
+                </div>
+                </div>
+        </form>
+      
     </div>
     <!-- edit form column -->
+
+
+
     <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+        <style>
+            .panel-heading a:after {
+              font-family:'Glyphicons Halflings';
+              content:"\e114";
+              float: right;
+              color: grey;
+            }
+            .panel-heading a.collapsed:after {
+              content:"\e080";
+            }
+        </style>
+
+        <div class="panel-group" id="accordion">
+
+
+            <div class="panel panel-default" id="panel1">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne"> Main Company: {{company.main_address}} {{company.main_city}} </a>
+                    </h4>
+
+                </div>
+
+
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <form action="profile.html" method="post" class="form-horizontal" role="form" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Company:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{usr.company_name}} name="comp_name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Email:</label>
+                                <div class="col-lg-8">
+                                <input class="form-control" value={{usr.email}} name="comp_email" readonly type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Phone Number:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{company.main_phone}} name="comp_phone" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Address:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{company.main_address}} name="comp_address" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">City:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{company.main_city}} name="comp_city" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{company.main_city}} name="comp_city" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" value={{company.main_state}} name="comp_state" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-8">
+                                <button type="submit">Update</button>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+
+
+            <div class="panel panel-default" id="panel2">
+                <div class="panel-heading">
+                     <h4 class="panel-title"> <a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsed"> Branch: Address </a></h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
+                </div>
+            </div>
 
 
 
-      <div class="alert alert-info alert-dismissable">
-        <a class="panel-close close" data-dismiss="alert">×</a> 
-        <i class="fa fa-coffee"></i>
-        This is an <strong>.alert</strong>. Use this to show important messages to the user.
-      </div>
 
 
 
 
 
-      <h3>Company info</h3>
-      <form action="profile.html" method="post" class="form-horizontal" role="form" >
-      {% csrf_token %}
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Company:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{usr.company_name}} name="comp_name" type="text">
-          </div>
         </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Email:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{usr.email}} name="comp_email" readonly type="text">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Phone Number:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{company.main_phone}} name="comp_phone" type="text">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Address:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{company.main_address}} name="comp_address" type="text">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">City:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{company.main_city}} name="comp_city" type="text">
-          </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">State:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value={{company.main_state}} name="comp_state" type="text">
-          </div>
-
-        </div>
-        
-        <h3>Credit Card Info </h3>
-        <div class="form-group">
-          <label class="col-md-3 control-label">Credit Number:</label>
-          <div class="col-md-8">
-            <input class="form-control" value={{company.credit_number}} name="credit_num" type="text">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-md-3 control-label">Credit Expeiration Date:</label>
-          <div class="col-md-8">
-            <input class="form-control" value={{company.credit_expiration}} name="credit_expdate" type="text">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-md-3 control-label">Credit Zipcode:</label>
-          <div class="col-md-8">
-            <input class="form-control" value={{company.credit_zipcode}} name="credit_zipcode" type="text">
-          </div>
-
-        <div class="form-group">
-          <label class="col-md-3 control-label"></label>
-          <div class="col-md-8">
-            <button type="submit">Update</button>
-            <!--
-            <span></span>
-            <input class="btn btn-default" value="Cancel" type="reset">
-            -->
-          </div>
-        </div>
-      </form>
     </div>
-  </div>
 </div>

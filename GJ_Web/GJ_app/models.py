@@ -107,7 +107,7 @@ class Company(models.Model):
     is_active = models.NullBooleanField()
 
     def __str__(self):        
-        return self.company_id.company_name + " " + self.main_phone + " " + self.main_address + "," + self.main_city + "," + self.main_state + "," + self.main_zipcode + " " + self.credit_number + " " + self.credit_expiration + " " + self.credit_cvv + " " + self.credit_zipcode + " " #+ str(self.is_active)
+        return self.company_id.company_name + " " + self.main_phone + " " + self.main_address + "," + self.main_city + "," + self.main_state + "," + self.main_zipcode
 
     class Meta:
         managed = False

@@ -18,7 +18,7 @@ class CategoryOptiondisplay(admin.ModelAdmin):
     list_display = ('id', 'category_id', 'option_id')
 
 class Companydisplay(admin.ModelAdmin):
-    list_display = ('id', 'company_id', 'company_name', 'main_phone', 'main_address', 'main_city', 'main_state', 'main_zipcode', 'date_created', 'last_updated', 'is_active')
+    list_display = ('id', 'company_id', 'company_name', 'main_phone', 'main_address', 'main_city', 'main_state', 'main_zipcode', 'date_created', 'last_updated')
 
 class Containerdisplay(admin.ModelAdmin):
     list_display = ('container_id', 'container_name')
