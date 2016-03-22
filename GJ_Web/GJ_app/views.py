@@ -318,12 +318,17 @@ def menu_json(request):
 					}
 				}
 			}
-			
 		}
 	}	
 	"""
 	branch_id = request.GET.get('branch', -1)
-	print branch_id
+	
+	if branch_id == -1:
+		return render (request, 'GJ_app/message.html', {'message':
+			"Please send the branch id with the following syntax:\n"
+			+ "/data/?branch={branch id}"})
+	
+	print "data for branch", branch_id
 	branch = get_object_or_404(Branch, branch_id = branch_id)
 	company = get_object_or_404(Company, id = branch.company_id.user_id)
 	menu_table = get_list_or_404(Menu, menu_id = company.company_id)
@@ -336,16 +341,77 @@ def menu_json(request):
 		# going by category id and main option id
 		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
 		item_table.append(new_item)
-		category = new_item.category_id
-		container = new_item.container_id
 		
+		print "for", menu_entry.item_nickname, "in first half:"
+		
+		# Set categories in return JSON
+		category = new_item.category_id
 		if not category.category_id in menu_dict['categories']:
 			menu_dict['categories'][category.category_id] = {'id': category.category_id,
 									'name': category.category_name,
 									'mains': {}}
 		
 		mains_dict = menu_dict['categories'][category.category_id]['mains']
-		mains_dict[new_item.id] = menu_entry.item_nickname
+		
+		# Get Options
+		options_list = new_item.options.split(',')
+		options_type = new_item.options_isFixed.split(',')
+		options_price = new_item.options_price.split(',')
+		options_data = []
+		
+		# Fix price
+		for i, price_str in enumerate(options_price):
+			temp_float = float(price_str)
+			temp_out = "{:.2f}".format(temp_float/100)
+			options_price[i] = temp_out
+			
+			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+		
+		# populate Main Options in return json
+		for i, opt_id in enumerate(options_list):
+			if options_type[i] == "main":
+				if not opt_id in mains_dict:
+					mains_dict[opt_id] = {'id': opt_id, 
+											'name': options_data[i].option_name,
+											'containers': []}
+				
+				
+				
+	# I need to do this after all Main Options and empty Containers are created
+	for menu_entry in menu_table:
+		# going by category id and main option id
+		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		
+		print "for", menu_entry.item_nickname, "in second half:"
+		
+		category = new_item.category_id
+		mains_dict = menu_dict['categories'][category.category_id]['mains']
+		
+		options_list = new_item.options.split(',')
+		options_type = new_item.options_isFixed.split(',')
+		
+		container_dicts = []
+		# populate Main Options in return json
+		for i, opt_id in enumerate(options_list):
+			if options_type[i] == "main":
+				# look through entire Menu for all Main Options that match
+				# the current Main Option so we can add the current container
+				# to those main options
+				
+				for temp_cat_id, temp_cat in menu_dict['categories'].iteritems():
+					for temp_main_id, temp_main in temp_cat['mains'].iteritems():
+						if temp_main_id == opt_id:
+							container_dicts.append(temp_main['containers'])
+		
+		print new_item.container_id
+		print
+		
+		new_container = new_item.container_id
+		
+		for i, in_containers in enumerate(container_dicts):
+			if not new_container.container_name in in_containers:
+				in_containers.append(new_container.container_name)
+		
 		"""
 		if not container.container_id in container_dict:
 			container_dict[container.container_id] = {'id': container.container_id,
@@ -369,7 +435,8 @@ def menu_json(request):
 							'last update':'today', 'food count':36})
 
 def data(request): 
-	return HttpResponseRedirect(reverse('GJ_app:menu_json'))
+	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?branch=' 
+											+ request.GET.get('branch', -1))
 
 
 	
