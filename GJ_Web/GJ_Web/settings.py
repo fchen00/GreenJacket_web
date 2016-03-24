@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_DIR = os.path.dirname(__file__)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -133,13 +133,37 @@ USE_TZ = True
 
 #STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+# STATIC_URL = '/static/'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "staticfiles"),
+#     )
+
+
+'''
+## How is this work on Heroku?
+    when you host your project on to heroku. the root for the static files are in the "static_resources" 
+    folder, so when you try to load it, just simple do for example the background file for the index 
+    page, you just do 
+
+    background-image:url('../picture/food.jpg') 
+
+    so on heroku it would just go into static_resources file to find the image we are looking for 
+
+'''
+
+STATIC_ROOT = os.path.join(PROJECT_DIR, '../static_resources')
+
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static", 'static_root')
-
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-    )
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "static", 'media_root')
+)
+
+STATICFILES_FINDERS = ( 
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
