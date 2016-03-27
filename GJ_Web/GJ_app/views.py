@@ -376,9 +376,9 @@ def menu_json(request):
 		options_price = new_item.options_price.split(',')
 		options_data = []
 		
-		print "options list is", options_list
-		print "options type is", options_type
-		print "options price is", options_price
+		#print "options list is", options_list
+		#print "options type is", options_type
+		#print "options price is", options_price
 		
 		# Fix price
 		for i, price_str in enumerate(options_price):
@@ -394,7 +394,7 @@ def menu_json(request):
 				if not opt_id in mains_dict:
 					mains_dict[opt_id] = {'id': opt_id, 
 											'name': options_data[i].option_name,
-											'containers': []}
+											'containers': {}}
 				
 				
 				
@@ -429,9 +429,12 @@ def menu_json(request):
 		
 		new_container = new_item.container_id
 		
+		print container_dicts
+		
 		for i, in_containers in enumerate(container_dicts):
-			if not new_container.container_name in in_containers:
-				in_containers.append(new_container.container_name)
+			if not new_container.container_id in in_containers:
+				temp_container_dict = {'name': new_container.container_name, 'id': new_container.container_id, 'sizes': {}}
+				in_containers[new_container.container_id] = temp_container_dict
 		
 		"""
 		if not container.container_id in container_dict:
