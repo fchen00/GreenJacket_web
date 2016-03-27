@@ -321,9 +321,9 @@ def menu_json(request):
 		}
 	}	
 	"""
-	branch_id = request.GET.get('branch', -1)
-	
-	if branch_id == -1:
+	branch_id = request.GET.get('branch', "-1")
+    
+	if branch_id == "-1":
 		return render (request, 'GJ_app/message.html', {'message':
 			"Please send the branch id with the following syntax:\n"
 			+ "/data/?branch={branch id}"})
@@ -436,7 +436,7 @@ def menu_json(request):
 
 def data(request): 
 	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?branch=' 
-											+ request.GET.get('branch', -1))
+											+ request.GET.get('branch', "-1"))
 
 
 	
