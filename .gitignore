@@ -19,3 +19,4 @@ db.sqlite3
 
 # IntellijIDEA
 .idea
+GJ_Web/db.sqlite3
