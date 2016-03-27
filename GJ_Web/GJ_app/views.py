@@ -107,6 +107,23 @@ def addItem(request, menu_id):
 	containers = Container.objects.all()
 	
 	return render(request, 'GJ_app/createItem.html', {'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+	
+
+def createItem(request, menu_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	if request.method == 'POST':
+		nickName = request.POST['nickNameNew']
+		basePrice = int(request.POST['basePriceNatural']) + int(request.POST['basePriceFloat'])
+		print basePrice
+		startDate = request.POST['startDateNew']
+		endDate = request.POST['endDateNew']
+		startTime = request.POST['startTimeNew']
+		endTime = request.POST['endTimeNew']
+		
+		
+	
+	return render(request, 'GJ_app/createItem.html', {'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
 		
 def pricing(request):
 	return render(request, "GJ_app/pricing.html")

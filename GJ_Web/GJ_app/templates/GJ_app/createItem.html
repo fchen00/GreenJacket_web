@@ -11,9 +11,9 @@
 		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none; font-family: 'Poiret One', cursive;}
 	</style>
 	<section>
-		<div class="container">
+		<div class="container" style="padding-bottom:5%">
 			<legend style="font-size:50px; text-align:center" > Create an item  </legend>
-			<form action="/GJ_app/processNewItem" method="POST"> {% csrf_token %}
+			<form action="/GJ_app/createItem" method="POST"> {% csrf_token %}
 				<div class="row">
 					<div class="col-xs-12 col-md-4">
 						<legend style="text-align:center" > (1) Basic Info  </legend>
@@ -187,69 +187,26 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12 col-md-9">
+				<div class="col-xs-12 col-md-12">
 					<legend style="text-align:center" > (3) Meal Options </legend>
-					<div class="row">
-						<div class="col-xs-12 col-md-2 container_details">
-							<h5> Item Category</h5>
-							<div class="dropdown">
-								<button class="btn btn-default dropdown-toggle" id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Category
-								<span class="caret"></span>
-								</button>
-								<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
-									{% for element in categories %}
-										<li role="presentaton" class="group" id="{{element.category_id}}"><a href="">{{element.category_name}} </a></li>
-									{% endfor %}
-								</ul>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-3 container_details">
-							<h5> Meal Side</h5>
-							<div class="dropdown">
-								<button class="btn btn-default dropdown-toggle" id="mainIngredient" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Main Ingredient
-								<span class="caret"></span>
-								</button>
-								<ul class="dynamic_link dropdown-menu" aria-labelledby="mainIngredient">
-									{% for element in categoryOptions %}
-										<li role="presentaton" class="group" id="{{element.option_id.option_id}}"><a href="">  {{element.option_id.option_name}} </a></li>
-									{% endfor %}
-								</ul>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-2 container_details">
-							<h5> Choose a size </h5>
-							<div class="dropdown">
-								<button class="btn btn-default dropdown-toggle" id="category" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Size
-								<span class="caret"></span>
-								</button>
-								<ul class="dynamic_link dropdown-menu" aria-labelledby="category">
-									{% for element in sizes %}
-										<li role="presentaton" class="group" id="{{element.size_id}}"><a href="">  {{element.size_name}} </a></li>
-									{% endfor %}
-								</ul>
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-2 container_details">
-							<h5> Meal Price </h5>
-							<div class="input-group">
-								<div class="input-group-addon">$</div>
-								<input class="form-control" name="discountNatural" placeholder="2">
-								<div class="input-group-addon">.</div>
-								<input class="form-control" name="discountFloat" placeholder="90">
-							</div>
-						</div>
-						<div class="col-xs-12 col-md-3 container_details">
-							<h5>.. </h5>
-							<div>
-								<a class="btn btn-md btn-success GJButton" style="outline:none; font-weight:bold" id="addPop"
-								data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Add another meal" href=""> +</a>
-							</div>
-						</div>	
+					<table class="table table-hover" id="mealTable">
+						<thead>
+							<th> # </th>
+							<th> Side Category</th>
+							<th> Side Ingredient </th>
+							<th> Side Size </th>
+							<th> Meal Price </th>
+						</thead>
+						<tbody>
+								
+						</tbody>
+					</table>
+					<div class="col'">
+						<a id="add_meal" class="btn btn-default pull-left">Add Meal</a>
+						<a id='delete_meal' class="pull-right btn btn-default">Delete Meal</a>			
 					</div>
 				</div>
+				<div style="text-align:center; font-family: 'Poiret One', cursive; padding-top: 20%"><button class="btn btn-success btn-lg" type="submit">Create</button> </div>
 			</form>
 		</div>
 	</section>
@@ -260,6 +217,7 @@
 		$(document).ready(function () {
 		
 			var i = 1;
+			var j = 0;
 			
 			$(".containerDiv").hide();
 			$(".sizeDiv").hide();
@@ -428,13 +386,137 @@
 
 				$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">Category	<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}	</ul></div></div></td><td id="optionalIngTd-' + i + '"> </td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '">Fixed</label></td><td><label class="radio-inline"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '">Optional</label><div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="discountNatural" placeholder="2"><div class="input-group-addon">.</div><input class="form-control" name="discountFloat" placeholder="90"></div></td></tr>');
 
-				  
+				$("#additionalPrice-"+i).hide();
+
+					$("#optionalCatMenu-" + i + " li").on("click", function() {
+						//sets button text
+						$("#optionalCategory-" + i).text($($(this).find("a")).text())
+						var categoryId = $(this).prop('id');
+						//removes isSelected class
+						$("#optionalCatMenu-" + i +" li a").removeClass("isSelected");
+
+						//add isSlected Class to clicked element
+						$($(this).find('a')).addClass("isSelected")
+						
+						return changeOptionalIngredient(categoryId.slice(15, categoryId.length));
+					});
+				
+				
+				function changeOptionalIngredient(id){
+					var divPartI = "<div class='dropdown'><button class='btn btn-default dropdown-toggle' id='optionalIngredient-" + i + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='optionalIngMenu-"+ i + "' role='menu' aria-labelledby='optionalIngredient-" + i + "'>";
+					{% for element in categoryOptions %}
+						
+						if (id == {{element.category_id.category_id}})
+							divPartI = divPartI +  "<li role='presentaton' id='optional-" + i + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + i + "' href='#/'>{{element.option_id.option_name}} </a></li>";
+					{% endfor %}
+					var res = divPartI + "</ul></div>";
+					
+					document.getElementById("optionalIngTd-" + i).innerHTML =  res;
+
+					$("#optionalIngMenu-" + i + " li").on("click", function() {
+					//sets button text
+					$("#optionalIngredient-" + i).text($($(this).find("a")).text())
+					//removes isSelected class
+					$("#optionalIngMenu-" + i + " li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")
+					
+					});
+				};
+				
+				$("#selectOptional-" + i).on("click", function() {
+					//sets button text
+					$("#additionalPrice-" + i).show();
+				});
+				
+				$("#selectFixed-" + i).on("click", function() {
+					//sets button text
+					$("#additionalPrice-" + i).hide();
+				});
+					  
 			});
 			
 			 $("#delete_row").click(function(){
 				if (i>1) {
 					$("#row-"+ i).html('');
 					i--;
+
+				 }
+			});
+			
+			$("#add_meal").click(function(){
+				
+				 j++;
+				$('#mealTable').append('<tr id="mealRow-'+ j +'"></tr>');
+
+				$('#mealRow-'+j).html('<td>' + j  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Category<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ j + '" role="menu" aria-labelledby="sideCategory-'+ j + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ j + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ j + '"> </td><td id="sideSizeDiv-' + j + '"><div class="container_details" style="display:inline-block; transform:translateY(0%)" id="sideSizeDropdown-' + j + '"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ j + '" role="menu" aria-labelledby="sideSize-'+ j + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ j + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ j + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat" placeholder="Ex: 90 Cents"></div></td></tr>');
+							
+				$("#sideCatMenu-" + j + " li").on("click", function() {
+						//sets button text
+						$("#sideCategory-" + j).text($($(this).find("a")).text())
+						var categoryId = $(this).prop('id');
+						//removes isSelected class
+						$("#sideCatMenu-" + j +" li a").removeClass("isSelected");
+
+						//add isSlected Class to clicked element
+						$($(this).find('a')).addClass("isSelected")
+						
+						return changeSideIngredient(categoryId.slice(11, categoryId.length));
+					});
+					
+				$("#sideSizeMenu-" + j + " li").on("click", function() {
+					//sets button text
+					$("#sideSize-" + j).text($($(this).find("a")).text())
+					var sizeText= $(this).text();
+					//removes isSelected class
+					$("#sideSizeMenu-" + j + " li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")	
+					return checkCount(sizeText);
+				});
+			
+				function checkCount(text){
+					if (text.trim() == "Count") {
+						$('#sideSizeDropdown-' + j).css('transform' , 'translateY(-40%)');
+						$('#sideSizeDiv-' + j).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="sideCount-' + j + '"><input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. "></div>');
+					} else {
+						$('#sideSizeDropdown-' + j).css('transform' , '');
+						$('#sideCount-' + j).remove();
+					}
+			
+				};
+			
+				
+				function changeSideIngredient(id){
+					var divPartI = "<div class='dropdown'><button class='btn btn-default dropdown-toggle' id='sideIngredient-" + j + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='sideIngMenu-"+ j + "' role='menu' aria-labelledby='sideIngredient-" + j + "'>";
+					{% for element in categoryOptions %}
+						
+						if (id == {{element.category_id.category_id}})
+							divPartI = divPartI +  "<li role='presentaton' id='side-" + j + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + j + "' href='#/'>{{element.option_id.option_name}} </a></li>";
+					{% endfor %}
+					var res = divPartI + "</ul></div>";
+					
+					document.getElementById("sideIngTd-" + j).innerHTML =  res;
+
+					$("#sideIngMenu-" + j + " li").on("click", function() {
+					//sets button text
+					$("#sideIngredient-" + j).text($($(this).find("a")).text())
+					//removes isSelected class
+					$("#sideIngMenu-" + j + " li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					});
+					$($(this).find('a')).addClass("isSelected")
+					
+				};
+				
+			});
+			$("#delete_meal").click(function(){
+				if (j>0) {
+					$("#mealRow-"+ j).html('');
+					j--;
 
 				 }
 			});
