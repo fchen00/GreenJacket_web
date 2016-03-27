@@ -207,26 +207,26 @@ from braintree.test.nonces import Nonces
 
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
-                                  merchant_id="r9kd7wjtk8cngfpq",
-                                  public_key="3k4tcgjpwp6pxtmb",
-                                  private_key="a1f5495a400cb65e2d4b46d0846fa218")
-                                  
+								  merchant_id="r9kd7wjtk8cngfpq",
+								  public_key="3k4tcgjpwp6pxtmb",
+								  private_key="a1f5495a400cb65e2d4b46d0846fa218")
+								  
 def pay (request):
-    if request.method == "GET":
-        braintree_token = braintree.ClientToken.generate()
-        print braintree_token
-        return render (request, 'GJ_app/pay.html', {'braintree_token': braintree_token})
-    elif request.method == "POST":
-        nonce = request.POST['payment_method_nonce']
-        result = braintree.Transaction.sale({
-            "amount": "1.00",
-            "payment_method_nonce": nonce,
-            "options": {
-              "submit_for_settlement": True
-            }
-        })
-        print "\n\nresult is", result, "\n\n"
-        return render (request, 'GJ_app/message.html', {'message':"Payment Received"})
+	if request.method == "GET":
+		braintree_token = braintree.ClientToken.generate()
+		print braintree_token
+		return render (request, 'GJ_app/pay.html', {'braintree_token': braintree_token})
+	elif request.method == "POST":
+		nonce = request.POST['payment_method_nonce']
+		result = braintree.Transaction.sale({
+			"amount": "1.00",
+			"payment_method_nonce": nonce,
+			"options": {
+			  "submit_for_settlement": True
+			}
+		})
+		print "\n\nresult is", result, "\n\n"
+		return render (request, 'GJ_app/message.html', {'message':"Payment Received"})
 
 # # Menu Data to App
 def menu_json(request):
@@ -322,7 +322,7 @@ def menu_json(request):
 	}	
 	"""
 	branch_id = request.GET.get('branch', "-1")
-    
+	
 	if branch_id == "-1":
 		return render (request, 'GJ_app/message.html', {'message':
 			"Please send the branch id with the following syntax:\n"
@@ -358,6 +358,10 @@ def menu_json(request):
 		options_type = new_item.options_isFixed.split(',')
 		options_price = new_item.options_price.split(',')
 		options_data = []
+		
+		print "options list is", options_list
+		print "options type is", options_type
+		print "options price is", options_price
 		
 		# Fix price
 		for i, price_str in enumerate(options_price):
