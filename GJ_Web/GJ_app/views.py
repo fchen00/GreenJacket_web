@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 from datetime import *
+
 
 from .models import *
 from .menu_controller import *
@@ -16,7 +17,10 @@ def index(request):
 	logged_in = request.session.get('logged_in', False)
 	print "Login? " + str(logged_in)
 	if logged_in:
- 		return HttpResponseRedirect(reverse('GJ_app:profile'))
+		comp_id = request.session.get("user_id")
+		print comp_id
+		return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
+ 		# return HttpResponseRedirect(reverse('GJ_app:menuHome'))
  	elif request.method == 'POST':
  		email = request.POST['email']
  		password = request.POST['password']
@@ -106,24 +110,99 @@ def addItem(request, menu_id):
 	sizes = Size.objects.all()
 	containers = Container.objects.all()
 	
-	return render(request, 'GJ_app/createItem.html', {'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+	return render(request, 'GJ_app/createItem.html', {'comp_id':menu_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
 	
 
 def createItem(request, menu_id):
 	# if is_logged:'
 	# im going to be using the user_id until we set uo the session
+	options = []
+	optionsIsFixed = []
+	options_price = []
 	if request.method == 'POST':
 		nickName = request.POST['nickNameNew']
-		basePrice = int(request.POST['basePriceNatural']) + int(request.POST['basePriceFloat'])
+		# if nickName == 'd':
+			# messages.info(request, 'You will need to change your password in one week.')
+			# return HttpResponseRedirect(reverse('GJ_app:addItem', args=[menu_id]))
+		basePrice = ((int(request.POST['basePriceNatural'])) * 100) + int(request.POST['basePriceFloat'])
 		print basePrice
 		startDate = request.POST['startDateNew']
 		endDate = request.POST['endDateNew']
 		startTime = request.POST['startTimeNew']
 		endTime = request.POST['endTimeNew']
+		mainCategory = request.POST['postCategory']
+		mainIngredient = request.POST['postMainIngredient']
+		mainContainer = request.POST['postContainer']
+		mainSize = request.POST['postMainSize']
 		
+		options.append(mainIngredient)
+		optionsIsFixed.append('main')
+		options_price.append(0)
+		
+		if 'count_number' in request.POST:
+			countNumber = request.POST['count_number']
+			# its not working
+			# countPrice = int(request.POST['discountNatural']) + (int(request.POST['discountFloat']) * 0.01)
+			# print countPrice
+		
+		# this is for optional ingredients
+		optionalCounter = 1
+		while True:
+			if ('postIng-'+ str(optionalCounter)) in request.POST:
+				options_temp = 'postIng-' + str(optionalCounter)
+				isFixed_temp = 'itemIsFixed-' + str(optionalCounter)
+				if ('ingPriceNatural-'+ str(optionalCounter)) in request.POST:
+					price_temp = ((int(request.POST['ingPriceNatural-' + str(optionalCounter)])) * 100) + int(request.POST['ingPriceFloat-' + str(optionalCounter)])
+				else:
+					price_temp = 0
+				options.append(str(request.POST[options_temp]))
+				optionsIsFixed.append(str(request.POST[isFixed_temp]))
+				options_price.append(price_temp)
+
+				optionalCounter = optionalCounter + 1
+			else:
+				break
+			
+		print options
+		print optionsIsFixed
+		print options_price
+		
+		mealCounter = 1
+		meal_options = []
+		meal_sizes = []
+		meal_price = []
+		count_meal_arr = []
+		while True:
+			if ('postSideIng-'+ str(mealCounter)) in request.POST:
+				sides_temp = 'postSideIng-' + str(mealCounter)
+				sidesSize_temp = 'postSideSize-' + str(mealCounter)
+				
+				if ('countMeal-'+ str(optionalCounter)) in request.POST:
+					count_meal = request.POST['countMeal-' + str(mealCounter)]
+					count_meal_arr.append(count_meal)
+				else:
+					count_meal_arr.append(1)
+					
+				price_temp = ((int(request.POST['mealNatural-' + str(mealCounter)])) * 100) + int(request.POST['mealFloat-' + str(mealCounter)])
+
+				
+				meal_options.append(str(request.POST[sides_temp]))
+				meal_sizes.append(str(request.POST[sidesSize_temp]))
+				meal_price.append(price_temp)
+			
+				mealCounter = mealCounter + 1
+			else:
+				break
+				
+		print meal_options
+		print meal_sizes
+		print meal_price
+		print count_meal_arr
+		# TODO:
+	# price for each sizes
 		
 	
-	return render(request, 'GJ_app/createItem.html', {'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+	return HttpResponseRedirect(reverse('GJ_app:index'))
 		
 def pricing(request):
 	return render(request, "GJ_app/pricing.html")

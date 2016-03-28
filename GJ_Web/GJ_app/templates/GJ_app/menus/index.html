@@ -26,6 +26,9 @@
 	</style>
 	<section>
 		<legend style="font-size:50px; text-align:center" > Menu Page  </legend>
+		{% for message in messages %}
+			<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+		{% endfor %}
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
 				<div style="text-align:center">
