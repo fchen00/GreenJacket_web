@@ -125,11 +125,10 @@ def createItem(request, menu_id):
 			# messages.info(request, 'You will need to change your password in one week.')
 			# return HttpResponseRedirect(reverse('GJ_app:addItem', args=[menu_id]))
 		basePrice = ((int(request.POST['basePriceNatural'])) * 100) + int(request.POST['basePriceFloat'])
-		print basePrice
-		startDate = request.POST['startDateNew']
-		endDate = request.POST['endDateNew']
-		startTime = request.POST['startTimeNew']
-		endTime = request.POST['endTimeNew']
+		startDate = datetime.strptime(request.POST['startDateNew'],  "%m-%d-%Y")
+		endDate = datetime.strptime(request.POST['endDateNew'],  "%m-%d-%Y")
+		startTime = datetime.strptime(request.POST['startTimeNew'], "%I:%M %p")
+		endTime = datetime.strptime(request.POST['endTimeNew'],   "%I:%M %p")
 		mainCategory = request.POST['postCategory']
 		mainIngredient = request.POST['postMainIngredient']
 		mainContainer = request.POST['postContainer']
@@ -198,10 +197,38 @@ def createItem(request, menu_id):
 		print meal_sizes
 		print meal_price
 		print count_meal_arr
+		
 		# TODO:
 	# price for each sizes
+	# adding different sizes to tables
+	# fixing count problem with meal
 		
-	
+		userObject = User.objects.get(user_id=int(menu_id))
+		
+		new_menu_item = Menu(menu_id=userObject, item_nickname = nickName, item_basePrice = basePrice, item_isActive = 1,  item_startDate = startDate, item_endDate = endDate, item_startTime = startTime, item_endTime = endTime)
+		new_menu_item.save()
+		lastItem = Menu.objects.filter(menu_id=menu_id).last()
+
+		
+		optionsString = ",".join(options)
+		optionsFixedString = ",".join(optionsIsFixed)
+		optionsPriceString = ",".join(str(x) for x in options_price)
+		
+		optionsArray = []
+		for x, val in meal_options:
+			mealOptionsString = ''
+			mealOptionsString = str(val) + '-' + str(meal_sizes[x])
+			optionsArray.append(mealOptionsString)
+			
+		completeMealString = ",".join(optionsArray)
+		mealPrice = ",".join(str(x) for x in meal_price)
+		
+		catObject = Category.objects.get(category_id = int(mainCategory))
+		contObject = Container.objects.get(container_id = int(mainContainer))
+		
+		new_item_entry = Item(item_id = lastItem, category_id = catObject, container_id = contObject, options = optionsString, options_isFixed = optionsFixedString, options_price = optionsPriceString, item_mealOptions = completeMealString,  item_mealPrice = mealPrice )
+		new_item_entry.save()
+		
 	return HttpResponseRedirect(reverse('GJ_app:index'))
 		
 def pricing(request):

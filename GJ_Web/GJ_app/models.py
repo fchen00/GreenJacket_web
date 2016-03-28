@@ -325,9 +325,11 @@ class Item(models.Model):
 		finalmealList = []
 		mealString = ""
 		
-		mealList = self.item_mealOptions.split(',')
-		mealPriceList = self.item_mealPrice.split(',')
-
+		mealList = [str(x) for x in self.item_mealOptions.split(',')] 
+		mealPriceList = [str(x) for x in self.item_mealPrice.split(',')] 
+		
+		mealList = filter(None, mealList)
+		
 		for index, value in enumerate(mealList):
 			
 			mealOption = value.split('-')
