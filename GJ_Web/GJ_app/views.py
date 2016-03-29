@@ -447,14 +447,21 @@ def menu_json(request):
 	branch_id = request.GET.get('branch', "-1")
 	
 	if branch_id == "-1":
+		branch_id = request.GET.get('company', "-1")
+	
+	if branch_id == "-1":
 		return render (request, 'GJ_app/message.html', {'message':
 			"Please send the branch id with the following syntax:\n"
 			+ "/data/?branch={branch id}"})
 	
 	print "data for branch", branch_id
 	branch = get_object_or_404(Branch, branch_id = branch_id)
-	company = get_object_or_404(Company, id = branch.company_id.user_id)
+	#company = get_object_or_404(Company, id = branch.company_id.user_id)
+	company = get_object_or_404(Company, id = branch_id)
 	menu_table = get_list_or_404(Menu, menu_id = company.company_id)
+	
+	print "branch is ", branch
+	print "company is ", company
 	
 	item_table = []
 	menu_dict = {'company_id': company.company_id.user_id, 'company_name': company.company_name}
@@ -530,12 +537,11 @@ def menu_json(request):
 						if temp_main_id == opt_id:
 							container_dicts.append(temp_main['containers'])
 		
-		print new_item.container_id
-		print
+		#print new_item.container_id
 		
 		new_container = new_item.container_id
 		
-		print container_dicts
+		#print container_dicts
 		
 		for i, in_containers in enumerate(container_dicts):
 			if not new_container.container_id in in_containers:
