@@ -97,7 +97,9 @@ class Company(models.Model):
     main_city = models.CharField(max_length=200, blank=True, null=True)
     main_state = models.TextField(blank=True, null=True)  # This field type is a guess.
     main_zipcode = models.TextField(blank=True, null=True)  # This field type is a guess.
-    # credit_holder = models.TextField(blank=True, null=True)
+    branches_category = models.IntegerField(db_column='branches_category', blank=True, null=True)  # This field type is a guess.
+
+	# credit_holder = models.TextField(blank=True, null=True)
     # credit_number = models.TextField(blank=True, null=True)  # This field type is a guess.
     # credit_expiration = models.TextField(blank=True, null=True)  # This field type is a guess.
     # credit_cvv = models.CharField(max_length=4, blank=True, null=True)

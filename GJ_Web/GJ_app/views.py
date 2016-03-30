@@ -138,6 +138,7 @@ def createItem(request, menu_id):
 		optionsIsFixed.append('main')
 		options_price.append(0)
 		
+		countNumber = 1
 		if 'count_number' in request.POST:
 			countNumber = request.POST['count_number']
 			# its not working
@@ -208,14 +209,19 @@ def createItem(request, menu_id):
 		new_menu_item = Menu(menu_id=userObject, item_nickname = nickName, item_basePrice = basePrice, item_isActive = 1,  item_startDate = startDate, item_endDate = endDate, item_startTime = startTime, item_endTime = endTime)
 		new_menu_item.save()
 		lastItem = Menu.objects.filter(menu_id=menu_id).last()
-
 		
+		
+		sizeObject = Size.objects.get(size_id = int(mainSize))
+		new_size = ItemSize(item_id = new_menu_item, size_id = sizeObject, itemSizePrice = 0, item_count = countNumber)
+		new_size.save()
+		
+	
 		optionsString = ",".join(options)
 		optionsFixedString = ",".join(optionsIsFixed)
 		optionsPriceString = ",".join(str(x) for x in options_price)
 		
 		optionsArray = []
-		for x, val in meal_options:
+		for x, val in enumerate(meal_options):
 			mealOptionsString = ''
 			mealOptionsString = str(val) + '-' + str(meal_sizes[x])
 			optionsArray.append(mealOptionsString)
@@ -230,7 +236,35 @@ def createItem(request, menu_id):
 		new_item_entry.save()
 		
 	return HttpResponseRedirect(reverse('GJ_app:index'))
+			
+			
+def deleteItem(request, item_id):
+	
+	menuItem = Menu.objects.get(item_id = item_id)
+	
+	sizeObjects = ItemSize.objects.filter(item_id = menuItem)
+	sizeObjects.delete()
+	
+	itemObject = Item.objects.get(item_id = menuItem)
+	itemObject.delete()
+	
+	menuItem.delete()
+	
+	return HttpResponseRedirect(reverse('GJ_app:index'))
+
+	
 		
+def updateItem(request, menu_id, item_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	categories = Category.objects.all()
+	categoryOptions= CategoryOption.objects.all()
+	sizes = Size.objects.all()
+	containers = Container.objects.all()
+	
+	return render(request, 'GJ_app/editItem.html', {'comp_id':menu_id, 'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+	
+	
 def pricing(request):
 	return render(request, "GJ_app/pricing.html")
 
