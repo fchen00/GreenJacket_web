@@ -536,20 +536,33 @@ def menu_json(request):
 			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
 		
 		# populate Main Options in return json
+		# requires only one main ingredient
+		main_id  = None
+		
 		for i, opt_id in enumerate(options_list):
 			if options_type[i] == "main":
+				main_id = opt_id
 				if not opt_id in mains_dict:
 					mains_dict[opt_id] = {'id': opt_id, 
 											'name': options_data[i].option_name,
 											'containers': {}}
 				
-				
-				new_container = new_item.container_id
-				if opt_id == "33":
-					print "spinach container is ", new_container.container_name, "and cat is", category.category_name
-					print 
-				mains_dict[opt_id]['containers'][new_container.container_id] = {'id': new_container.container_id,
+		
+		container_dict = mains_dict[main_id]['containers']
+		new_container = new_item.container_id
+		container_dict[new_container.container_id] = {'id': new_container.container_id,
 														'name': new_container.container_name, 'sizes':{}}
+		
+		sizes_dict = container_dict[new_container.container_id]['sizes']
+		
+		new_size = get_list_or_404(ItemSize, item_id = new_item.item_id)
+		
+		for i, size_row in enumerate(new_size):
+			temp_size_dict = {'id': size_row.size_id.size_id, 'name': size_row.size_id.size_name, 'options': {}}
+			sizes_dict[size_row.size_id.size_id] = temp_size_dict
+			print "size row is ", size_row.size_id.size_name
+				
+				
 				
 				
 	"""			
