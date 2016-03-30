@@ -489,12 +489,12 @@ def menu_json(request):
 			+ "/data/?branch={branch id}"})
 	
 	print "data for branch", branch_id
-	branch = get_object_or_404(Branch, branch_id = branch_id)
+	#branch = get_object_or_404(Branch, branch_id = branch_id)
 	#company = get_object_or_404(Company, id = branch.company_id.user_id)
 	company = get_object_or_404(Company, id = branch_id)
 	menu_table = get_list_or_404(Menu, menu_id = company.company_id)
 	
-	print "branch is ", branch
+	#print "branch is ", branch
 	print "company is ", company
 	
 	item_table = []
