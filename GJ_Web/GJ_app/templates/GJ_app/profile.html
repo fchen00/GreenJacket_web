@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Profile{% endblock %}
     {% block content %}
-        <section> {% include "profilesection.html" %} </section>
+        <section> {% include "profilesection.html" %} 
+		
+		<script>
+	
+			$(document).ready(function () {
+				
+				$("#activeBar li").removeClass("active");
+				$("#profileActive").addClass("active");
+
+			});
+			
+			</script>
+		</section>
     {% endblock %}

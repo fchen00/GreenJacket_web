@@ -4,7 +4,7 @@
 			div {color:white;}
 			
 			.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;}
-			.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none;}
+			.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #44B78B; background-color: #44B78B; transition:all 0.5s; outline:none;}
 		</style>
 		<section>
 
@@ -39,5 +39,15 @@
 
 
 			</div>
+			
+				<script>
+	
+					$(document).ready(function () {
+						
+						$("#activeBar li").removeClass("active");
+						$("#homeActive").addClass("active");
+
+					});
+				</script>
 		</section>
 	{% endblock %}

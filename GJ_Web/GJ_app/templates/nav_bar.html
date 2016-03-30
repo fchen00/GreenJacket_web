@@ -1,24 +1,43 @@
-<!-- NavBar -->
-	<nav class ="navbar navbar-default navbar-fixed-top" id="my-navbar">
-            <div class="container-fluid">
-				<div class="navbar-header">
-					<a class="pull-left" href="#">
-						<img alt="Brand" src="/static/pictures/22.JPG" class="img-rounded img-responsive">
-					</a>           
-					<a href="/GJ_app/" class="navbar-brand" style="padding-left:25px; padding-top:20px">GreenJacket</a>
-					<div style="border-right:3px solid grey;height:40px; margin-top:10px"></div>	
-                </div>
-                <div class ="container" style="padding-top:5px">
-                    <ul class="nav navbar-nav" >
-                        <li><a href="/GJ_app/">Home</a>
-                        <!-- <li><a href="/GJ_app/signup">Sign-up</a> -->
-						 <li><a href="/GJ_app/pricing">Pricing</a>
-                        <!-- <li><a href="/GJ_app/login/">Login</a> -->
-                        {% if request.session.logged_in %}
-							<li><a href="/GJ_app/profile/">Profile</a>
-							<li><a href="/GJ_app/logout/">Logout</a>
-						{% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav><!--  End Nav Bar -->
+<style>
+
+	.navbar-brand {
+	  padding: 0px; /* firefox bug fix */
+	  display:inline-flex;
+	}
+	.navbar-brand>img {
+	  height: 100%;
+	  width: auto;
+	}
+</style>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/GJ_app/" class="navbar-brand" > 
+		<img alt="Green Jacket" src="/static/pictures/22.JPG" class="img-rounded img-responsive">
+		<text style="padding-top:0.8em; padding-left: 0.6em; padding-right: 0.6em"> GreenJacket </text>
+	</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav" id="activeBar">
+        <li id="homeActive"><a href="/GJ_app/">Home</a></li>
+		<li id="pricingActive"><a href="/GJ_app/pricing">Pricing</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+		{% if request.session.logged_in %}
+			<li id="profileActive"><a href="/GJ_app/profile/">Profile</a></li>
+			<li id="logoutActive"><a href="/GJ_app/logout/">Logout</a></li>
+		{% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>			 

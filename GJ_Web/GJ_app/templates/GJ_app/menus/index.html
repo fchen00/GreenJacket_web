@@ -21,7 +21,7 @@
 		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
 		.btn-success{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none; font-family: 'Poiret One', cursive;}
-		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #19E794; background-color: #19E794; transition:all 0.5s; outline:none; font-family: 'Poiret One', cursive;}
+		.btn-success:hover , .btn-success:focus, .btn-success:active { border-color: #44B78B; background-color: #44B78B; transition:all 0.5s; outline:none; font-family: 'Poiret One', cursive;}
 		
 	</style>
 	<section>
@@ -263,6 +263,9 @@
 	
 		$(document).ready(function () {
 			
+			$("#activeBar li").removeClass("active");
+			$("#homeActive").addClass("active");
+			
 			 $('#datetimepicker1').datepicker()
 				.on('changeDate', function(ev){
 					$('#datetimepicker1').datepicker('hide');
@@ -282,7 +285,6 @@
 			
 		});
 		
-	   
 	</script>
 	
 	
