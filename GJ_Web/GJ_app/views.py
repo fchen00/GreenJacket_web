@@ -544,7 +544,15 @@ def menu_json(request):
 											'containers': {}}
 				
 				
+				new_container = new_item.container_id
+				if opt_id == "33":
+					print "spinach container is ", new_container.container_name, "and cat is", category.category_name
+					print 
+				mains_dict[opt_id]['containers'][new_container.container_id] = {'id': new_container.container_id,
+														'name': new_container.container_name, 'sizes':{}}
 				
+				
+	"""			
 	# I need to do this after all Main Options and empty Containers are created
 	for menu_entry in menu_table:
 		# going by category id and main option id
@@ -582,13 +590,15 @@ def menu_json(request):
 				temp_container_dict = {'name': new_container.container_name, 'id': new_container.container_id, 'sizes': {}}
 				in_containers[new_container.container_id] = temp_container_dict
 		
-		"""
+		
 		if not container.container_id in container_dict:
 			container_dict[container.container_id] = {'id': container.container_id,
 									'name': container.container_name,
 									'sizes':{}, 'items':{}}
 		
 		mains_dict[container.container_id]['mains'][new_item.id] = menu_entry.item_nickname
+		
+		#size_dict = in_containers[new_container.container_id]['sizes']
 		"""	
 		
 	
@@ -605,8 +615,12 @@ def menu_json(request):
 							'last update':'today', 'food count':36})
 
 def data(request): 
-	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?branch=' 
-											+ request.GET.get('branch', "-1"))
+	temp_id = request.GET.get('company', "-1")
+	if temp_id == "-1":
+		temp_id = request.GET.get('branch', "-1")
+		
+	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?company=' 
+											+ temp_id)
 
 
 	
