@@ -555,12 +555,16 @@ def menu_json(request):
 		
 		sizes_dict = container_dict[new_container.container_id]['sizes']
 		
-		new_size = get_list_or_404(ItemSize, item_id = new_item.item_id)
+		#print "id is about to be", new_item.item_id.item_id
+		new_size = get_list_or_404(ItemSize, item_id = new_item.item_id.item_id)
+		#print "new size is ", new_size
+		#print
 		
 		for i, size_row in enumerate(new_size):
-			temp_size_dict = {'id': size_row.size_id.size_id, 'name': size_row.size_id.size_name, 'options': {}}
-			sizes_dict[size_row.size_id.size_id] = temp_size_dict
-			print "size row is ", size_row.size_id.size_name
+			temp_size_dict = {'id': size_row.id, 'name_id':size_row.size_id.size_id, 'name': size_row.size_id.size_name,
+								'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
+			sizes_dict[size_row.id] = temp_size_dict
+			print "id is ", size_row.id
 				
 				
 				
