@@ -540,15 +540,40 @@ def menu_json(request):
 			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
 		
 		# populate Main Options in return json
+		# requires only one main ingredient
+		main_id  = None
+		
 		for i, opt_id in enumerate(options_list):
 			if options_type[i] == "main":
+				main_id = opt_id
 				if not opt_id in mains_dict:
 					mains_dict[opt_id] = {'id': opt_id, 
 											'name': options_data[i].option_name,
 											'containers': {}}
 				
+		
+		container_dict = mains_dict[main_id]['containers']
+		new_container = new_item.container_id
+		container_dict[new_container.container_id] = {'id': new_container.container_id,
+														'name': new_container.container_name, 'sizes':{}}
+		
+		sizes_dict = container_dict[new_container.container_id]['sizes']
+		
+		#print "id is about to be", new_item.item_id.item_id
+		new_size = get_list_or_404(ItemSize, item_id = new_item.item_id.item_id)
+		#print "new size is ", new_size
+		#print
+		
+		for i, size_row in enumerate(new_size):
+			temp_size_dict = {'id': size_row.id, 'name_id':size_row.size_id.size_id, 'name': size_row.size_id.size_name,
+								'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
+			sizes_dict[size_row.id] = temp_size_dict
+			print "id is ", size_row.id
 				
 				
+				
+				
+	"""			
 	# I need to do this after all Main Options and empty Containers are created
 	for menu_entry in menu_table:
 		# going by category id and main option id
@@ -586,13 +611,15 @@ def menu_json(request):
 				temp_container_dict = {'name': new_container.container_name, 'id': new_container.container_id, 'sizes': {}}
 				in_containers[new_container.container_id] = temp_container_dict
 		
-		"""
+		
 		if not container.container_id in container_dict:
 			container_dict[container.container_id] = {'id': container.container_id,
 									'name': container.container_name,
 									'sizes':{}, 'items':{}}
 		
 		mains_dict[container.container_id]['mains'][new_item.id] = menu_entry.item_nickname
+		
+		#size_dict = in_containers[new_container.container_id]['sizes']
 		"""	
 		
 	
@@ -609,8 +636,12 @@ def menu_json(request):
 							'last update':'today', 'food count':36})
 
 def data(request): 
-	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?branch=' 
-											+ request.GET.get('branch', "-1"))
+	temp_id = request.GET.get('company', "-1")
+	if temp_id == "-1":
+		temp_id = request.GET.get('branch', "-1")
+		
+	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?company=' 
+											+ temp_id)
 
 
 	
