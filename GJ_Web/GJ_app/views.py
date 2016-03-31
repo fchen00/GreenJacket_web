@@ -142,8 +142,8 @@ def createItem(request, menu_id):
 		if 'count_number' in request.POST:
 			countNumber = request.POST['count_number']
 			# its not working
-			# countPrice = int(request.POST['discountNatural']) + (int(request.POST['discountFloat']) * 0.01)
-			# print countPrice
+			countPrice = int(request.POST['discountNatural']) + (int(request.POST['discountFloat']) * 0.01)
+			print countPrice
 		
 		# this is for optional ingredients
 		optionalCounter = 1
@@ -254,7 +254,7 @@ def deleteItem(request, item_id):
 
 	
 		
-def updateItem(request, menu_id, item_id):
+def updateItem(request, item_id):
 	# if is_logged:'
 	# im going to be using the user_id until we set uo the session
 	categories = Category.objects.all()
@@ -262,7 +262,11 @@ def updateItem(request, menu_id, item_id):
 	sizes = Size.objects.all()
 	containers = Container.objects.all()
 	
-	return render(request, 'GJ_app/editItem.html', {'comp_id':menu_id, 'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions})
+	menuObject = Menu.objects.get(item_id = item_id)
+	itemObject = Item.objects.get(item_id = menuObject)
+	itemSizeObject = ItemSize.objects.filter(item_id = menuObject)
+	
+	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuItemObject': menuItemObject, 'itemObject': itemObject, 'itemSizeObject': itemSizeObject})
 	
 	
 def pricing(request):

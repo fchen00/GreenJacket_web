@@ -32,12 +32,12 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="basePriceEdit">Base Price (Subtotal Price before Sales Tax)</label>
+							<label for="basePriceEdit">Base Price* </label>
 							<div class="input-group">
 								<div class="input-group-addon">$</div>
-								<input class="form-control" name="basePriceNatural" placeholder="Ex: 2 dollars" required pattern="\d+">
+								<input class="form-control" id="basePriceNatural" name="basePriceNatural" placeholder="Ex: 2 dollars" required pattern="\d+">
 								<div class="input-group-addon">.</div>
-								<input class="form-control" name="basePriceFloat" placeholder="Ex: 90 cents" required pattern="\d{2}">
+								<input class="form-control" id="basePriceFloat" name="basePriceFloat" placeholder="Ex: 90 cents" required pattern="\d{2}">
 							</div>
 						</div>
 						<div class="form-group">
@@ -94,6 +94,7 @@
 										</ul>
 									</div>
 								</div>
+								<div class="container_details" id="dynamic_ingredient"></div>	
 								<div class="container_details containerDiv">
 									<h5> Item Container</h5>
 									<div class="dropdown" id="dropdown-container">
@@ -112,7 +113,6 @@
 
 							</div>
 							<div class="col-xs-12 col-md-6" id="secondColumn">
-								<div class="container_details" id="dynamic_ingredient"></div>	
 								<div class="container_details sizeDiv">
 									<h5> Choose a size </h5>
 									<div class="dropdown" id="dropdown-size">
@@ -125,6 +125,26 @@
 												<li role="presentaton" id="size-{{element.size_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.size_name}} </a></li>
 											{% endfor %}
 										</ul>
+									</div>
+								</div>
+								<div id="additionalSizeButton" style="text-align:center; font-family: 'Poiret One', cursive"><button type="button" class="btn btn-success btn-lg hvr-icon-float-away">Add More Sizes</button> </div> 
+
+								<div class="row" id="additionalSizeDiv">
+									<h5> Additional Size </h5>
+									<table class="table table-hover col-xs-12 col-md-6" id="additionalSizeTable">
+										<thead>
+											<th> </th>
+											<th> </th>
+											<th> </th>
+											<th> </th>
+										</thead>
+										<tbody>
+											
+										</tbody>
+									</table>
+									<div style="padding-bottom:40%" >
+										<a id="add_size" class="btn btn-default pull-left" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Add Size"><i class="fa fa-plus-circle"></i></a>
+										<a id="delete_size" class="pull-right btn btn-danger" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Delete Size"><i class="fa fa-minus-circle"></i></a>			
 									</div>
 								</div>
 							</div>
@@ -186,11 +206,16 @@
 			
 			var i = 0;
 			var j = 0;
+			var k = 0;
 			
 			$("#basicInfoDiv").hide();
 			$("#itemDetailsDiv").hide();
 			$("#mealOptionsDiv").hide();
 			$("#submitButton").hide();
+			$("#additionalSizeDiv").hide();
+			$("#additionalSizeButton").hide();
+
+			
 			
 			$("#startButton").on("click", function() {
 				$('#createLegend').animate({ "right": "+=20%" }, "slow" )
@@ -203,6 +228,13 @@
 				
 			});
 			
+			$("#additionalSizeButton").on("click", function() {
+				$("#additionalSizeButton").hide();
+				$('#additionalSizeDiv').fadeIn('slow');
+					
+			});
+
+
 			$("#continueButton1").on("click", function() {
 				$("#continueButton1").hide();
 				$('#basicInfoDiv').animate({ "right": "+=33%" }, 1200)
@@ -347,6 +379,8 @@
 					$('#postMainSize').remove();
 					$('#dropdown-size').append('<input id="postMainSize" name="postMainSize" value="'+ actualID + '" type="hidden">');
 				
+					$("#additionalSizeButton").show();
+
 					
 					return checkCount(sizeText);
 				});
@@ -355,15 +389,88 @@
 			function checkCount(text){
 				if (text.trim() == "Count") {
 					$('#countDiv').remove();
-					$('#secondColumn').append('<div class="container_details" id="countDiv"><div class="col-xs-12 col-md-6"><h5> How Many Pieces? </h5><div class="input-group"><input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. " required></div></div><div class="col-xs-12 col-md-6"><h5> Discount Price </h5><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" name="discountNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" name="discountFloat" placeholder="90" required></div></div></div>');
+					$('#sameBaseprice').remove();
+					$('#secondColumn').append('<div class="checkbox" id="sameBaseprice" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div>');
+					$('#secondColumn').append('<div class="container_details" id="countDiv"><div class="col-xs-12 col-md-6"><h5> How Many Pieces? </h5><div class="input-group"><input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. " required></div></div><div class="col-xs-12 col-md-6"><h5> Size Price </h5><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="sizeNatural" name="sizeNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" id="sizeFloat" name="sizeFloat" placeholder="90" required></div></div></div>');
 					$(".optionalDiv").show();
+					
+					$('#priceCheckbox').change(function() {
+						if ($(this).is(':checked')) {
+							$('#sizeNatural').val($('#basePriceNatural').val());
+							$('#sizeFloat').val($('#basePriceFloat').val()); 
+						} else {
+							$('#sizeNatural').val('');
+							$('#sizeFloat').val('');
+						}				
+					});
 				} else {
 					$('#countDiv').remove();
+					$('sameBaseprice').remove();
 					$(".optionalDiv").show();
 				}
 		
 			};
+			
+			
+			$("#add_size").click(function(){
+				
+				 k++;
+				$('#additionalSizeTable').append('<tr id="sizeRow-'+ k +'"></tr>');
 
+				$('#sizeRow-'+k).html('<td>' + k  + '</td><td id="addCount-' + k + '"><div class="container_details" style="display:inline-block; transform:translateY(0%)" id="additionalSizeDropdown-' + k + '"><div class="dropdown" id="dropdown-addSize-' + k + '"><button class="btn btn-default dropdown-toggle" id="addSizeCategory-' + k + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="addSize-' + k + '" role="menu" aria-labelledby="addSizeCategory-' + k + '">{% for element in sizes %}<li role="presentaton" id="addSize-k-{{element.size_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.size_name}} </a></li>{% endfor %}</ul></div></div></td>');
+
+				$("#addSize-" + k + " li").on("click", function() {
+					//sets button text
+					$("#addSizeCategory-" + k).text($($(this).find("a")).text())
+					var categoryId = $(this).prop('id');
+					//removes isSelected class
+					$("#addSize-" + k +" li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")
+					
+					var sizeText= $(this).text();
+					var ing= $(this).prop('id');
+					var actualID = ing.split('-')[3];
+					
+					$('#postAddSize-' + k).remove();
+					$('#dropdown-addSize-' + k).append('<input id="postAddSize-' + k + '" name="postAddSize-' + k + '" value="'+ actualID + '" type="hidden">');
+			
+				
+					return checkCount(sizeText);
+				});
+				
+				function checkCount(text){
+					if (text.trim() == "Count") {
+						$('#sameBasepriceTd-' + k).remove();
+						$('#addSizePriceTd-' + k).remove();
+						$('#additionalCount-' + k).remove();
+						$('#additionalSizeDropdown-' + k).css('transform' , 'translateY(-40%)');
+						$('#addCount-' + k).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="additionalCount-' + k + '"><input class="form-control" name="additionalSizeCount-'+ k  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
+						$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" id="sameBaseprice-addSize-' + k + '" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td style="width:30%" id="addSizePriceTd-' + k + '"><div class="input-group" id="addSizePrice-'+ k + '"><div class="input-group-addon">$</div><input class="form-control" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
+					} else {
+						$('#sameBasepriceTd-' + k).remove();
+						$('#addSizePriceTd-' + k).remove();
+						$('#additionalCount-' + k).remove();
+						$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" id="sameBaseprice-addSize-' + k + '"  style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td style="width:30%" id="addSizePriceTd-' + k + '"><div class="input-group" id="addSizePrice-'+ k + '"><div class="input-group-addon">$</div><input class="form-control" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
+					}
+
+				};
+					  
+					  
+			});
+			
+			 $("#delete_size").click(function(){
+				if (k>0) {
+					$("#sizeRow-"+ k).remove();
+					k--;
+
+				 }
+			});
+			
+			
+			
+						
 		
 			$("#add_row").click(function(){
 				
@@ -444,7 +551,7 @@
 				 j++;
 				$('#mealTable').append('<tr id="mealRow-'+ j +'"></tr>');
 
-				$('#mealRow-'+j).html('<td>' + j  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Category<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ j + '" role="menu" aria-labelledby="sideCategory-'+ j + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ j + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ j + '"> </td><td id="sideSizeDiv-' + j + '"><div class="container_details" style="display:inline-block; transform:translateY(0%)" id="sideSizeDropdown-' + j + '"><div class="dropdown" id="dropdown-sideSize-' + j + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ j + '" role="menu" aria-labelledby="sideSize-'+ j + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ j + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ j + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + j + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ j + '" placeholder="Ex: 90 Cents"></div></td></tr>');
+				$('#mealRow-'+j).html('<td>' + j  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Category<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ j + '" role="menu" aria-labelledby="sideCategory-'+ j + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ j + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ j + '"> </td><td id="sideSizeDiv-' + j + '"><div class="container_details" style="display:inline-block; transform:translateY(0%)" id="sideSizeDropdown-' + j + '"><div class="dropdown" id="dropdown-sideSize-' + j + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ j + '" role="menu" aria-labelledby="sideSize-'+ j + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ j + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ j + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + j + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ j + '" placeholder="Ex: 90 Cents"></div></td>');
 							
 				$("#sideCatMenu-" + j + " li").on("click", function() {
 						//sets button text
@@ -512,7 +619,7 @@
 					
 					return checkCount(sizeText);
 				});
-			
+
 				function checkCount(text){
 					if (text.trim() == "Count") {
 						$('#sideSizeDropdown-' + j).css('transform' , 'translateY(-40%)');
