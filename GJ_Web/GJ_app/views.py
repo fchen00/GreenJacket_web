@@ -134,16 +134,20 @@ def createItem(request, menu_id):
 		mainContainer = request.POST['postContainer']
 		mainSize = request.POST['postMainSize']
 		
+		mainCount = 1
+		if 'mainCount' in request.POST:
+			mainCount = request.POST['mainCount']
+		
+		mainSizePrice = ((int(request.POST['mainSizeNatural'])) * 100) + int(request.POST['mainSizeFloat'])
+
+
+		
+		
+		
+		
 		options.append(mainIngredient)
 		optionsIsFixed.append('main')
 		options_price.append(0)
-		
-		countNumber = 1
-		if 'count_number' in request.POST:
-			countNumber = request.POST['count_number']
-			# its not working
-			countPrice = int(request.POST['discountNatural']) + (int(request.POST['discountFloat']) * 0.01)
-			print countPrice
 		
 		# this is for optional ingredients
 		optionalCounter = 1
@@ -212,8 +216,33 @@ def createItem(request, menu_id):
 		
 		
 		sizeObject = Size.objects.get(size_id = int(mainSize))
-		new_size = ItemSize(item_id = new_menu_item, size_id = sizeObject, itemSizePrice = 0, item_count = countNumber)
+		new_size = ItemSize(item_id = new_menu_item, size_id = sizeObject, itemSizePrice = mainSizePrice, item_count = mainCount)
 		new_size.save()
+		
+		
+		sizeCounter = 1
+		while True:
+			if ('postAddSize-'+ str(sizeCounter)) in request.POST:
+				additionalSize = 'postAddSize-' + str(sizeCounter)
+				
+				m = request.POST[additionalSize]
+				print m
+				
+				additionalSizeCount = 1
+				if ('additionalSizeCount-' + str(sizeCounter))  in request.POST:
+					additionalSizeCount = request.POST['additionalSizeCount-' + str(sizeCounter)]
+				
+				additionalSizePrice = ((int(request.POST['addSizeNatural-' +  str(optionalCounter)])) * 100) + int(request.POST['addSizeFloat-' +  str(optionalCounter)])
+				
+				sizeObject = Size.objects.get(size_id = int(request.POST[additionalSize]))
+				new_size = ItemSize(item_id = new_menu_item, size_id = sizeObject, itemSizePrice = additionalSizePrice, item_count = additionalSizeCount)
+				new_size.save()
+
+				sizeCounter = sizeCounter + 1
+			else:
+				break
+		
+		
 		
 	
 		optionsString = ",".join(options)
@@ -266,7 +295,8 @@ def updateItem(request, item_id):
 	itemObject = Item.objects.get(item_id = menuObject)
 	itemSizeObject = ItemSize.objects.filter(item_id = menuObject)
 	
-	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuItemObject': menuItemObject, 'itemObject': itemObject, 'itemSizeObject': itemSizeObject})
+	print 
+	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuObject': menuObject, 'itemObject': itemObject, 'itemSizeObject': itemSizeObject})
 	
 	
 def pricing(request):
