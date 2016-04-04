@@ -324,7 +324,26 @@ def signup(request):
 		c.save()
 		return render(request, 'GJ_app/signupsuccess.html')
 	#print companyname
-	return render(request, 'GJ_app/signup.html')
+
+
+
+
+	if request.method == "GET":
+		braintree_token = braintree.ClientToken.generate()
+		print braintree_token
+		return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
+	elif request.method == "POST":
+		nonce = request.POST['payment_method_nonce']
+		result = braintree.Transaction.sale({
+			"amount": "1.00",
+			"payment_method_nonce": nonce,
+			"options": {
+			  "submit_for_settlement": True
+			}
+		})
+		print "\n\nresult is", result, "\n\n"
+
+	return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
 
 
 
@@ -389,6 +408,13 @@ def pay (request):
 		})
 		print "\n\nresult is", result, "\n\n"
 		return render (request, 'GJ_app/message.html', {'message':"Payment Received"})
+
+
+
+
+
+
+
 
 # # Menu Data to App
 def menu_json(request):
