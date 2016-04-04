@@ -586,16 +586,35 @@ def menu_json(request):
 		
 		sizes_dict = container_dict[new_container.container_id]['sizes']
 		
-		#print "id is about to be", new_item.item_id.item_id
-		new_size = get_list_or_404(ItemSize, item_id = new_item.item_id.item_id)
-		#print "new size is ", new_size
-		#print
+		options_dicts = []
 		
-		for i, size_row in enumerate(new_size):
-			temp_size_dict = {'id': size_row.id, 'name_id':size_row.size_id.size_id, 'name': size_row.size_id.size_name,
+		#print "id is about to be", new_item.item_id.item_id
+		try:
+			new_size = get_list_or_404(ItemSize, item_id = new_item.item_id.item_id)
+			for i, size_row in enumerate(new_size):
+				temp_size_dict = {'id': size_row.id, 'name_id':size_row.size_id.size_id, 'name': size_row.size_id.size_name,
 								'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
-			sizes_dict[size_row.id] = temp_size_dict
-			print "id is ", size_row.id
+								#'count': size_row.item_count, 'price': "{:.2f}".format(float(size_row.itemSizePrice)/100), 'options': {}}
+				sizes_dict[size_row.id] = temp_size_dict
+				options_dicts.append(temp_size_dict['options'])
+				
+		except:
+			print "size not found"
+			temp_size_dict = {'id': 0, 'name_id':'         ERROR!!! SIZE MISSING!!!          ',
+								'name': '            ERROR!!! SIZE MISSING!!!          ',
+								'count': '0', 'price': '0', 'options': {}}
+			sizes_dict['0'] = temp_size_dict
+			options_dicts.append(temp_size_dict['options'])
+		
+		for option_dict in options_dicts:
+			for i, option in enumerate(options_list):
+				if options_type[i] != 'main':
+					option_dict[option] = {'id':option, 'name': options_data[i].option_name, 'type': options_type[i], 
+											'price': options_price[i]}
+		
+		print options_dicts
+		
+		print
 				
 				
 				
