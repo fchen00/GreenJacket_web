@@ -311,13 +311,14 @@ def signup(request):
 		compcity = request.POST['comp_city']
 		compstate = request.POST['comp_state']
 		compzip = request.POST['comp_zip']
+		numbranches = request.POST['numBranch']
 		print "password is " + comppassword
-		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip
-		u = User(company_name=compname, email=compemail, password=comppassword, is_admin=False)
+		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip + " " + numbranches
+		u = User(company_name=compname, email=compemail.lower(), password=comppassword, is_admin=False)
 		u.save()
 		c = Company(company_id=u, company_name=compname, main_phone=compphone, 
 			main_address=compaddress, main_city=compcity, main_state=compstate, 
-			main_zipcode=compzip, is_active=False)
+			main_zipcode=compzip, branches_category=numbranches, is_active=False)
 		print "This Company"
 		print c
 		c.save()
@@ -340,7 +341,7 @@ def login(request):
 		password = request.POST['password']
 		print "GOt the method Post " + email + " " + password
 		print "email = " + email + "\npassword = " + password
-		k = User.objects.get(email=email)
+		k = User.objects.get(email=email.tolower())
 		
 		if k:
 			request.session['logged_in'] = True
