@@ -535,6 +535,11 @@ def menu_json(request):
 	for menu_entry in menu_table:
 		# going by category id and main option id
 		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		
+		if (menu_entry.item_isActive == 0):
+			print "Item", menu_entry.item_nickname, "is inactive: skipping"
+			continue
+			
 		item_table.append(new_item)
 		
 		print "for", menu_entry.item_nickname, "in first half:"
@@ -604,7 +609,8 @@ def menu_json(request):
 			print "size not found"
 			temp_size_dict = {'id': 0, 'name_id':'         ERROR!!! SIZE MISSING!!!          ',
 								'name': '            ERROR!!! SIZE MISSING!!!          ',
-								'real_item': {'name': menu_entry.item_nickname, 'id': new_item.item_id.item_id},
+								'real_item': {'name': menu_entry.item_nickname, 'id': new_item.item_id.item_id,
+												'is_active': menu_entry.item_isActive},
 								'count': '0', 'price': '0', 'options': {}}
 			sizes_dict['0'] = temp_size_dict
 			options_dicts.append(temp_size_dict['options'])
@@ -615,7 +621,7 @@ def menu_json(request):
 					option_dict[option] = {'id':option, 'name': options_data[i].option_name, 'type': options_type[i], 
 											'price': options_price[i]}
 		
-		print options_dicts
+		#print options_dicts
 		
 		print
 				
