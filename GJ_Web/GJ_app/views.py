@@ -299,9 +299,6 @@ def profile(request):
 	return render(request, 'GJ_app/profile.html', {'usr' : usr, 'company':company})
 		
 def signup(request):
-	#user = get_object_or_404(User)
-	#print User.objects.all()
-	#print Branch.objects.all()
 	if request.method == 'POST':
 		compname = request.POST['comp_name']
 		compemail = request.POST['comp_email']
@@ -325,9 +322,6 @@ def signup(request):
 		return render(request, 'GJ_app/signupsuccess.html')
 	#print companyname
 
-
-
-
 	if request.method == "GET":
 		braintree_token = braintree.ClientToken.generate()
 		print braintree_token
@@ -342,8 +336,7 @@ def signup(request):
 			}
 		})
 		print "\n\nresult is", result, "\n\n"
-
-	return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
+		return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
 
 
 
