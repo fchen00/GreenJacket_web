@@ -78,6 +78,9 @@
 
 					</div>
 				</div>
+
+
+
 				<div class="col-md-6" style="left:35%; margin-left:-100px;" >
 					<fieldset class="form-group">
 					    <label for="exampleSelect1">Branch Category</label>
@@ -90,17 +93,18 @@
 					</fieldset>
 				</div>
 
+				
+
 			</div>
 
-
+			<div style="text-align:center; font-family: 'Poiret One', cursive;"><button class="btn btn-success btn-lg" type="submit">Submit</button> </div> 
 
 
 
 
 			<!-- Brain tree payment method -->
 			<div >
-		        <form id="checkout" method="post" action="#" 
-		        style="background:white; border: solid 1px;">
+		        <form id="checkout" method="post" action="#" style="background:white; border: solid 1px;">
 		          {% csrf_token %}
 		          <div id="payment-form" style="padding-top:1em;"></div>
 		          <div style="text-align:center; font-family: 'Poiret One', cursive;"><button class="btn btn-success btn-lg" value = "Pay $1" type="submit">Pay $1</button> </div>
