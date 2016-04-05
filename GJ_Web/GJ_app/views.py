@@ -600,8 +600,8 @@ def menu_json(request):
 				temp_size_dict = {'id': size_row.id, 'name_id':size_row.size_id.size_id, 'name': size_row.size_id.size_name,
 								'real_item': {'name': menu_entry.item_nickname, 'id': new_item.item_id.item_id,
 								'is_active': menu_entry.item_isActive},
-								'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
-								#'count': size_row.item_count, 'price': "{:.2f}".format(float(size_row.itemSizePrice)/100), 'options': {}}
+								#'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
+								'count': size_row.item_count, 'price': "{:.2f}".format(float(size_row.itemSizePrice)/100), 'options': {}}
 				sizes_dict[size_row.id] = temp_size_dict
 				options_dicts.append(temp_size_dict['options'])
 				
