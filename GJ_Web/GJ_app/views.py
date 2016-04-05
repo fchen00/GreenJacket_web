@@ -299,6 +299,7 @@ def profile(request):
 	return render(request, 'GJ_app/profile.html', {'usr' : usr, 'company':company})
 		
 def signup(request):
+	'''
 	if request.method == 'POST':
 		compname = request.POST['comp_name']
 		compemail = request.POST['comp_email']
@@ -320,6 +321,7 @@ def signup(request):
 		print c
 		c.save()
 		return render(request, 'GJ_app/signupsuccess.html')
+	'''
 	#print companyname
 
 	if request.method == "GET":
@@ -327,6 +329,28 @@ def signup(request):
 		print braintree_token
 		return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
 	elif request.method == "POST":
+
+		compname = request.POST['comp_name']
+		compemail = request.POST['comp_email']
+		comppassword = request.POST['comp_password']
+		compphone = request.POST['comp_phone']
+		compaddress = request.POST['comp_addr']
+		compcity = request.POST['comp_city']
+		compstate = request.POST['comp_state']
+		compzip = request.POST['comp_zip']
+		numbranches = request.POST['numBranch']
+		print "password is " + comppassword
+		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip + " " + numbranches
+		u = User(company_name=compname, email=compemail.lower(), password=comppassword, is_admin=False)
+		u.save()
+		c = Company(company_id=u, company_name=compname, main_phone=compphone, 
+			main_address=compaddress, main_city=compcity, main_state=compstate, 
+			main_zipcode=compzip, branches_category=numbranches, is_active=False)
+		print "This Company"
+		print c
+		c.save()
+
+
 		nonce = request.POST['payment_method_nonce']
 		result = braintree.Transaction.sale({
 			"amount": "1.00",
@@ -336,7 +360,9 @@ def signup(request):
 			}
 		})
 		print "\n\nresult is", result, "\n\n"
-		return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
+		
+		return render(request, 'GJ_app/signupsuccess.html')
+		#return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
 
 
 
