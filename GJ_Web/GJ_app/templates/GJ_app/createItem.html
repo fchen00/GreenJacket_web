@@ -115,7 +115,7 @@
 							<div class="col-xs-12 col-md-6" id="secondColumn">
 								<div class="container_details sizeDiv">
 									<h5> Choose a size </h5>
-									<div class="dropdown" id="dropdown-size">
+									<div class="dropdown" id="dropdown-size" style="display:inline-flex">
 										<button class="btn btn-default dropdown-toggle" id="size" type="button" data-toggle="dropdown" aria-expanded="false">
 											Size
 										<span class="caret"></span>
@@ -127,7 +127,7 @@
 										</ul>
 									</div>
 								</div>
-								<div id="additionalSizeButton" style="text-align:center; font-family: 'Poiret One', cursive"><button type="button" class="btn btn-success btn-lg hvr-icon-float-away">Add More Sizes</button> </div> 
+								<div id="additionalSizeButton" style="text-align:center; font-family: 'Poiret One', cursive; padding-top:5%"><button type="button" class="btn btn-success btn-lg hvr-icon-float-away">Add More Sizes</button> </div> 
 
 								<div class="row" id="additionalSizeDiv">
 									<h5> Additional Size </h5>
@@ -361,6 +361,7 @@
 			function changeSize(){
 
 				$(".sizeDiv").show();
+				var additionalSizeIsPressed = false;
 
 				$("#mainSize li").on("click", function() {
 					//sets button text
@@ -379,7 +380,10 @@
 					$('#postMainSize').remove();
 					$('#dropdown-size').append('<input id="postMainSize" name="postMainSize" value="'+ actualID + '" type="hidden">');
 				
-					$("#additionalSizeButton").show();
+					if (!additionalSizeIsPressed){
+						additionalSizeIsPressed = true;
+						$("#additionalSizeButton").show();
+					}
 
 					
 					return checkCount(sizeText);
@@ -387,28 +391,29 @@
 			};
 			
 			function checkCount(text){
+				
+				$('#mainSizePrice').remove();
+				$('.sizeDiv').append('<div id="mainSizePrice"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div><div class="container_details"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="mainsizeNatural" name="mainSizeNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" id="mainsizeFloat" name="mainSizeFloat" placeholder="90" required></div></div></div>');
+				$('#countDiv').remove();
+				$('#sameBaseprice').remove();
+				$(".optionalDiv").show();
+
 				if (text.trim() == "Count") {
-					$('#countDiv').remove();
-					$('#sameBaseprice').remove();
-					$('#secondColumn').append('<div class="checkbox" id="sameBaseprice" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div>');
-					$('#secondColumn').append('<div class="container_details" id="countDiv"><div class="col-xs-12 col-md-6"><h5> How Many Pieces? </h5><div class="input-group"><input class="form-control" name="count_number" placeholder="Ex: 3, 6, 7, .. " required></div></div><div class="col-xs-12 col-md-6"><h5> Size Price </h5><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="sizeNatural" name="sizeNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" id="sizeFloat" name="sizeFloat" placeholder="90" required></div></div></div>');
-					$(".optionalDiv").show();
-					
-					$('#priceCheckbox').change(function() {
-						if ($(this).is(':checked')) {
-							$('#sizeNatural').val($('#basePriceNatural').val());
-							$('#sizeFloat').val($('#basePriceFloat').val()); 
-						} else {
-							$('#sizeNatural').val('');
-							$('#sizeFloat').val('');
-						}				
-					});
+					$('#dropdown-size').append('<div class="input-group" id="countDiv"><input class="form-control" name="mainCount" placeholder="Ex: 3, 6, 7, ..  pieces" required></div>');
 				} else {
 					$('#countDiv').remove();
-					$('sameBaseprice').remove();
-					$(".optionalDiv").show();
-				}
-		
+				};
+				
+			
+				$('#priceCheckbox').change(function() {
+						if ($(this).is(':checked')) {
+							$('#mainsizeNatural').val($('#basePriceNatural').val());
+							$('#mainsizeFloat').val($('#basePriceFloat').val()); 
+						} else {
+							$('#mainsizeNatural').val('');
+							$('#mainsizeFloat').val('');
+						}				
+					});
 			};
 			
 			
@@ -431,7 +436,10 @@
 					
 					var sizeText= $(this).text();
 					var ing= $(this).prop('id');
-					var actualID = ing.split('-')[3];
+					console.log(ing);
+					var actualID = ing.split('-')[2];
+				
+					console.log(actualID);
 					
 					$('#postAddSize-' + k).remove();
 					$('#dropdown-addSize-' + k).append('<input id="postAddSize-' + k + '" name="postAddSize-' + k + '" value="'+ actualID + '" type="hidden">');
@@ -441,23 +449,30 @@
 				});
 				
 				function checkCount(text){
+					
+					$('#sameBasepriceTd-' + k).remove();
+					$('#addSizePriceTd-' + k).remove();
+					$('#additionalCount-' + k).remove();
+					$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + k + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ k + '" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ k + '" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
+
+					
 					if (text.trim() == "Count") {
-						$('#sameBasepriceTd-' + k).remove();
-						$('#addSizePriceTd-' + k).remove();
-						$('#additionalCount-' + k).remove();
 						$('#additionalSizeDropdown-' + k).css('transform' , 'translateY(-40%)');
 						$('#addCount-' + k).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="additionalCount-' + k + '"><input class="form-control" name="additionalSizeCount-'+ k  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
-						$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" id="sameBaseprice-addSize-' + k + '" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td style="width:30%" id="addSizePriceTd-' + k + '"><div class="input-group" id="addSizePrice-'+ k + '"><div class="input-group-addon">$</div><input class="form-control" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
-					} else {
-						$('#sameBasepriceTd-' + k).remove();
-						$('#addSizePriceTd-' + k).remove();
-						$('#additionalCount-' + k).remove();
-						$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" id="sameBaseprice-addSize-' + k + '"  style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td style="width:30%" id="addSizePriceTd-' + k + '"><div class="input-group" id="addSizePrice-'+ k + '"><div class="input-group-addon">$</div><input class="form-control" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
 					}
-
+	
+					$('#addSizePriceCheckbox-' + k).change(function() {
+						if ($(this).is(':checked')) {
+							$('#addSizeNatural-' + k).val($('#basePriceNatural').val());
+							$('#addSizeFloat-' + k).val($('#basePriceFloat').val()); 
+						} else {
+							$('#addSizeNatural-' + k).val('');
+							$('#addSizeFloat-' + k).val('');
+						}				
+					});
+				
 				};
-					  
-					  
+		  
 			});
 			
 			 $("#delete_size").click(function(){
@@ -575,7 +590,7 @@
 					{% endfor %}
 					var res = divPartI + "</ul></div>";
 					
-					document.getElementById("sideIngTd-" + j).innerHTML =  res;
+					$('#sideIngTd-' + j).html(res);
 
 					$("#sideIngMenu-" + j + " li").on("click", function() {
 					//sets button text

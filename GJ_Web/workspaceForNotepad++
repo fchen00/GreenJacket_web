@@ -1,5 +1,5 @@
 <NotepadPlus>
-    <Project name="GJ-app">
+    <Project name="GJ_app">
         <Folder name="migrations">
             <File name="GJ_app\migrations\0001_initial.py" />
             <File name="GJ_app\migrations\0001_initial.pyc" />
@@ -17,6 +17,8 @@
                 <File name="GJ_app\static\css\bootstrap-theme.css" />
                 <File name="GJ_app\static\css\bootstrap-theme.css.map" />
                 <File name="GJ_app\static\css\bootstrap-theme.min.css" />
+                <File name="GJ_app\static\css\bootstrap-timepicker.css" />
+                <File name="GJ_app\static\css\bootstrap-timepicker.min.css" />
                 <File name="GJ_app\static\css\bootstrap.css" />
                 <File name="GJ_app\static\css\bootstrap.css.map" />
                 <File name="GJ_app\static\css\bootstrap.min.css" />
@@ -39,6 +41,7 @@
             <Folder name="dajax">
                 <File name="GJ_app\static\dajax\dojo.dajax.core.js" />
                 <File name="GJ_app\static\dajax\jquery.dajax.core.js" />
+                <File name="GJ_app\static\dajax\main.js" />
                 <File name="GJ_app\static\dajax\mootools.dajax.core.js" />
                 <File name="GJ_app\static\dajax\prototype.dajax.core.js" />
             </Folder>
@@ -139,6 +142,8 @@
                 <File name="GJ_app\static\js\bootstrap-datepicker.js" />
                 <File name="GJ_app\static\js\bootstrap-rating-input.min.js" />
                 <File name="GJ_app\static\js\bootstrap-rating.js" />
+                <File name="GJ_app\static\js\bootstrap-timepicker.js" />
+                <File name="GJ_app\static\js\bootstrap-timepicker.min.js" />
                 <File name="GJ_app\static\js\bootstrap.js" />
                 <File name="GJ_app\static\js\bootstrap.min.js" />
                 <File name="GJ_app\static\js\calendar.js" />
@@ -152,6 +157,7 @@
                 <File name="GJ_app\static\js\jquery.js" />
                 <File name="GJ_app\static\js\jquery.min.js" />
                 <File name="GJ_app\static\js\LICENSE-JQUERY.txt" />
+                <File name="GJ_app\static\js\moment.js" />
                 <File name="GJ_app\static\js\npm.js" />
                 <File name="GJ_app\static\js\prepopulate.js" />
                 <File name="GJ_app\static\js\prepopulate.min.js" />
@@ -213,6 +219,7 @@
                 </Folder>
                 <File name="GJ_app\templates\GJ_app\createItem.html" />
                 <File name="GJ_app\templates\GJ_app\detail.html" />
+                <File name="GJ_app\templates\GJ_app\editItem.html" />
                 <File name="GJ_app\templates\GJ_app\index.html" />
                 <File name="GJ_app\templates\GJ_app\login.html" />
                 <File name="GJ_app\templates\GJ_app\logout.html" />
