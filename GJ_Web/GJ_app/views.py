@@ -293,10 +293,10 @@ def updateItem(request, item_id):
 	
 	menuObject = Menu.objects.get(item_id = item_id)
 	itemObject = Item.objects.get(item_id = menuObject)
-	itemSizeObject = ItemSize.objects.filter(item_id = menuObject)
+	itemSizeObjects = ItemSize.objects.filter(item_id = menuObject)
+	itemSizeCount = itemSizeObjects.count()
 	
-	print 
-	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuObject': menuObject, 'itemObject': itemObject, 'itemSizeObject': itemSizeObject})
+	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuObject': menuObject, 'itemObject': itemObject, 'itemSizeObjects': itemSizeObjects, 'itemSizeCount': itemSizeCount})
 	
 	
 def pricing(request):

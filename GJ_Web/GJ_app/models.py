@@ -156,7 +156,15 @@ class Menu(models.Model):
 	
 	def realPrice(self):
 	# make sure it returns a real number
-		return self.item_basePrice/ 100.0
+		return "{:.2f}".format(float(self.item_basePrice)/100)
+	
+	def priceIntegers(self):
+	# make sure it returns a real number
+		return self.item_basePrice/100
+		
+	def priceFloats(self):
+	# make sure it returns a real number
+		return int(str(self.item_basePrice)[-2:])
 	
 	class Meta:
 		managed = False
@@ -191,6 +199,20 @@ class Item(models.Model):
 
 #   def __repr__(self):
 		# return '<Item %r, %r, %r>' %(self.item_id, self.category_id, self.container_id)
+    def mainItem(self):
+		
+		optionsList = self.options_isFixed.split(',')
+		optionsIndexList = self.options.split(',')
+		
+		for index, value in enumerate(optionsList):
+			if value == "main":
+				mainOptionIndex = optionsIndexList[index]
+				mainOptionName = str((Option.objects.get(option_id = mainOptionIndex)).option_name)
+				return mainOptionName
+		
+		return "missing"	
+			
+			
     def itemSizes(self):
 
 		itemSizesList = []
@@ -367,6 +389,15 @@ class ItemSize(models.Model):
 	def __str__(self):
 		return str(self.id) + " " + str(self.item_id.item_id) + " " + str(self.size_id.size_id) + " " + str(self.itemSizePrice) + " " + str(self.item_count)
 
+		
+	def priceIntegers(self):
+	# make sure it returns a real number
+		return self.itemSizePrice/100
+		
+	def priceFloats(self):
+	# make sure it returns a real number
+		return int(str(self.itemSizePrice)[-2:])
+		
 	class Meta:
 		managed = False
 		db_table = 'Item-Size'
