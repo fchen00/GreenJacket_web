@@ -33,6 +33,9 @@
 							<label for="password_field" style="font-family: 'Poiret One', cursive;">Password</label>
 							<input type="password" class="form-control" name="password" id="password_field" placeholder="Password">
 						</div>
+						{% if message %}
+						    <div style="color:red; padding-bottom:5px;"> {{message}} </div>
+						{% endif %}
 						<button type="submit" class="btn btn-success GJButton">Sign in</button>
 					</form>
 				</div>
