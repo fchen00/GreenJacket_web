@@ -288,6 +288,8 @@
 
 			});
 			
+			prepareOptionalIngredients();
+			
 			$("#continueButton2").on("click", function() {
 				$("#continueButton2").hide();
 				$('#mealOptionsDiv').fadeIn('slow');
@@ -602,7 +604,7 @@
 
 							if ("{{itemSizeElement.size_id.size_name}}" == "Count") {
 								$('#additionalSizeDropdown-' + i).css('transform' , 'translateY(-40%)');
-								$('#addCount-' + i).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="additionalCount-' + i + '"><input class="form-control" name="additionalSizeCount-'+ i  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
+								$('#addCount-' + i).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="additionalCount-' + i + '"><input class="form-control" name="additionalSizeCount-'+ i  + '" value="{{itemSizeElement.item_count}}" 	placeholder="Ex: 3, 6, 7, .. " required></div>');
 							}
 							$('#sizeRow-' + i).append('<td id="sameBasepriceTd-' + i + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + i + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + i + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ i + '" value="{{itemSizeElement.priceIntegers}}" name="addSizeNatural-' + i + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ i + '" value="{{itemSizeElement.priceFloats}}" name="addSizeFloat-'+ i + '" placeholder="Ex: 90 Cents"></div></td>');
 							$('#addSizePriceCheckbox-' + i).change(function() {

@@ -243,7 +243,7 @@ def createItem(request, menu_id):
 				if ('additionalSizeCount-' + str(sizeCounter))  in request.POST:
 					additionalSizeCount = request.POST['additionalSizeCount-' + str(sizeCounter)]
 				
-				additionalSizePrice = ((int(request.POST['addSizeNatural-' +  str(optionalCounter)])) * 100) + int(request.POST['addSizeFloat-' +  str(optionalCounter)])
+				additionalSizePrice = ((int(request.POST['addSizeNatural-' +  str(sizeCounter)])) * 100) + int(request.POST['addSizeFloat-' +  str(sizeCounter)])
 				
 				sizeObject = Size.objects.get(size_id = int(request.POST[additionalSize]))
 				new_size = ItemSize(item_id = new_menu_item, size_id = sizeObject, itemSizePrice = additionalSizePrice, item_count = additionalSizeCount)
