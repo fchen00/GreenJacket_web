@@ -56,7 +56,15 @@ def menuHome(request, comp_id):
 		options = Option.objects.all()
 		currentDate = date.today();
 		continDate= date(currentDate.year + 1, currentDate.month, currentDate.day)
-		return render(request, 'GJ_app/menus/index.html', {'items': items, 'comp_id':comp_id,  'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options})
+		
+		categories = []
+		for i in items:
+			if i.category_id not in categories:
+				categories.append(i.category_id)
+				
+		print categories
+		
+		return render(request, 'GJ_app/menus/index.html', {'items': items, 'comp_id':comp_id,  'companyName' : company_name, 'currentDate' : currentDate, 'continDate': continDate, 'options':options, 'categories': categories})
 	
 
 
