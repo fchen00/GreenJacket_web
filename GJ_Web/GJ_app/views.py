@@ -16,10 +16,11 @@ from .helpers_controller import *
 def index(request):
 	logged_in = request.session.get('logged_in', False)
 	print "Login? " + str(logged_in)
+	print ('GJ'.encode('hex'))
 	if logged_in:
 		comp_id = request.session.get("user_id")
 		# print comp_id
-		# return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
+		return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
  		# return HttpResponseRedirect(reverse('GJ_app:menuHome'))
  	elif request.method == 'POST':
  		email = request.POST['email']
