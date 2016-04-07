@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 from datetime import *
-
+from cryptography.fernet import Fernet
 
 from .models import *
 from .menu_controller import *
@@ -18,23 +18,25 @@ def index(request):
 	print "Login? " + str(logged_in)
 	if logged_in:
 		comp_id = request.session.get("user_id")
-		print comp_id
-		return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
+		# print comp_id
+		# return HttpResponseRedirect(reverse('GJ_app:menuHome', args=[comp_id]))
  		# return HttpResponseRedirect(reverse('GJ_app:menuHome'))
  	elif request.method == 'POST':
  		email = request.POST['email']
  		password = request.POST['password']
- 		print "GOt the method Post " + email + " " + password
- 		print "email = " + email + "\npassword = " + password
+ 		# print "GOt the method Post " + email + " " + password
+ 		# print "email = " + email + "\npassword = " + password
  		k = User.objects.get(email=email)
+ 		psright = (k.password == password.encode('hex'))
 		
- 		if k:
+ 		if k and psright:
  			request.session['logged_in'] = True
  			request.session['email'] = email
  			user_id = k.user_id
- 			request.session['user_id'] = user_id
-		
- 		return HttpResponseRedirect(reverse('GJ_app:index'))
+ 			request.session['user_id'] = user_id 			
+			return HttpResponseRedirect(reverse('GJ_app:index'))
+		else:
+			return render(request, 'GJ_app/index.html', {'message': "Incorrect Username and Password, please enter the correct username and password"})
 	else:	
 		return render(request, 'GJ_app/index.html')
 	
@@ -316,12 +318,12 @@ def profile(request):
 	logged_in = request.session.get('logged_in', False)
 	if not logged_in:
 		return HttpResponseRedirect(reverse('GJ_app:login'))
-	print "Logging in " + str(logged_in)
-	print request.session.get('email')
+	# print "Logging in " + str(logged_in)
+	# print request.session.get('email')
 	usr = get_object_or_404(User, email=request.session.get('email'))
-	print usr
+	# print usr
 	company = get_object_or_404(Company,company_id = usr)
-	print company
+	# print company
 
 	if request.method == 'POST':
 		Company.objects.filter(company_id=usr).update(company_name=request.POST['comp_name'])
@@ -364,28 +366,31 @@ def signup(request):
 
 	if request.method == "GET":
 		braintree_token = braintree.ClientToken.generate()
-		print braintree_token
+		# print braintree_token
 		return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
 	elif request.method == "POST":
 
 		compname = request.POST['comp_name']
 		compemail = request.POST['comp_email']
-		comppassword = request.POST['comp_password']
+		comppassword = (request.POST['comp_password']).encode('hex')
 		compphone = request.POST['comp_phone']
 		compaddress = request.POST['comp_addr']
 		compcity = request.POST['comp_city']
 		compstate = request.POST['comp_state']
 		compzip = request.POST['comp_zip']
 		numbranches = request.POST['numBranch']
-		print "password is " + comppassword
-		print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip + " " + numbranches
+		# print "password is " + comppassword
+		##Hexing the password
+
+
+		# print compname + " " + compemail + " " + comppassword + " " + compphone + " " + compaddress + " " + compcity + " " + compstate + " " +  compzip + " " + numbranches
 		u = User(company_name=compname, email=compemail.lower(), password=comppassword, is_admin=False)
 		u.save()
 		c = Company(company_id=u, company_name=compname, main_phone=compphone, 
 			main_address=compaddress, main_city=compcity, main_state=compstate, 
 			main_zipcode=compzip, branches_category=numbranches, is_active=False)
-		print "This Company"
-		print c
+		# print "This Company"
+		# print c
 		c.save()
 
 
@@ -397,7 +402,7 @@ def signup(request):
 			  "submit_for_settlement": True
 			}
 		})
-		print "\n\nresult is", result, "\n\n"
+		# print "\n\nresult is", result, "\n\n"
 		
 		return render(request, 'GJ_app/signupsuccess.html')
 		#return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
@@ -415,8 +420,8 @@ def login(request):
 	if request.method == 'POST':
 		email = request.POST['email']
 		password = request.POST['password']
-		print "GOt the method Post " + email + " " + password
-		print "email = " + email + "\npassword = " + password
+		# print "GOt the method Post " + email + " " + password
+		# print "email = " + email + "\npassword = " + password
 		k = User.objects.get(email=email.tolower())
 		
 		if k:
@@ -755,5 +760,27 @@ def data(request):
 	return HttpResponseRedirect(reverse('GJ_app:menu_json') + '?company=' 
 											+ temp_id)
 
+
+
+
+
+
+
+
+
+'''
+Example of Encrpytion
+
+Preinstall
+pip install cryptography
+from cryptography.fernet import Fernet
+
+Example:
+>>> encrypted = 'H\xe7\n@\xe0\x13\xe0M\xc32\xce\x16@\xb2B\xd0'
+>>> encoded = encrypted.encode('hex')
+>>> decoded = encoded.decode('hex')
+>>> encrypted == decoded
+True
+'''
 
 	
