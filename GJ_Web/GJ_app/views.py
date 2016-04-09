@@ -597,7 +597,11 @@ def menu_json(request):
 		
 	for menu_entry in menu_table:
 		# going by category id and main option id
-		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		try:
+			new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		except:
+			print "Missing item in database with id:", menu_entry.item_id
+			continue
 		
 		if (menu_entry.item_isActive == 0):
 			print "Item", menu_entry.item_nickname, "is inactive: skipping"
@@ -632,7 +636,10 @@ def menu_json(request):
 			temp_out = "{:.2f}".format(temp_float/100)
 			options_price[i] = temp_out
 			
-			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+			try:
+				options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+			except:
+				print "Error, missing option with id:", options_list[i]
 		
 		# populate Main Options in return json
 		# requires only one main ingredient
