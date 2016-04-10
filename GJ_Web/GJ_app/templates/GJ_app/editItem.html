@@ -26,14 +26,14 @@
 <!-- 			{% for message in messages %}
 				<div class="alert alert-{{ message.tags }}">{{ message }}</div>
 			{% endfor %} -->
-			<form action="/GJ_app/createItem/{{comp_id}}/" method="POST"> {% csrf_token %}
+			<form action="/GJ_app/editItem/{{menuObject.item_id}}/" method="POST"> {% csrf_token %}
 				<div class="row">
 					<div class="col-xs-12 col-md-4" id="basicInfoDiv">
 						<legend style="text-align:center" > (1) Basic Info  </legend>
 						<div class="form-group">
 							<label for="nickNameEdit">Item Nickname</label>
 							<div class="input-group" style="width:100%">
-								<input class="form-control" name="nickNameNew" value="{{menuObject.item_nickname}}" placeholder="Ex: Big Mac, Egg Muffin, Ultimate Supreme Pizza, .." required>
+								<input class="form-control" name="nickNameEdit" value="{{menuObject.item_nickname}}" placeholder="Ex: Big Mac, Egg Muffin, Ultimate Supreme Pizza, .." required>
 							</div>
 						</div>
 						<div class="form-group">
@@ -147,7 +147,7 @@
 											{% endfor %}
 										</ul>
 										{% if mainSize.size_id.size_name == "Count" %}
-											<div class="input-group" id="countDiv"><input class="form-control" name="mainCount" value="{{mainSize.item_count}}" placeholder="Ex: 3, 6, 7, ..  pieces" required></div>
+											<div class="input-group" id="countDiv"><input class="form-control" name="mainCount" value="{{mainSize.item_count}}" placeholder="Ex: 3, 6, 7, ..  pieces" required pattern="\d+"></div>
 										{% endif %}
 									</div>
 									<div id="mainSizePrice">
@@ -157,9 +157,9 @@
 										<div class="container_details">
 											<div class="input-group">
 												<div class="input-group-addon">$</div>
-												<input class="form-control" id="mainsizeNatural" name="mainSizeNatural" value="{{mainSize.priceIntegers}}" placeholder="2" required>
+												<input class="form-control" id="mainsizeNatural" name="mainSizeNatural" value="{{mainSize.priceIntegers}}" placeholder="0" required pattern="\d+">
 												<div class="input-group-addon">.</div>
-												<input class="form-control" id="mainsizeFloat" name="mainSizeFloat" value="{{mainSize.priceFloats}}" placeholder="90" required>
+												<input class="form-control" id="mainsizeFloat" name="mainSizeFloat" value="{{mainSize.priceFloats}}" placeholder="00" required pattern="\d{2}">
 											</div>
 										</div>
 									</div>
@@ -244,8 +244,8 @@
 			$("#activeBar li").removeClass("active");
 			$("#homeActive").addClass("active");
 			
-			var i = 0;
-			var j = 0;
+			var i = {{optionalIngredients|length}};
+			var j = {{mealOptions|length}};
 			var k = {{itemSizeCount}} - 1;
 
 			$("#basicInfoDiv").hide();
@@ -258,6 +258,9 @@
 				$("#additionalSizeDiv").show();
 				prepareAdditionalSize();
 			{% endif %}	
+			prepareOptionalIngredients();
+
+			prepareMeals();
 			
 			$("#startButton").on("click", function() {
 				$('#createLegend').animate({ "right": "+=20%" }, "slow" )
@@ -288,7 +291,6 @@
 
 			});
 			
-			prepareOptionalIngredients();
 			
 			$("#continueButton2").on("click", function() {
 				$("#continueButton2").hide();
@@ -429,6 +431,7 @@
 					var actualID = siz.slice(5,siz.length);
 				
 					$('#postMainSize').remove();
+					console.log(actualID);
 					$('#dropdown-size').append('<input id="postMainSize" name="postMainSize" value="'+ actualID + '" type="hidden">');
 				
 					<!-- if (!additionalSizeIsPressed){ -->
@@ -444,7 +447,7 @@
 			function checkCount(text){
 				
 				$('#mainSizePrice').remove();
-				$('.sizeDiv').append('<div id="mainSizePrice"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div><div class="container_details"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="mainsizeNatural" name="mainSizeNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" id="mainsizeFloat" name="mainSizeFloat" placeholder="90" required></div></div></div>');
+				$('.sizeDiv').append('<div id="mainSizePrice"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div><div class="container_details"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="mainsizeNatural" name="mainSizeNatural" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" id="mainsizeFloat" name="mainSizeFloat" placeholder="00" required></div></div></div>');
 				$('#countDiv').remove();
 				$('#sameBaseprice').remove();
 				$(".optionalDiv").show();
@@ -514,7 +517,7 @@
 					$('#sameBasepriceTd-' + k).remove();
 					$('#addSizePriceTd-' + k).remove();
 					$('#additionalCount-' + k).remove();
-					$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + k + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ k + '" name="addSizeNatural-' + k + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ k + '" name="addSizeFloat-'+ k + '" placeholder="Ex: 90 Cents"></div></td>');
+					$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + k + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ k + '" name="addSizeNatural-' + k + '" placeholder="0"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ k + '" name="addSizeFloat-'+ k + '" placeholder="00"></div></td>');
 
 					
 					if (text.trim() == "Count") {
@@ -570,8 +573,8 @@
 							
 								console.log(actualID);
 								
-								$('#postAddSize-' + k).remove();
-								$('#dropdown-addSize-' + k).append('<input id="postAddSize-' + i + '" name="postAddSize-' + i + '" value="'+ actualID + '" type="hidden">');
+								$('#postAddSize-' + i).remove();
+								$('#dropdown-addSize-' + i).append('<input id="postAddSize-' + i + '" name="postAddSize-' + i + '" value="'+ actualID + '" type="hidden">');
 						
 							
 								return checkCount(sizeText);
@@ -582,7 +585,7 @@
 							$('#sameBasepriceTd-' + i).remove();
 							$('#addSizePriceTd-' + i).remove();
 							$('#additionalCount-' + i).remove();
-							$('#sizeRow-' + i).append('<td id="sameBasepriceTd-' + i + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + i + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + i + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ i + '" name="addSizeNatural-' + i + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ i + '" name="addSizeFloat-'+ i + '" placeholder="Ex: 90 Cents"></div></td>');
+							$('#sizeRow-' + i).append('<td id="sameBasepriceTd-' + i + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + i + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + i + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ i + '" name="addSizeNatural-' + i + '" placeholder="0"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ i + '" name="addSizeFloat-'+ i + '" placeholder="00"></div></td>');
 
 							
 							if (text.trim() == "Count") {
@@ -606,7 +609,7 @@
 								$('#additionalSizeDropdown-' + i).css('transform' , 'translateY(-40%)');
 								$('#addCount-' + i).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="additionalCount-' + i + '"><input class="form-control" name="additionalSizeCount-'+ i  + '" value="{{itemSizeElement.item_count}}" 	placeholder="Ex: 3, 6, 7, .. " required></div>');
 							}
-							$('#sizeRow-' + i).append('<td id="sameBasepriceTd-' + i + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + i + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + i + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ i + '" value="{{itemSizeElement.priceIntegers}}" name="addSizeNatural-' + i + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ i + '" value="{{itemSizeElement.priceFloats}}" name="addSizeFloat-'+ i + '" placeholder="Ex: 90 Cents"></div></td>');
+							$('#sizeRow-' + i).append('<td id="sameBasepriceTd-' + i + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + i + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + i + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ i + '" value="{{itemSizeElement.priceIntegers}}" name="addSizeNatural-' + i + '" placeholder="0"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ i + '" value="{{itemSizeElement.priceFloats}}" name="addSizeFloat-'+ i + '" placeholder="00"></div></td>');
 							$('#addSizePriceCheckbox-' + i).change(function() {
 								if ($(this).is(':checked')) {
 									$('#addSizeNatural-' + i).val($('#basePriceNatural').val());
@@ -616,6 +619,9 @@
 									$('#addSizeFloat-' + i).val('');
 								}				
 							});
+							
+							$('#postAddSize-' + i).remove();
+							$('#dropdown-addSize-' + i).append('<input id="postAddSize-' + i + '" name="postAddSize-' + i + '" value="'+ {{itemSizeElement.size_id.size_id}} + '" type="hidden">');
 						{% endif %}
 				{% endfor %}
 			};
@@ -624,7 +630,6 @@
 						
 		
 			$("#add_row").click(function(){
-				
 				 i++;
 				$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
 
@@ -677,7 +682,7 @@
 				$("#selectOptional-" + i).on("click", function() {
 					//sets button text
 					
-					$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="90" required></div>');
+					$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="00" required></div>');
 				});
 				
 				$("#selectFixed-" + i).on("click", function() {
@@ -700,12 +705,28 @@
 			function prepareOptionalIngredients(){
 				
 				var i = 0;
-				{% for itemSizeElement in itemSizeObjects %}
+					{% for key, value in optionalIngredients.items %}
 						 i++;
 						$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
+						$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}</ul></div></div></td><td id="optionalIngTd-' + i + '"><div class="dropdown" id="dropdown-ing-' + i + '"><button class="btn btn-default dropdown-toggle" id="optionalIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalIngMenu-' + i + '" role="menu" aria-labelledby="optionalIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="optional-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
+						if ('{{value.optionStatus}}' == "fixed"){
+							$('#selectFixed-' + i).prop("checked", true);
+						} else {
+							$('#selectOptional-' + i).prop("checked", true);
+							if ({{value.optionPrice}} != 0) {
+							var ingPriceNatural = {{value.optionPrice}}/100 >> 0
+								var ingPriceFloat = "{{value.optionPrice}}".slice(-2); 
+								
+							} 
+							else {
+										var ingPriceNatural = 0;
+										var ingPriceFloat = 0;
+							}
+							
+						$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" value="' + ingPriceNatural + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" value="' + ingPriceFloat + '" placeholder="00" required></div>');
 
-						$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">Category	<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}	</ul></div></div></td><td id="optionalIngTd-' + i + '"> </td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
 
+						}
 							$("#optionalCatMenu-" + i + " li").on("click", function() {
 								//sets button text
 								$("#optionalCategory-" + i).text($($(this).find("a")).text())
@@ -718,7 +739,6 @@
 								
 								return changeOptionalIngredient(categoryId.slice(15, categoryId.length));
 							});
-						
 						
 						function changeOptionalIngredient(id){
 							var divPartI = "<div class='dropdown' id='dropdown-ing-" + i + "'><button class='btn btn-default dropdown-toggle' id='optionalIngredient-" + i + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='optionalIngMenu-"+ i + "' role='menu' aria-labelledby='optionalIngredient-" + i + "'>";
@@ -753,16 +773,21 @@
 						$("#selectOptional-" + i).on("click", function() {
 							//sets button text
 							
-							$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="90" required></div>');
+							$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="00" required></div>');
 						});
 						
 						$("#selectFixed-" + i).on("click", function() {
 							//sets button text
 							$("#additionalPrice-" + i).remove();
 						});
+						
+						$('#postIng-' + i).remove();
+						$('#dropdown-ing-' + i).append('<input id="postIng-' + i + '" name="postIng-' + i + '" value="'+ {{value.optionObject.option_id}} + '" type="hidden">');
 					{% endfor %}  
 			};	  
-					  
+					
+					
+			
 			
 			
 			
@@ -860,6 +885,108 @@
 
 				 }
 			});
+			
+			function prepareMeals() {
+				var i = 0;
+				{% for key, value in mealOptions.items %}
+					i++;
+				$('#mealTable').append('<tr id="mealRow-'+ i +'"></tr>');
+				
+				if ({{value.mealPrice}} != 0) {
+					var mealNatural = ({{value.mealPrice}}/100) >> 0
+					var mealFloat = "{{value.mealPrice}}".slice(-2); 
+				}	
+				else {
+					var mealNatural = 0;
+					var mealFloat = 0;
+				}
+				
+				
+			$('#mealRow-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ i + '" role="menu" aria-labelledby="sideCategory-'+ i + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ i + '"><div class="dropdown" id="dropdown-sideIng-'  + i + '"><button class="btn btn-default dropdown-toggle" id="sideIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideIngMenu-' + i + '" role="menu" aria-labelledby="sideIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="side-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td id="sideSizeDiv-' + i + '"><div class="container_details" style="display:inline-block; transform:translateY(0%)" id="sideSizeDropdown-' + i + '"><div class="dropdown" id="dropdown-sideSize-' + i + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.sizeObject.size_name}} <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ i + '" role="menu" aria-labelledby="sideSize-'+ i + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ i + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ i + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + i + '" value="' + mealNatural + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ i + '" value="' + mealFloat + '"placeholder="Ex: 90 Cents"></div></td>');
+							
+				$("#sideCatMenu-" + i + " li").on("click", function() {
+						//sets button text
+						$("#sideCategory-" + i).text($($(this).find("a")).text())
+						var categoryId = $(this).prop('id');
+						//removes isSelected class
+						$("#sideCatMenu-" + i +" li a").removeClass("isSelected");
+
+						//add isSlected Class to clicked element
+						$($(this).find('a')).addClass("isSelected")
+						
+						return changeSideIngredient(categoryId.slice(11, categoryId.length));
+					});
+
+				function changeSideIngredient(id){
+					var divPartI = "<div class='dropdown' id='dropdown-sideIng-" + i + "'><button class='btn btn-default dropdown-toggle' id='sideIngredient-" + i + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='sideIngMenu-"+ i + "' role='menu' aria-labelledby='sideIngredient-" + i + "'>";
+					{% for element in categoryOptions %}
+						
+						if (id == {{element.category_id.category_id}})
+							divPartI = divPartI +  "<li role='presentaton' id='side-" + i + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + i + "' href='#/'>{{element.option_id.option_name}} </a></li>";
+					{% endfor %}
+					var res = divPartI + "</ul></div>";
+					
+					$('#sideIngTd-' + i).html(res);
+
+					$("#sideIngMenu-" + i + " li").on("click", function() {
+					//sets button text
+					$("#sideIngredient-" + i).text($($(this).find("a")).text())
+					//removes isSelected class
+					$("#sideIngMenu-" + i + " li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					
+					$($(this).find('a')).addClass("isSelected")
+					
+				
+					var ing= $(this).prop('id');
+					console.log(ing);
+					var actualID = ing.split('-')[2];
+					
+					$('#postSideIng-' + i).remove();
+					$('#dropdown-sideIng-' + i).append('<input id="postSideIng-' + i + '" name="postSideIng-' + i + '" value="'+ actualID + '" type="hidden">');
+				
+					});
+				};
+				
+				
+				$("#sideSizeMenu-" + i + " li").on("click", function() {
+					//sets button text
+					$("#sideSize-" + i).text($($(this).find("a")).text())
+					var sizeText= $(this).text();
+					//removes isSelected class
+					$("#sideSizeMenu-" + i + " li a").removeClass("isSelected");
+
+					//add isSlected Class to clicked element
+					$($(this).find('a')).addClass("isSelected")	
+					
+					var ing= $(this).prop('id');
+
+					var actualID = ing.split('-')[3];
+				
+					$('#postSideSize-' + i).remove();
+					$('#dropdown-sideSize-' + i).append('<input id="postSideSize-' + i + '" name="postSideSize-' + i + '" value="'+ actualID + '" type="hidden">');
+				
+					
+					return checkCount(sizeText);
+				});
+
+				function checkCount(text){
+					if (text.trim() == "Count") {
+						$('#sideSizeDropdown-' + i).css('transform' , 'translateY(-40%)');
+						$('#sideSizeDiv-' + i).append('<div class="input-group" style="display:inline-block; padding-left:20px" id="sideCount-' + i + '"><input class="form-control" name="countMeal-'+ i  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
+					} else {
+						$('#sideSizeDropdown-' + i).css('transform' , '');
+						$('#sideCount-' + i).remove();
+					}
+			
+				};
+				
+				$('#postSideIng-' + j).remove();
+				$('#dropdown-sideIng-' + j).append('<input id="postSideIng-' + j + '" name="postSideIng-' + j + '" value="'+ {{value.categoryObject.category_id}} + '" type="hidden">');
+				{% endfor %}
+				
+			};
 			
 			
 		});

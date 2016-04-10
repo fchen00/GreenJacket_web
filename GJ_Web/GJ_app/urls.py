@@ -45,7 +45,7 @@ urlpatterns = [
 	url(r'^createItem/(?P<menu_id>[0-9]+)/$', views.createItem, name='createItem'),
 	url(r'^deleteItem/(?P<item_id>[0-9]+)/$', views.deleteItem, name='deleteItem'),
 
-	# url(r'^editItem/(?P<menu_id>[0-9]+)/(?P<item_id>[0-9]+)/$', views.editItem, name='editItem'),
+	url(r'^editItem/(?P<item_id>[0-9]+)/$', views.editItem, name='editItem'),
 	url(r'^updateItem/(?P<item_id>[0-9]+)/$', views.updateItem, name='updateItem'),
 
 

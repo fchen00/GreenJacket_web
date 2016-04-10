@@ -11,6 +11,9 @@
 			color:#2C8A64;
 		}
 		
+		.nav > li > a {color: #2C8A64;	}
+		.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {background-color: #2C8A64; text-decoration:none; color:white}
+		
 		.container_details {text-align: center}
 		.GJButton{ border-color:#2C8A64; background-color: #2C8A64; background-image:none; outline:none;  font-family: 'Poiret One', cursive;}
 		.GJButton:hover, .GJButton:focus, .GJButton:active { border-color: #/FED136; background-color: #FED136; transition:all 0.5s; outline:none;  font-family: 'Poiret One', cursive;}
@@ -136,8 +139,17 @@
 								</div>
 								<div id="additionalSizeButton" style="text-align:center; font-family: 'Poiret One', cursive; padding-top:5%"><button type="button" class="btn btn-success btn-lg hvr-icon-float-away">Add More Sizes</button> </div> 
 
-								<div class="row" id="additionalSizeDiv">
-									<h5> Additional Size </h5>
+								
+							</div>
+						</div>
+						
+						<div class="row optionalDiv" style="padding-top:50px; padding-left:3%">
+							<ul class = "nav nav-tabs	" id="myTabs" style="padding-top: 5%">
+								<li id="addSize"><a href = "#tab-AdditionalSize" style="outline:0" data-toggle = "tab">Additional Size</a></li>
+								<li><a href = "#tab-OptionalIngredients" style="outline:0" data-toggle = "tab">Optional Ingredients</a></li>
+							</ul>
+							<div id = "myTabContent" class = "tab-content">
+								<div class="tab-pane fade col-xs-12" id="tab-AdditionalSize">
 									<table class="table col-xs-12 col-md-6" id="additionalSizeTable">
 										<thead>
 											<th> </th>
@@ -154,25 +166,24 @@
 										<a id="delete_size" class="pull-right btn btn-danger" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Delete Size"><i class="fa fa-minus-circle"></i></a>			
 									</div>
 								</div>
-							</div>
-						</div>
-						<div class="row optionalDiv" style="padding-top:50px; padding-left:20%">
-							<h5> Optional Ingredients </h5>
-							<table class="table col-xs-12 col-md-6" id="optionalIngredientsTable">
-								<thead>
-									<th> </th>
-									<th> </th>
-									<th> </th>
-									<th> </th>
-									<th> </th>
-								</thead>
-								<tbody>
-									
-								</tbody>
-							</table>
-							<div style="padding-bottom:40%" >
-								<a id="add_row" class="btn btn-default pull-left" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Add Row"><i class="fa fa-plus-circle"></i></a>
-								<a id="delete_row" class="pull-right btn btn-danger" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Delete Row"><i class="fa fa-minus-circle"></i></a>			
+								<div class="tab-pane fade col-xs-12" id="tab-OptionalIngredients">
+									<table class="table col-xs-12 col-md-6" id="optionalIngredientsTable">
+										<thead>
+										<th> </th>
+										<th> </th>
+										<th> </th>
+										<th> </th>
+										<th> </th>
+									</thead>
+									<tbody>
+										
+									</tbody>
+									</table>
+									<div style="padding-bottom:40%" >
+										<a id="add_row" class="btn btn-default pull-left" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Add Row"><i class="fa fa-plus-circle"></i></a>
+										<a id="delete_row" class="pull-right btn btn-danger" data-container="body" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-content="Delete Row"><i class="fa fa-minus-circle"></i></a>			
+									</div>
+								</div>
 							</div>
 							<div id="continueButton2" style="text-align:center; font-family: 'Poiret One', cursive"><button type="button" class="btn btn-success btn-lg hvr-bubble-float-bottom">Meal Section</button> </div>
 						</div>
@@ -219,7 +230,7 @@
 			$("#itemDetailsDiv").hide();
 			$("#mealOptionsDiv").hide();
 			$("#submitButton").hide();
-			$("#additionalSizeDiv").hide();
+			$("#addSize").hide();
 			$("#additionalSizeButton").hide();
 
 			
@@ -237,7 +248,7 @@
 			
 			$("#additionalSizeButton").on("click", function() {
 				$("#additionalSizeButton").hide();
-				$('#additionalSizeDiv').fadeIn('slow');
+				$('#addSize').fadeIn('slow');
 					
 			});
 
@@ -288,8 +299,17 @@
 			$("#add_meal").popover({ trigger: "hover" });
 			$("#delete_row").popover({ trigger: "hover" });
 			$("#delete_meal").popover({ trigger: "hover" });
+	
+			$('#myTabs a').click(function () {
+				<!-- $('#makeSelection').hide(); -->
+				$('body,html').animate({ scrollDown: $('body').height() }, 1200);
+				
+					if ($(this).attr('href') == ('#tab-Optional')){
+						$('#tab-Optional').show();
+						$('#tab-Optional').css('padding-top', '5%');
+					}
 
-
+			});
 			
 			
 			$("#mainCategory li").on("click", function() {
@@ -400,7 +420,7 @@
 			function checkCount(text){
 				
 				$('#mainSizePrice').remove();
-				$('.sizeDiv').append('<div id="mainSizePrice"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div><div class="container_details"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="mainsizeNatural" name="mainSizeNatural" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" id="mainsizeFloat" name="mainSizeFloat" placeholder="90" required></div></div></div>');
+				$('.sizeDiv').append('<div id="mainSizePrice"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="priceCheckbox">same as Base Price?</label></div><div class="container_details"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="mainsizeNatural" name="mainSizeNatural" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" id="mainsizeFloat" name="mainSizeFloat" placeholder="00" required></div></div></div>');
 				$('#countDiv').remove();
 				$('#sameBaseprice').remove();
 				$(".optionalDiv").show();
@@ -548,7 +568,7 @@
 				$("#selectOptional-" + i).on("click", function() {
 					//sets button text
 					
-					$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="2" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="90" required></div>');
+					$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '"><div class="input-group-addon">Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="00" required></div>');
 				});
 				
 				$("#selectFixed-" + i).on("click", function() {
