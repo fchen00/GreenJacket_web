@@ -28,7 +28,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/GJ_app/" class="navbar-brand" > 
+      <a href="/" class="navbar-brand" > 
 		<img alt="Green Jacket" src="/static/pictures/trans2.gif" class="img-rounded img-responsive">
 		<text style="padding-top:0.8em; padding-left: 0.6em; padding-right: 0.6em; font-size:18px !important;"> GreenJacket </text>
 	</a>
@@ -37,13 +37,13 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav" id="activeBar">
-        <li id="homeActive"><a href="/GJ_app/">Home</a></li>
-		<li id="pricingActive"><a href="/GJ_app/pricing">Pricing</a></li>
+        <li id="homeActive"><a href="/">Home</a></li>
+		<li id="pricingActive"><a href="/pricing">Pricing</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		{% if request.session.logged_in %}
-			<li id="profileActive"><a href="/GJ_app/profile/">Profile</a></li>
-			<li id="logoutActive"><a href="/GJ_app/logout/">Logout</a></li>
+			<li id="profileActive"><a href="/profile/">Profile</a></li>
+			<li id="logoutActive"><a href="/logout/">Logout</a></li>
 		{% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->

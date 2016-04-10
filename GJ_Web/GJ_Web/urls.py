@@ -24,5 +24,5 @@ from GJ_app import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^GJ_app/', include('GJ_app.urls')),
+    url(r'^', include('GJ_app.urls')),
 ]

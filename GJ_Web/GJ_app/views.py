@@ -71,7 +71,7 @@ def menuHome(request, comp_id):
 	
 
 
-	return render(request, 'GJ_app/index.html')
+	return render(request, 'index.html')
 
 	
 def activateItem(request, itemID):
@@ -828,7 +828,11 @@ def menu_json(request):
 		
 	for menu_entry in menu_table:
 		# going by category id and main option id
-		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		try:
+			new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
+		except:
+			print "Missing item in database with id:", menu_entry.item_id
+			continue
 		
 		if (menu_entry.item_isActive == 0):
 			print "Item", menu_entry.item_nickname, "is inactive: skipping"
@@ -847,11 +851,16 @@ def menu_json(request):
 		
 		mains_dict = menu_dict['categories'][category.category_id]['mains']
 		
-		# Get Options
+		# Get Options and meals
 		options_list = new_item.options.split(',')
 		options_type = new_item.options_isFixed.split(',')
 		options_price = new_item.options_price.split(',')
 		options_data = []
+		
+		temp_meal_list = new_item.item_mealOptions.split(',')
+		meal_prices = new_item.item_mealPrice.split(',')
+		meal_options = []
+		meal_sizes = []
 		
 		#print "options list is", options_list
 		#print "options type is", options_type
@@ -863,7 +872,26 @@ def menu_json(request):
 			temp_out = "{:.2f}".format(temp_float/100)
 			options_price[i] = temp_out
 			
-			options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+			try:
+				options_data.append(get_object_or_404(Option, option_id = options_list[i]))
+			except:
+				print "Error, missing option with id:", options_list[i]
+		
+		
+		for i, m_price_str in enumerate(meal_prices):
+			try:
+				temp_float = float(m_price_str)
+			except:
+				print "Missing meal item in database for item", new_item.id
+				temp_float = 0
+				continue
+				
+			temp_out = "{:.2f}".format(temp_float/100)
+			meal_prices[i] = temp_out
+			
+			meal_options.append(temp_meal_list[i].split('-')[0])
+			meal_sizes.append(temp_meal_list[i].split('-')[1])
+			
 		
 		# populate Main Options in return json
 		# requires only one main ingredient
@@ -886,6 +914,7 @@ def menu_json(request):
 		sizes_dict = container_dict[new_container.container_id]['sizes']
 		
 		options_dicts = []
+		meals_dicts = []
 		
 		#print "id is about to be", new_item.item_id.item_id
 		try:
@@ -895,9 +924,11 @@ def menu_json(request):
 								'real_item': {'name': menu_entry.item_nickname, 'id': new_item.item_id.item_id,
 								'is_active': menu_entry.item_isActive},
 								#'count': size_row.item_count, 'price': size_row.itemSizePrice, 'options': {}}
-								'count': size_row.item_count, 'price': "{:.2f}".format(float(size_row.itemSizePrice)/100), 'options': {}}
+								'count': size_row.item_count, 'price': "{:.2f}".format(float(size_row.itemSizePrice)/100),
+								'options': {}, 'meals': {}}
 				sizes_dict[size_row.id] = temp_size_dict
 				options_dicts.append(temp_size_dict['options'])
+				meals_dicts.append(temp_size_dict['meals'])
 				
 		except:
 			print "size not found"
@@ -905,9 +936,11 @@ def menu_json(request):
 								'name': '            ERROR!!! SIZE MISSING!!!          ',
 								'real_item': {'name': menu_entry.item_nickname, 'id': new_item.item_id.item_id,
 												'is_active': menu_entry.item_isActive},
-								'count': '0', 'price': '0', 'options': {}}
+								'count': '0', 'price': '0', 'options': {}, 'meals': {}}
 			sizes_dict['0'] = temp_size_dict
 			options_dicts.append(temp_size_dict['options'])
+			meals_dicts.append(temp_size_dict['meals'])
+			
 		
 		for option_dict in options_dicts:
 			for i, option in enumerate(options_list):
@@ -915,74 +948,28 @@ def menu_json(request):
 					option_dict[option] = {'id':option, 'name': options_data[i].option_name, 'type': options_type[i], 
 											'price': options_price[i]}
 		
+		for meal_dict in meals_dicts:
+			for j, meal_option in enumerate (meal_options):
+				try:
+					temp_option = get_object_or_404(Option, option_id = meal_option)
+				except:
+					print "Invalid option id:", meal_option,"from meal:"
+					continue
+				try:
+					temp_size = get_object_or_404(Size, size_id = meal_sizes[j])
+				except:
+					print "Invalid size id:", meal_sizes[j],"from meal"
+					continue
+				
+				meal_dict[meal_option] = {'id': meal_option, 'option_id': meal_option, 'size_id': meal_sizes[j],
+											'price': meal_prices[j], 'size_name': temp_size.size_name,
+											'count': 0, 'option_name': temp_option.option_name}
+		
 		#print options_dicts
 		
 		print
-				
-				
-				
-				
-	"""			
-	# I need to do this after all Main Options and empty Containers are created
-	for menu_entry in menu_table:
-		# going by category id and main option id
-		new_item = get_object_or_404(Item, item_id = menu_entry.item_id)
-		
-		print "for", menu_entry.item_nickname, "in second half:"
-		
-		category = new_item.category_id
-		mains_dict = menu_dict['categories'][category.category_id]['mains']
-		
-		options_list = new_item.options.split(',')
-		options_type = new_item.options_isFixed.split(',')
-		
-		container_dicts = []
-		# populate Main Options in return json
-		for i, opt_id in enumerate(options_list):
-			if options_type[i] == "main":
-				# look through entire Menu for all Main Options that match
-				# the current Main Option so we can add the current container
-				# to those main options
-				
-				for temp_cat_id, temp_cat in menu_dict['categories'].iteritems():
-					for temp_main_id, temp_main in temp_cat['mains'].iteritems():
-						if temp_main_id == opt_id:
-							container_dicts.append(temp_main['containers'])
-		
-		#print new_item.container_id
-		
-		new_container = new_item.container_id
-		
-		#print container_dicts
-		
-		for i, in_containers in enumerate(container_dicts):
-			if not new_container.container_id in in_containers:
-				temp_container_dict = {'name': new_container.container_name, 'id': new_container.container_id, 'sizes': {}}
-				in_containers[new_container.container_id] = temp_container_dict
-		
-		
-		if not container.container_id in container_dict:
-			container_dict[container.container_id] = {'id': container.container_id,
-									'name': container.container_name,
-									'sizes':{}, 'items':{}}
-		
-		mains_dict[container.container_id]['mains'][new_item.id] = menu_entry.item_nickname
-		
-		#size_dict = in_containers[new_container.container_id]['sizes']
-		"""	
-		
-	
-	
+			
 	return JsonResponse(menu_dict)
-	
-	return JsonResponse({'restaurant name':'Cafe One', 'restaurant id':1746928, 
-							'categories':{'Meat':{'containers':{'Burger':
-								{'options':{'Cheese':{'locked':True},
-									'Bacon':{'locked':False, 'extra_price':0.20},
-									'Pickles':{'locked':False, 'extra_price':0.05}}}, 'Wrap':{}}},
-							'Sides':{'containers':{'Fries':{}}},
-							'Drinks':{'containers':{'small':{}, 'medium':{}, 'large':{}}}},
-							'last update':'today', 'food count':36})
 
 def data(request): 
 	temp_id = request.GET.get('company', "-1")

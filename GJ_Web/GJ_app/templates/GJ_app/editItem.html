@@ -26,7 +26,7 @@
 <!-- 			{% for message in messages %}
 				<div class="alert alert-{{ message.tags }}">{{ message }}</div>
 			{% endfor %} -->
-			<form action="/GJ_app/editItem/{{menuObject.item_id}}/" method="POST"> {% csrf_token %}
+			<form action="/createItem/{{comp_id}}/" method="POST"> {% csrf_token %}
 				<div class="row">
 					<div class="col-xs-12 col-md-4" id="basicInfoDiv">
 						<legend style="text-align:center" > (1) Basic Info  </legend>

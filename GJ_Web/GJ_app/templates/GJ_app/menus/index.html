@@ -39,7 +39,7 @@
 		<div style="margin:0 auto; display:table">
 			<div style="text-align:center">
 				<a class="btn btn-md btn-success GJButton" style="outline:none; font-weight:bold" id="addPop"
-					data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Add New Item" href="/GJ_app/addItem/{{comp_id}}/"><i class="fa fa-plus"></i></a>
+					data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Add New Item" href="/addItem/{{comp_id}}/"><i class="fa fa-plus"></i></a>
 			</div>
 			<ul class = "nav nav-pills" id="myTabs" style="padding-top: 5%">
 				{% for cat in categories %}
@@ -59,7 +59,7 @@
 									<div class="panel-heading" role="tab" id="heading-{{item.item_id.item_id}}">
 										<h4 class="panel-title">
 											<a role="button" style="width:100%; display:block; outline: 0" data-toggle="collapse" data-parent="#accordion" href="#{{item.item_id.item_id}}" aria-expanded="true" aria-controls="nav-{{item.item_id.item_id}}">
-												<text style="text-align:left">{{item.item_id.item_nickname}}</text><a class="editForm btn btn-sm btn-danger pull-right" style="outline:none; transform:translateY(-78%)" href="/GJ_app/deleteItem/{{item.item_id.item_id}}" role="button"><i class="fa fa-minus-circle"></i></a>
+												<text style="text-align:left">{{item.item_id.item_nickname}}</text><a class="editForm btn btn-sm btn-danger pull-right" style="outline:none; transform:translateY(-78%)" href="/deleteItem/{{item.item_id.item_id}}" role="button"><i class="fa fa-minus-circle"></i></a>
 											</a>
 										</h4>
 									</div>
@@ -111,7 +111,7 @@
 																<td style="width:unset"> Item Status </td>
 																<td>{% if item.item_id.item_isActive == 1 %}
 																		Active &nbsp;
-																		<a class="btn-sm btn-danger" style="outline:none text-decoration:none;" href="/GJ_app/deactivateItem/{{item.item_id.item_id}}"> Deactivate</a>
+																		<a class="btn-sm btn-danger" style="outline:none text-decoration:none;" href="/deactivateItem/{{item.item_id.item_id}}"> Deactivate</a>
 																	{% else %}
 																		Inactive
 																	{% endif %}  
@@ -146,9 +146,9 @@
 											<p>
 												<div style="padding-top:7%">
 													{% if item.item_id.item_isActive == 1 %}
-														<a class="editForm btn btn-success" style="outline:none" href="/GJ_app/updateItem/{{item.item_id.item_id}}" role="button"> Edit Item Details</a>
+														<a class="editForm btn btn-success" style="outline:none" href="/updateItem/{{item.item_id.item_id}}" role="button"> Edit Item Details</a>
 													{% else %}
-														<a class="activate btn btn-success" style="outline:none" href="/GJ_app/activateItem/{{item.item_id.item_id}}" role="button"> Activate Item</a>
+														<a class="activate btn btn-success" style="outline:none" href="/activateItem/{{item.item_id.item_id}}" role="button"> Activate Item</a>
 													{% endif %} 
 													<button class="editIngredients btn btn-success" type="button" data-toggle="collapse" data-target="#moreDetails-{{item.item_id.item_id}}" aria-expanded="false" aria-controls="moreDetails-{{item.item_id.item_id}}"> More detailed info
 													</button>
