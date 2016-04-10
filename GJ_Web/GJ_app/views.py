@@ -71,7 +71,7 @@ def menuHome(request, comp_id):
 	
 
 
-	return render(request, 'GJ_app/index.html')
+	return render(request, 'index.html')
 
 	
 def activateItem(request, itemID):
