@@ -43,7 +43,10 @@
 								<b>Price: $55 <text style="font-size:11px">(One-time Payment)</text></b>
 							</div>
 						</p>
-						<p style="text-align:center;  font-family: 'Poiret One', cursive;"><a class="btn btn-success btn-lg " href="/signup" role="button" name="55">Sign Up</a></p>
+						<form method="post" action="/signup/" style="text-align:center;  font-family: 'Poiret One', cursive;">
+							{% csrf_token %}
+							<button class="btn btn-success btn-lg" name="branchcategory" value ="1"type="submit">Sign Up</button> 
+						</form>
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-4">
@@ -57,7 +60,10 @@
 							</div>
 
 						</p>
-						<p style="text-align:center;  font-family: 'Poiret One', cursive;"><a class="btn btn-success btn-lg " href="/signup" role="button" name="40">Sign Up</a></p>
+						<form method="post" action="/signup/" style="text-align:center;  font-family: 'Poiret One', cursive;">
+							{% csrf_token %}
+							<button class="btn btn-success btn-lg" name="branchcategory" value ="2"type="submit">Sign Up</button> 
+						</form>
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-4">
@@ -75,7 +81,11 @@
 							</div>
 
 						</p>
-						<div style="text-align:center; font-family: 'Poiret One', cursive;"><a class="btn btn-success btn-lg " href="/signup" role="button" name="55+">Sign Up</a></div><div style="height:15px"></div>
+						<form method="post"  action="/signup/" style="text-align:center;  font-family: 'Poiret One', cursive;">
+							{% csrf_token %}
+							<button class="btn btn-success btn-lg" name="branchcategory" value ="3"type="submit">Sign Up</button> 
+						</form>
+						<div style="height:15px"></div>
 					</div>
 				</div>
 			</div>

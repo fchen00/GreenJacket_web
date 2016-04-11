@@ -82,17 +82,36 @@
 					</div>
 				</div>
 
-
 				<!-- To select an option and disable it 
 					disabled="disabled" selected="selected" -->
 				<div class="col-md-6" style="left:35%; margin-left:-100px;" >
 					<fieldset class="form-group">
 					    <label for="exampleSelect1">Branch Category</label>
+
+					    {% if branch_cate %}
+					    <select class="form-control" id="numberofbranch" disabled="disabled" name="numBranch">
+					    {% else %}
 					    <select class="form-control" id="numberofbranch" name="numBranch">
+					    {% endif %}
 					    	<option value="" selected disabled>Please select an option...</option>
+
+					    	{% ifequal branch_cate '1' %}
+					      	<option value='1' selected="selected">1-2 Branches: Small Enterprises  $55 (One-time Payment)</option>
+					      	{% else %}
 					      	<option value='1'>1-2 Branches: Small Enterprises  $55 (One-time Payment)</option>
+					      	{% endifequal %}
+
+					      	{% ifequal branch_cate "2" %}
+					      	<option value='2' selected="selected">3-10: Medium Enterprises $40 (per year)</option>
+					      	{% else %}
 					      	<option value='2'>3-10: Medium Enterprises $40 (per year)</option>
+					      	{% endifequal %}
+
+					      	{% ifequal branch_cate "3" %}
+					      	<option value='3' selected="selected">10+: Large Enterprises $55 (per year) + QR*</option>
+					      	{% else %}
 					      	<option value='3'>10+: Large Enterprises $55 (per year) + QR*</option>
+					      	{% endifequal %}
 					    </select>
 					</fieldset>
 				</div>
@@ -103,7 +122,9 @@
 
 
 			<div id="payment-form" style="padding-top:1em;"></div>
-		    <div style="text-align:center; font-family: 'Poiret One', cursive;"><button class="btn btn-success btn-lg" value = "Pay $1" type="submit">Submit & Pay</button> </div>
+		    <div style="text-align:center; font-family: 'Poiret One', cursive;">
+		    <button class="btn btn-success btn-lg" value = "Pay $1" type="submit">Submit & Pay</button> 
+		    </div>
 
 
 			<!-- Brain tree payment method 
