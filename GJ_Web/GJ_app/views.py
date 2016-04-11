@@ -307,7 +307,238 @@ def updateItem(request, item_id):
 	itemSizeObjects = ItemSize.objects.filter(item_id = menuObject)
 	itemSizeCount = itemSizeObjects.count()
 	
-	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuObject': menuObject, 'itemObject': itemObject, 'itemSizeObjects': itemSizeObjects, 'itemSizeCount': itemSizeCount})
+	optionsList = itemObject.options_isFixed.split(',')
+	optionsIndexList = itemObject.options.split(',')
+	optionsListPrices = itemObject.options_price.split(',')
+	
+	
+	optionalIngredients= dict()
+	
+	for index, element in enumerate(optionsList):
+		if element != 'main':
+			optionObject = Option.objects.get(option_id = optionsIndexList[index])
+			categoryObject = (CategoryOption.objects.get(option_id = optionObject)).category_id
+			optionalIngredients[index]={'optionObject':optionObject, 'categoryObject':categoryObject, 'optionStatus':element, 'optionPrice':optionsListPrices[index]}
+	
+	if itemObject.item_mealOptions:
+	
+		mealsList = itemObject.item_mealOptions.split(',')
+		mealsListPrices = itemObject.item_mealPrice.split(',')
+	
+		mealOptions = dict()
+
+		for index, element in enumerate(mealsList):
+			print index
+			tempList = element.split('-')
+			optionObject = Option.objects.get(option_id = tempList[0])
+			sizeObject = Size.objects.get(size_id = tempList[1])
+			categoryObject = (CategoryOption.objects.get(option_id = optionObject)).category_id
+
+			mealOptions[index] = {'optionObject': optionObject, 'sizeObject': sizeObject, 'categoryObject': categoryObject, 'mealPrice': mealsListPrices[index]}
+			
+	else:
+		mealOptions = {}
+				
+	return render(request, 'GJ_app/editItem.html', {'item_id': item_id, 'categories': categories, 'containers':containers, 'sizes': sizes, 'categoryOptions':categoryOptions, 'menuObject': menuObject, 'itemObject': itemObject, 'itemSizeObjects': itemSizeObjects, 'itemSizeCount': itemSizeCount, 'optionalIngredients': optionalIngredients, 'mealOptions': mealOptions})
+	
+	
+def editItem(request, item_id):
+	# if is_logged:'
+	# im going to be using the user_id until we set uo the session
+	
+	menuObject = Menu.objects.get(item_id = item_id)
+	itemObject = Item.objects.get(item_id = menuObject)
+	itemSizeObjects = ItemSize.objects.filter(item_id = menuObject)
+	options = []
+	optionsIsFixed = []
+	options_price = []
+	if request.method == 'POST':
+		nickName = request.POST['nickNameEdit']
+		# if nickName == 'd':
+			# messages.info(request, 'You will need to change your password in one week.')
+			# return HttpResponseRedirect(reverse('GJ_app:addItem', args=[menu_id]))
+		basePrice = ((int(request.POST['basePriceNatural'])) * 100) + int(request.POST['basePriceFloat'])
+		startDate = datetime.strptime(request.POST['startDateEdit'],  "%m-%d-%Y")
+		endDate = datetime.strptime(request.POST['endDateEdit'],  "%m-%d-%Y")
+		startTime = datetime.strptime(request.POST['startTimeEdit'], "%I:%M %p")
+		endTime = datetime.strptime(request.POST['endTimeEdit'],   "%I:%M %p")
+		if 'postCategory' in request.POST:
+			mainCategory = request.POST['postCategory']
+		else:
+			mainCategory = itemObject.category_id.category_id
+			
+		if 'postMainIngredient' in request.POST:
+			mainIngredient = request.POST['postMainIngredient']
+		else:
+			temp = itemObject.options.split(',')
+			tempFixed= itemObject.options_isFixed.split(',')
+			for index, value in enumerate(tempFixed):
+				if value == 'main':
+					mainIngredient = temp[index]
+					
+		if 'postContainer' in request.POST:
+			mainContainer = request.POST['postContainer']
+		else:
+			mainContainer = itemObject.container_id.container_id
+		
+		if 'postMainSize' in request.POST:
+			mainSize = request.POST['postMainSize']
+		else:
+			mainSize = itemSizeObjects[0].size_id.size_id
+		
+		mainCount = 1
+		if 'mainCount' in request.POST:
+			mainCount = request.POST['mainCount']
+		
+		mainSizePrice = ((int(request.POST['mainSizeNatural'])) * 100) + int(request.POST['mainSizeFloat'])
+
+		
+		
+		
+		
+		options.append(mainIngredient)
+		optionsIsFixed.append('main')
+		options_price.append(0)
+		
+		# this is for optional ingredients
+		optionalCounter = 1
+		while True:
+			if ('postIng-'+ str(optionalCounter)) in request.POST:
+				options_temp = 'postIng-' + str(optionalCounter)
+				isFixed_temp = 'itemIsFixed-' + str(optionalCounter)
+				if ('ingPriceNatural-'+ str(optionalCounter)) in request.POST:
+					price_temp = ((int(request.POST['ingPriceNatural-' + str(optionalCounter)])) * 100) + int(request.POST['ingPriceFloat-' + str(optionalCounter)])
+				else:
+					price_temp = 0
+				options.append(str(request.POST[options_temp]))
+				optionsIsFixed.append(str(request.POST[isFixed_temp]))
+				options_price.append(price_temp)
+
+				optionalCounter = optionalCounter + 1
+			else:
+				break
+			
+		# print options
+		# print optionsIsFixed
+		# print options_price
+		
+		mealCounter = 1
+		meal_options = []
+		meal_sizes = []
+		meal_price = []
+		count_meal_arr = []
+		while True:
+			if ('postSideIng-'+ str(mealCounter)) in request.POST:
+				sides_temp = 'postSideIng-' + str(mealCounter)
+				sidesSize_temp = 'postSideSize-' + str(mealCounter)
+				
+				if ('countMeal-'+ str(optionalCounter)) in request.POST:
+					count_meal = request.POST['countMeal-' + str(mealCounter)]
+					count_meal_arr.append(count_meal)
+				else:
+					count_meal_arr.append(1)
+					
+				price_temp = ((int(request.POST['mealNatural-' + str(mealCounter)])) * 100) + int(request.POST['mealFloat-' + str(mealCounter)])
+
+				
+				meal_options.append(str(request.POST[sides_temp]))
+				meal_sizes.append(str(request.POST[sidesSize_temp]))
+				meal_price.append(price_temp)
+			
+				mealCounter = mealCounter + 1
+			else:
+				break
+				
+		# print meal_options
+		# print meal_sizes
+		# print meal_price
+		# print count_meal_arr
+		
+		# TODO:
+	# price for each sizes
+	# adding different sizes to tables
+	# fixing count problem with meal
+		
+
+		
+		menuObject.item_nickname = nickName
+		menuObject.item_basePrice = basePrice
+		menuObject.item_startDate = startDate
+		menuObject.item_endDate = endDate
+		menuObject.item_startTime = startTime
+		menuObject.item_endTime = endTime
+		
+		menuObject.save()
+		
+		mainSizeObject = itemSizeObjects[0]
+		mainSizeObject.size_id = Size.objects.get(size_id = int(mainSize))
+		mainSizeObject.itemSizePrice = mainSizePrice
+		mainSizeObject.item_count = mainCount
+				
+		mainSizeObject.save()
+		
+		sizeCounter = 1
+		while True:
+			if ('postAddSize-'+ str(sizeCounter)) in request.POST:
+				additionalSize = 'postAddSize-' + str(sizeCounter)
+				
+				m = request.POST[additionalSize]
+				print m
+				
+				additionalSizeCount = 1
+				if ('additionalSizeCount-' + str(sizeCounter))  in request.POST:
+					additionalSizeCount = request.POST['additionalSizeCount-' + str(sizeCounter)]
+				
+				additionalSizePrice = ((int(request.POST['addSizeNatural-' +  str(sizeCounter)])) * 100) + int(request.POST['addSizeFloat-' +  str(sizeCounter)])
+				
+				if sizeCounter < itemSizeObjects.count():
+					additionalSizeObject = itemSizeObjects[sizeCounter]
+					
+					additionalSizeObject.size_id = Size.objects.get(size_id = int(request.POST[additionalSize]))
+					additionalSizeObject.itemSizePrice = additionalSizePrice
+					additionalSizeObject.item_count = additionalSizeCount
+					
+					additionalSizeObject.save()
+				else:
+					newSizeId = Size.objects.get(size_id = int(request.POST[additionalSize]))
+					newAdditionalSize = ItemSize(item_id = menuObject, size_id = newSizeId, itemSizePrice = additionalSizePrice, item_count = additionalSizeCount)
+					newAdditionalSize.save()
+
+				sizeCounter = sizeCounter + 1
+			else:
+				break
+		
+		
+		
+	
+		optionsString = ",".join(options)
+		optionsFixedString = ",".join(optionsIsFixed)
+		optionsPriceString = ",".join(str(x) for x in options_price)
+		
+		optionsArray = []
+		for x, val in enumerate(meal_options):
+			mealOptionsString = ''
+			mealOptionsString = str(val) + '-' + str(meal_sizes[x])
+			optionsArray.append(mealOptionsString)
+			
+		completeMealString = ",".join(optionsArray)
+		mealPrice = ",".join(str(x) for x in meal_price)
+		
+		catObject = Category.objects.get(category_id = int(mainCategory))
+		contObject = Container.objects.get(container_id = int(mainContainer))
+		
+		itemObject.category_id = catObject
+		itemObject.container_id = contObject
+		itemObject.options = optionsString
+		itemObject.options_isFixed = optionsFixedString
+		itemObject.options_price = optionsPriceString
+		itemObject.item_mealOptions = completeMealString
+		itemObject.item_mealPrice = mealPrice
+		
+		itemObject.save()
+		
+	return HttpResponseRedirect(reverse('GJ_app:index'))
+	
 	
 	
 def pricing(request):
