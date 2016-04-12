@@ -622,8 +622,16 @@ def signup(request):
 		braintree_token = braintree.ClientToken.generate()
 		# print braintree_token
 		return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
+	if request.method == "POST" and 'branchcategory' in request.POST:
+		for item in request.POST:
+			print " Hello I'm in here"
+			print request.POST[item]
+			branch_cate = request.POST['branchcategory']
+			braintree_token = braintree.ClientToken.generate()
+		print branch_cate
+		return render(request, 'GJ_app/signup.html', {'branch_cate': branch_cate, 'braintree_token': braintree_token})
 	elif request.method == "POST":
-
+		print "I'm in POST"
 		compname = request.POST['comp_name']
 		compemail = request.POST['comp_email']
 		comppassword = (request.POST['comp_password']).encode('hex')
@@ -660,6 +668,17 @@ def signup(request):
 		
 		return render(request, 'GJ_app/signupsuccess.html')
 		#return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
+
+
+
+
+
+
+
+
+
+
+
 
 
 
