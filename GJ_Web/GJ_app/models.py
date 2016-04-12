@@ -248,9 +248,9 @@ class Item(models.Model):
 					sizesString += str(actualSizesList[i]) + " "
 					
 					if i+2 == len(actualSizesList):
-						sizesString += " (+ $" + str(int(actualSizesList[i+1])/100.00) + ")"
+						sizesString += " ($" + str(int(actualSizesList[i+1])/100.00) + ")"
 					else:
-						sizesString += " (+ $" + str(int(actualSizesList[i+1])/100.00) + "), "
+						sizesString += " ($" + str(int(actualSizesList[i+1])/100.00) + "), "
 					i += 2
 			return sizesString
 		return "No Specified Size"
