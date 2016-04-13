@@ -6,10 +6,12 @@ from django.http import JsonResponse
 from django.contrib import messages
 from datetime import *
 from cryptography.fernet import Fernet
-
+import requests
 from .models import *
 from .menu_controller import *
 from .helpers_controller import *
+import urllib2
+
 
 # Users
 
@@ -27,7 +29,7 @@ def index(request):
  		password = request.POST['password']
  		# print "GOt the method Post " + email + " " + password
  		# print "email = " + email + "\npassword = " + password
- 		k = User.objects.get(email=email)
+ 		k = User.objects.get(email=email.lower())
  		psright = (k.password == password.encode('hex'))
 		
  		if k and psright:
@@ -618,18 +620,24 @@ def signup(request):
 	'''
 	#print companyname
 
-	if request.method == "GET":
-		braintree_token = braintree.ClientToken.generate()
-		# print braintree_token
-		return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
+	print "The internet is on " + str(connected_to_internet())
+	if connected_to_internet():
+		if request.method == "GET":
+			braintree_token = braintree.ClientToken.generate()
+			# print braintree_token
+			return render (request, 'GJ_app/signup.html', {'braintree_token': braintree_token})
+
+
 	if request.method == "POST" and 'branchcategory' in request.POST:
 		for item in request.POST:
-			print " Hello I'm in here"
 			print request.POST[item]
 			branch_cate = request.POST['branchcategory']
-			braintree_token = braintree.ClientToken.generate()
-		print branch_cate
-		return render(request, 'GJ_app/signup.html', {'branch_cate': branch_cate, 'braintree_token': braintree_token})
+			if connected_to_internet():
+				braintree_token = braintree.ClientToken.generate()
+		if connected_to_internet():
+			return render(request, 'GJ_app/signup.html', {'branch_cate': branch_cate, 'braintree_token': braintree_token})
+		else: 
+			return render(request, 'GJ_app/signup.html', {'branch_cate': branch_cate})
 	elif request.method == "POST":
 		print "I'm in POST"
 		compname = request.POST['comp_name']
@@ -655,21 +663,21 @@ def signup(request):
 		# print c
 		c.save()
 
-
-		nonce = request.POST['payment_method_nonce']
-		result = braintree.Transaction.sale({
-			"amount": "1.00",
-			"payment_method_nonce": nonce,
-			"options": {
-			  "submit_for_settlement": True
-			}
-		})
+		if connected_to_internet():
+			nonce = request.POST['payment_method_nonce']
+			result = braintree.Transaction.sale({
+				"amount": "1.00",
+				"payment_method_nonce": nonce,
+				"options": {
+				  "submit_for_settlement": True
+				}
+			})
 		# print "\n\nresult is", result, "\n\n"
 		
 		return render(request, 'GJ_app/signupsuccess.html')
 		#return render(request, 'GJ_app/signup.html', {'message':"Payment Received"})
 
-
+	return render (request, 'GJ_app/signup.html')
 
 
 
@@ -695,7 +703,7 @@ def login(request):
 		password = request.POST['password']
 		# print "GOt the method Post " + email + " " + password
 		# print "email = " + email + "\npassword = " + password
-		k = User.objects.get(email=email.tolower())
+		k = User.objects.get(email=email.lower())
 		
 		if k:
 			request.session['logged_in'] = True
@@ -1025,6 +1033,20 @@ def data(request):
 
 
 
+
+
+
+
+#Check for internet service
+
+
+def connected_to_internet(url='http://www.google.com/', timeout=5):
+    try:
+        _ = requests.get(url, timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        print("No internet connection available.")
+    return False
 
 
 
