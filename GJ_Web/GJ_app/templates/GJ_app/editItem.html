@@ -571,66 +571,258 @@
 				 k++;
 				$('#additionalSizeTable').append('<tr id="sizeRow-'+ k +'"></tr>');
 
-				$('#sizeRow-'+k).html('<td>' + k  + '</td><td id="addCount-' + k + '"><div class="container_details" id="additionalSizeDropdown-' + k + '"><div class="dropdown" id="dropdown-addSize-' + k + '"><button class="btn btn-default dropdown-toggle" id="addSizeCategory-' + k + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="addSize-' + k + '" role="menu" aria-labelledby="addSizeCategory-' + k + '">{% for element in sizes %}<li role="presentaton" id="addSize-k-{{element.size_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.size_name}} </a></li>{% endfor %}</ul></div></div></td>');
+				$('#sizeRow-'+k).html('<td>' + k  + '</td><td id="addCount-' + k + '"><div class="container_details" id="additionalSizeDropdown-' + k + '"><div class="dropdown" id="dropdown-addSize-' + k + '"><button class="btn btn-default dropdown-toggle" id="addSizeCategory-' + k + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="addSize-' + k + '" role="menu" aria-labelledby="addSizeCategory-' + k + '">{% for element in sizes %}<li role="presentaton" id="addSize-' + k + '-{{element.size_id}}"><a role="menuitem" tabindex="-1" href="#/">  {{element.size_name}} </a></li>{% endfor %}</ul></div></div></td>');
 
-				$("#addSize-" + k + " li").on("click", function() {
-					//sets button text
-					$("#addSizeCategory-" + k).text($($(this).find("a")).text())
-					var categoryId = $(this).prop('id');
-					//removes isSelected class
-					$("#addSize-" + k +" li a").removeClass("isSelected");
-
-					//add isSlected Class to clicked element
-					$($(this).find('a')).addClass("isSelected")
-					
-					var sizeText= $(this).text();
-					var ing= $(this).prop('id');
-					console.log(ing);
-					var actualID = ing.split('-')[2];
-				
-					console.log(actualID);
-					
-					$('#postAddSize-' + k).remove();
-					$('#dropdown-addSize-' + k).append('<input id="postAddSize-' + k + '" name="postAddSize-' + k + '" value="'+ actualID + '" type="hidden">');
-			
-				
-					return checkCount(sizeText);
-				});
-				
-				function checkCount(text){
-					
-					$('#sameBasepriceTd-' + k).remove();
-					$('#addSizePriceTd-' + k).remove();
-					$('#additionalCount-' + k).remove();
-					$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + k + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ k + '" name="addSizeNatural-' + k + '" placeholder="0"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ k + '" name="addSizeFloat-'+ k + '" placeholder="00"></div></td>');
-
-					
-					if (text.trim() == "Count") {
-						$('#additionalSizeDropdown-' + k).css('float' , 'left');
-						$('#addCount-' + k).append('<div class="input-group" style="padding-left:20px" id="additionalCount-' + k + '"><input class="form-control" name="additionalSizeCount-'+ k  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
-					}
-	
-					$('#addSizePriceCheckbox-' + k).change(function() {
-						if ($(this).is(':checked')) {
-							$('#addSizeNatural-' + k).val($('#basePriceNatural').val());
-							$('#addSizeFloat-' + k).val($('#basePriceFloat').val()); 
-						} else {
-							$('#addSizeNatural-' + k).val('');
-							$('#addSizeFloat-' + k).val('');
-						}				
-					});
-				
-				};
-		  
 			});
 			
-			 $("#delete_size").click(function(){
+			$("#delete_size").click(function(){
 				if (k>0) {
 					$("#sizeRow-"+ k).remove();
 					k--;
 
 				 }
 			});
+			
+			$("#add_row").click(function(){
+				 i++;
+				$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
+
+				$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">Category	<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optionalCat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}	</ul></div></div></td><td id="optionalIngTd-' + i + '"> </td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline" style="float:left"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
+
+			});
+			
+			 $("#delete_row").click(function(){
+				if (i>0) {
+					$("#row-"+ i).remove();
+					i--;
+
+				 }
+			});
+			
+			$("#add_meal").click(function(){
+				
+				 j++;
+				$('#mealTable').append('<tr id="mealRow-'+ j +'"></tr>');
+
+				$('#mealRow-'+j).html('<td>' + j  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Category<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ j + '" role="menu" aria-labelledby="sideCategory-'+ j + '">{% for element in categories %} <li role="presentaton" id="sideCat-'+ j + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ j + '"> </td><td id="sideSizeDiv-' + j + '"><div class="container_details" id="sideSizeDropdown-' + j + '"><div class="dropdown" id="dropdown-sideSize-' + j + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ j + '" role="menu" aria-labelledby="sideSize-'+ j + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ j + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ j + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + j + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ j + '" placeholder="Ex: 90 Cents"></div></td>');
+			
+			});
+			
+			$("#delete_meal").click(function(){
+				if (j>0) {
+					$("#mealRow-"+ j).remove();
+					j--;
+
+				 }
+			});
+			
+			
+			
+			
+			$(document).click(function(){
+				
+				$("a").click(function(event) {
+						
+					if ($(event.target).parent().attr('id').split('-')[0] == 'addSize') {
+						
+						var k = $(event.target).parent().attr('id').split('-')[1] 
+					
+						$("#addSize-" + k + " li").on("click", function() {
+							//sets button text
+							$("#addSizeCategory-" + k).text($($(this).find("a")).text())
+							var categoryId = $(this).prop('id');
+							//removes isSelected class
+							$("#addSize-" + k +" li a").removeClass("isSelected");
+
+							//add isSlected Class to clicked element
+							$($(this).find('a')).addClass("isSelected")
+							
+							var sizeText= $(this).text();
+							var ing= $(this).prop('id');
+							console.log(ing);
+							var actualID = ing.split('-')[2];
+						
+							console.log(actualID);
+							
+							$('#postAddSize-' + k).remove();
+							$('#dropdown-addSize-' + k).append('<input id="postAddSize-' + k + '" name="postAddSize-' + k + '" value="'+ actualID + '" type="hidden">');
+					
+						
+							return checkCount(sizeText);
+						});
+				
+						function checkCount(text){
+							
+							$('#sameBasepriceTd-' + k).remove();
+							$('#addSizePriceTd-' + k).remove();
+							$('#additionalCount-' + k).remove();
+							$('#sizeRow-' + k).append('<td id="sameBasepriceTd-' + k + '"><div class="checkbox" style="text-align:center"><label><input type="checkbox" id="addSizePriceCheckbox-' + k + '">same as Base Price?</label></div></td><td id="addSizePriceTd-' + k + '"><div class="input-group"><div class="input-group-addon">$</div><input class="form-control" id="addSizeNatural-'+ k + '" name="addSizeNatural-' + k + '" placeholder="0"><div class="input-group-addon">.</div><input class="form-control" id="addSizeFloat-'+ k + '" name="addSizeFloat-'+ k + '" placeholder="00"></div></td>');
+
+							
+							if (text.trim() == "Count") {
+								$('#additionalSizeDropdown-' + k).css('float' , 'left');
+								$('#addCount-' + k).append('<div class="input-group" style="padding-left:20px" id="additionalCount-' + k + '"><input class="form-control" name="additionalSizeCount-'+ k  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
+							}
+			
+							$('#addSizePriceCheckbox-' + k).change(function() {
+								if ($(this).is(':checked')) {
+									$('#addSizeNatural-' + k).val($('#basePriceNatural').val());
+									$('#addSizeFloat-' + k).val($('#basePriceFloat').val()); 
+								} else {
+									$('#addSizeNatural-' + k).val('');
+									$('#addSizeFloat-' + k).val('');
+								}				
+							});
+						
+						};
+		  
+				} else if ($(event.target).parent().attr('id').split('-')[0] == 'optionalCat') {
+						
+						var i = $(event.target).parent().attr('id').split('-')[1] 
+			
+						$("#optionalCatMenu-" + i + " li").on("click", function() {
+						//sets button text
+							$("#optionalCategory-" + i).text($($(this).find("a")).text())
+							var categoryId = $(this).prop('id');
+							//removes isSelected class
+							$("#optionalCatMenu-" + i +" li a").removeClass("isSelected");
+
+							//add isSlected Class to clicked element
+							$($(this).find('a')).addClass("isSelected")
+							
+							return changeOptionalIngredient(categoryId.split('-')[2]);
+						});
+				
+				
+						function changeOptionalIngredient(id){
+							var divPartI = "<div class='dropdown' id='dropdown-ing-" + i + "'><button class='btn btn-default dropdown-toggle' id='optionalIngredient-" + i + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='optionalIngMenu-"+ i + "' role='menu' aria-labelledby='optionalIngredient-" + i + "'>";
+							{% for element in categoryOptions %}
+								
+								if (id == {{element.category_id.category_id}})
+									divPartI = divPartI +  "<li role='presentaton' id='optional-" + i + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + i + "' href='#/'>{{element.option_id.option_name}} </a></li>";
+							{% endfor %}
+							var res = divPartI + "</ul></div>";
+							
+							document.getElementById("optionalIngTd-" + i).innerHTML =  res;
+
+							$("#optionalIngMenu-" + i + " li").on("click", function() {
+							//sets button text
+							$("#optionalIngredient-" + i).text($($(this).find("a")).text())
+							//removes isSelected class
+							$("#optionalIngMenu-" + i + " li a").removeClass("isSelected");
+
+							//add isSlected Class to clicked element
+							$($(this).find('a')).addClass("isSelected")
+								
+							var ing= $(this).prop('id');
+
+							var actualID = ing.split('-')[2];
+						
+							$('#postIng-' + i).remove();
+							$('#dropdown-ing-' + i).append('<input id="postIng-' + i + '" name="postIng-' + i + '" value="'+ actualID + '" type="hidden">');
+						
+							});
+						};
+						
+						$("#selectOptional-" + i).on("click", function() {
+							//sets button text
+							$("#additionalPrice-" + i).remove();
+							$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '" style="padding-left:20px"><div class="input-group-addon" >Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="00" required></div>');
+						});
+						
+						$("#selectFixed-" + i).on("click", function() {
+							//sets button text
+							$("#additionalPrice-" + i).remove();
+						});
+					  
+				} else if ($(event.target).parent().attr('id').split('-')[0] == 'sideCat') {
+						
+						var j = $(event.target).parent().attr('id').split('-')[1] 
+			
+			
+						$("#sideCatMenu-" + j + " li").on("click", function() {
+						//sets button text
+							$("#sideCategory-" + j).text($($(this).find("a")).text())
+							var categoryId = $(this).prop('id');
+							//removes isSelected class
+							$("#sideCatMenu-" + j +" li a").removeClass("isSelected");
+
+							//add isSlected Class to clicked element
+							$($(this).find('a')).addClass("isSelected")
+							
+							return changeSideIngredient(categoryId.split('-')[2]);
+						});
+					
+						function changeSideIngredient(id){
+							var divPartI = "<div class='dropdown' id='dropdown-sideIng-" + j + "'><button class='btn btn-default dropdown-toggle' id='sideIngredient-" + j + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='sideIngMenu-"+ j + "' role='menu' aria-labelledby='sideIngredient-" + j + "'>";
+							{% for element in categoryOptions %}
+								
+								if (id == {{element.category_id.category_id}})
+									divPartI = divPartI +  "<li role='presentaton' id='side-" + j + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + j + "' href='#/'>{{element.option_id.option_name}} </a></li>";
+							{% endfor %}
+							var res = divPartI + "</ul></div>";
+							
+							$('#sideIngTd-' + j).html(res);
+
+							$("#sideIngMenu-" + j + " li").on("click", function() {
+							//sets button text
+								$("#sideIngredient-" + j).text($($(this).find("a")).text())
+								//removes isSelected class
+								$("#sideIngMenu-" + j + " li a").removeClass("isSelected");
+
+								//add isSlected Class to clicked element
+								
+								$($(this).find('a')).addClass("isSelected")
+								
+							
+								var ing= $(this).prop('id');
+								console.log(ing);
+								var actualID = ing.split('-')[2];
+								
+								$('#postSideIng-' + j).remove();
+								$('#dropdown-sideIng-' + j).append('<input id="postSideIng-' + j + '" name="postSideIng-' + j + '" value="'+ actualID + '" type="hidden">');
+						
+							});
+						};
+				
+				
+						$("#sideSizeMenu-" + j + " li").on("click", function() {
+							//sets button text
+							$("#sideSize-" + j).text($($(this).find("a")).text())
+							var sizeText= $(this).text();
+							//removes isSelected class
+							$("#sideSizeMenu-" + j + " li a").removeClass("isSelected");
+
+							//add isSlected Class to clicked element
+							$($(this).find('a')).addClass("isSelected")	
+							
+							var ing= $(this).prop('id');
+
+							var actualID = ing.split('-')[3];
+						
+							$('#postSideSize-' + j).remove();
+							$('#dropdown-sideSize-' + j).append('<input id="postSideSize-' + j + '" name="postSideSize-' + j + '" value="'+ actualID + '" type="hidden">');
+						
+							
+							return checkCount(sizeText);
+						});
+
+						function checkCount(text){
+							if (text.trim() == "Count") {
+								$('#sideSizeDropdown-' + j).css('float' , 'left');
+								$('#sideSizeDiv-' + j).append('<div class="input-group" style="padding-left:20px" id="sideCount-' + j + '"><input class="form-control" name="countMeal-'+ j  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
+							} else {
+								$('#sideSizeDropdown-' + j).css('transform' , '');
+								$('#sideCount-' + j).remove();
+							}
+					
+						};
+			
+				
+				};
+			});
+			});
+			
 			
 			function prepareAdditionalSize(){
 						var i = 0;
@@ -711,95 +903,13 @@
 				{% endfor %}
 			};
 			
-			
-						
-		
-			$("#add_row").click(function(){
-				 i++;
-				$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
-
-				$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">Category	<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}	</ul></div></div></td><td id="optionalIngTd-' + i + '"> </td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline" style="float:left"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
-
-					$("#optionalCatMenu-" + i + " li").on("click", function() {
-						//sets button text
-						$("#optionalCategory-" + i).text($($(this).find("a")).text())
-						var categoryId = $(this).prop('id');
-						//removes isSelected class
-						$("#optionalCatMenu-" + i +" li a").removeClass("isSelected");
-
-						//add isSlected Class to clicked element
-						$($(this).find('a')).addClass("isSelected")
-						
-						return changeOptionalIngredient(categoryId.slice(15, categoryId.length));
-					});
-				
-				
-				function changeOptionalIngredient(id){
-					var divPartI = "<div class='dropdown' id='dropdown-ing-" + i + "'><button class='btn btn-default dropdown-toggle' id='optionalIngredient-" + i + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='optionalIngMenu-"+ i + "' role='menu' aria-labelledby='optionalIngredient-" + i + "'>";
-					{% for element in categoryOptions %}
-						
-						if (id == {{element.category_id.category_id}})
-							divPartI = divPartI +  "<li role='presentaton' id='optional-" + i + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + i + "' href='#/'>{{element.option_id.option_name}} </a></li>";
-					{% endfor %}
-					var res = divPartI + "</ul></div>";
-					
-					document.getElementById("optionalIngTd-" + i).innerHTML =  res;
-
-					$("#optionalIngMenu-" + i + " li").on("click", function() {
-					//sets button text
-					$("#optionalIngredient-" + i).text($($(this).find("a")).text())
-					//removes isSelected class
-					$("#optionalIngMenu-" + i + " li a").removeClass("isSelected");
-
-					//add isSlected Class to clicked element
-					$($(this).find('a')).addClass("isSelected")
-						
-					var ing= $(this).prop('id');
-
-					var actualID = ing.split('-')[2];
-				
-					$('#postIng-' + i).remove();
-					$('#dropdown-ing-' + i).append('<input id="postIng-' + i + '" name="postIng-' + i + '" value="'+ actualID + '" type="hidden">');
-				
-					});
-				};
-				
-				$("#selectOptional-" + i).on("click", function() {
-					//sets button text
-					
-					$('#radioOptional-' + i).append('<div class="input-group" id="additionalPrice-' + i + '" style="padding-left:20px"><div class="input-group-addon" >Additional Price $</div><input class="form-control" name="ingPriceNatural-' + i + '" placeholder="0" required><div class="input-group-addon">.</div><input class="form-control" name="ingPriceFloat-' + i + '" placeholder="00" required></div>');
-				});
-				
-				$("#selectFixed-" + i).on("click", function() {
-					//sets button text
-					$("#additionalPrice-" + i).remove();
-				});
-					  
-					  
-					  
-			});
-			
-			 $("#delete_row").click(function(){
-				if (i>0) {
-					$("#row-"+ i).remove();
-					i--;
-
-				 }
-			});
-			
-			$(this).on('click', function(){
-				
-					console.log($(this));
-				});
-			
-			
 			function prepareOptionalIngredients(){
 				
 				var i = 0;
 					{% for key, value in optionalIngredients.items %}
 						 i++;
 						$('#optionalIngredientsTable').append('<tr id="row-'+ i +'"></tr>');
-						$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optional-cat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}</ul></div></div></td><td id="optionalIngTd-' + i + '"><div class="dropdown" id="dropdown-ing-' + i + '"><button class="btn btn-default dropdown-toggle" id="optionalIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalIngMenu-' + i + '" role="menu" aria-labelledby="optionalIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="optional-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline" style="float:left"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
+						$('#row-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="optionalCategory-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalCatMenu-' + i + '" role="menu" aria-labelledby="optionalCategory-' + i + '">{% for element in categories %}<li role="presentaton" id="optionalCat-' + i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li>{% endfor %}</ul></div></div></td><td id="optionalIngTd-' + i + '"><div class="dropdown" id="dropdown-ing-' + i + '"><button class="btn btn-default dropdown-toggle" id="optionalIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="optionalIngMenu-' + i + '" role="menu" aria-labelledby="optionalIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="optional-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td><label class="radio-inline"><input id="selectFixed-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="fixed" required>Fixed</label></td><td id="radioOptional-' + i + '"><label class="radio-inline" style="float:left"><input id="selectOptional-' + i + '" type="radio" name="itemIsFixed-' + i + '" value="optional">Optional</label></td></tr>');
 						if ('{{value.optionStatus}}' == "fixed"){
 							$('#selectFixed-' + i).prop("checked", true);
 						} else {
@@ -876,107 +986,7 @@
 						$('#dropdown-ing-' + i).append('<input id="postIng-' + i + '" name="postIng-' + i + '" value="'+ {{value.optionObject.option_id}} + '" type="hidden">');
 					{% endfor %}  
 			};	  
-					
-					
-			
-			
-			
-			
-			$("#add_meal").click(function(){
-				
-				 j++;
-				$('#mealTable').append('<tr id="mealRow-'+ j +'"></tr>');
 
-				$('#mealRow-'+j).html('<td>' + j  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Category<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ j + '" role="menu" aria-labelledby="sideCategory-'+ j + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ j + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ j + '"> </td><td id="sideSizeDiv-' + j + '"><div class="container_details" id="sideSizeDropdown-' + j + '"><div class="dropdown" id="dropdown-sideSize-' + j + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ j + '" type="button" data-toggle="dropdown" aria-expanded="false">Size <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ j + '" role="menu" aria-labelledby="sideSize-'+ j + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ j + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ j + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + j + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ j + '" placeholder="Ex: 90 Cents"></div></td>');
-							
-				$("#sideCatMenu-" + j + " li").on("click", function() {
-						//sets button text
-						$("#sideCategory-" + j).text($($(this).find("a")).text())
-						var categoryId = $(this).prop('id');
-						//removes isSelected class
-						$("#sideCatMenu-" + j +" li a").removeClass("isSelected");
-
-						//add isSlected Class to clicked element
-						$($(this).find('a')).addClass("isSelected")
-						
-						return changeSideIngredient(categoryId.slice(11, categoryId.length));
-					});
-					
-				function changeSideIngredient(id){
-					var divPartI = "<div class='dropdown' id='dropdown-sideIng-" + j + "'><button class='btn btn-default dropdown-toggle' id='sideIngredient-" + j + "' type='button' data-toggle='dropdown' aria-expanded='false'>Main Ingredient <span class='caret'></span></button><ul class='dropdown-menu' id='sideIngMenu-"+ j + "' role='menu' aria-labelledby='sideIngredient-" + j + "'>";
-					{% for element in categoryOptions %}
-						
-						if (id == {{element.category_id.category_id}})
-							divPartI = divPartI +  "<li role='presentaton' id='side-" + j + "-{{element.option_id.option_id}}' ><a role='menuitem' tabindex='-" + j + "' href='#/'>{{element.option_id.option_name}} </a></li>";
-					{% endfor %}
-					var res = divPartI + "</ul></div>";
-					
-					$('#sideIngTd-' + j).html(res);
-
-					$("#sideIngMenu-" + j + " li").on("click", function() {
-					//sets button text
-					$("#sideIngredient-" + j).text($($(this).find("a")).text())
-					//removes isSelected class
-					$("#sideIngMenu-" + j + " li a").removeClass("isSelected");
-
-					//add isSlected Class to clicked element
-					
-					$($(this).find('a')).addClass("isSelected")
-					
-				
-					var ing= $(this).prop('id');
-					console.log(ing);
-					var actualID = ing.split('-')[2];
-					
-					$('#postSideIng-' + j).remove();
-					$('#dropdown-sideIng-' + j).append('<input id="postSideIng-' + j + '" name="postSideIng-' + j + '" value="'+ actualID + '" type="hidden">');
-				
-					});
-				};
-				
-				
-				$("#sideSizeMenu-" + j + " li").on("click", function() {
-					//sets button text
-					$("#sideSize-" + j).text($($(this).find("a")).text())
-					var sizeText= $(this).text();
-					//removes isSelected class
-					$("#sideSizeMenu-" + j + " li a").removeClass("isSelected");
-
-					//add isSlected Class to clicked element
-					$($(this).find('a')).addClass("isSelected")	
-					
-					var ing= $(this).prop('id');
-
-					var actualID = ing.split('-')[3];
-				
-					$('#postSideSize-' + j).remove();
-					$('#dropdown-sideSize-' + j).append('<input id="postSideSize-' + j + '" name="postSideSize-' + j + '" value="'+ actualID + '" type="hidden">');
-				
-					
-					return checkCount(sizeText);
-				});
-
-				function checkCount(text){
-					if (text.trim() == "Count") {
-						$('#sideSizeDropdown-' + j).css('float' , 'left');
-						$('#sideSizeDiv-' + j).append('<div class="input-group" style="padding-left:20px" id="sideCount-' + j + '"><input class="form-control" name="countMeal-'+ j  + '" placeholder="Ex: 3, 6, 7, .. " required></div>');
-					} else {
-						$('#sideSizeDropdown-' + j).css('transform' , '');
-						$('#sideCount-' + j).remove();
-					}
-			
-				};
-			
-				
-			});
-			$("#delete_meal").click(function(){
-				if (j>0) {
-					$("#mealRow-"+ j).remove();
-					j--;
-
-				 }
-			});
-			
 			function prepareMeals() {
 				var i = 0;
 				{% for key, value in mealOptions.items %}
@@ -993,7 +1003,7 @@
 				}
 				
 				
-			$('#mealRow-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ i + '" role="menu" aria-labelledby="sideCategory-'+ i + '">{% for element in categories %} <li role="presentaton" id="side-cat-'+ i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ i + '"><div class="dropdown" id="dropdown-sideIng-'  + i + '"><button class="btn btn-default dropdown-toggle" id="sideIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideIngMenu-' + i + '" role="menu" aria-labelledby="sideIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="side-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td id="sideSizeDiv-' + i + '"><div class="container_details" id="sideSizeDropdown-' + i + '"><div class="dropdown" id="dropdown-sideSize-' + i + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.sizeObject.size_name}} <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ i + '" role="menu" aria-labelledby="sideSize-'+ i + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ i + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ i + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + i + '" value="' + mealNatural + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ i + '" value="' + mealFloat + '"placeholder="Ex: 90 Cents"></div></td>');
+			$('#mealRow-'+i).html('<td>' + i  + '</td><td><div class="container_details"><div class="dropdown"><button class="btn btn-default dropdown-toggle" id="sideCategory-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.categoryObject.category_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideCatMenu-'+ i + '" role="menu" aria-labelledby="sideCategory-'+ i + '">{% for element in categories %} <li role="presentaton" id="sideCat-'+ i + '-{{element.category_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.category_name}} </a></li> {% endfor %}</ul></div></div></td><td id="sideIngTd-'+ i + '"><div class="dropdown" id="dropdown-sideIng-'  + i + '"><button class="btn btn-default dropdown-toggle" id="sideIngredient-' + i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.optionObject.option_name}}<span class="caret"></span></button><ul class="dropdown-menu" id="sideIngMenu-' + i + '" role="menu" aria-labelledby="sideIngredient-' + i + '">{% for element in categoryOptions %}{% if value.categoryObject.category_id == element.category_id.category_id %}<li role="presentaton" id="side-' + i + '-{{element.option_id.option_id}}" ><a role="menuitem" tabindex="-' + i + '" href="#/">{{element.option_id.option_name}} </a></li>{% endif %}{% endfor %}</ul></div></td><td id="sideSizeDiv-' + i + '"><div class="container_details" id="sideSizeDropdown-' + i + '"><div class="dropdown" id="dropdown-sideSize-' + i + '"><button class="btn btn-default dropdown-toggle" id="sideSize-'+ i + '" type="button" data-toggle="dropdown" aria-expanded="false">{{value.sizeObject.size_name}} <span class="caret"></span></button><ul class="dropdown-menu" id="sideSizeMenu-'+ i + '" role="menu" aria-labelledby="sideSize-'+ i + '">{% for element in sizes %}<li role="presentaton" id="side-size-'+ i + '-{{element.size_id}}" ><a role="menuitem" tabindex="-1" href="#/">{{element.size_name}} </a></li>{% endfor %}</ul></div></div></td><td style="width:30%"><div class="input-group" id="mealPrice-'+ i + '"><div class="input-group-addon">$</div><input class="form-control" name="mealNatural-' + i + '" value="' + mealNatural + '" placeholder="Ex: 2 dollars"><div class="input-group-addon">.</div><input class="form-control" name="mealFloat-'+ i + '" value="' + mealFloat + '"placeholder="Ex: 90 Cents"></div></td>');
 							
 				$("#sideCatMenu-" + i + " li").on("click", function() {
 						//sets button text
