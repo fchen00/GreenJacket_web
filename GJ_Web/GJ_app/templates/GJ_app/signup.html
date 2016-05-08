@@ -115,6 +115,15 @@
 					    </select>
 					</fieldset>
 				</div>
+				{% ifequal branch_cate '1' %}
+				<input type="hidden" name="numBranch" value='1'>
+				{% endifequal %}
+				{% ifequal branch_cate '2' %}
+				<input type="hidden" name="numBranch" value='2'>
+				{% endifequal %}
+				{% ifequal branch_cate '3' %}
+				<input type="hidden" name="numBranch" value='3'>
+				{% endifequal %}
 
 
 
